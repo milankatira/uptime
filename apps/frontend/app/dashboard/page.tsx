@@ -79,8 +79,9 @@ interface ProcessedWebsite {
 }
 
 // Redesigned website card with enhanced visuals
-function WebsiteCard({ website }: { website: ProcessedWebsite }) {
+function WebsiteCard({ website, onDelete }: { website: ProcessedWebsite; onDelete: (id: string) => void }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Format the URL for display
   const displayUrl = useMemo(() => {
@@ -148,7 +149,24 @@ function WebsiteCard({ website }: { website: ProcessedWebsite }) {
             </div>
             <span className="text-xs text-gray-500 dark:text-gray-400">uptime</span>
           </div>
-          <div className="h-8 flex items-center justify-center">
+          <div className="h-8 flex items-center justify-center space-x-2">
+            <button
+              onClick={async (e) => {
+                e.stopPropagation();
+                setIsDeleting(true);
+                await onDelete(website.id);
+                setIsDeleting(false);
+              }}
+              disabled={isDeleting}
+              className="p-1 text-rose-500 hover:text-rose-700 dark:hover:text-rose-400 transition-colors duration-200"
+              aria-label="Delete website"
+            >
+              {isDeleting ? (
+                <div className="w-4 h-4 border-2 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <XCircle className="w-5 h-5" />
+              )}
+            </button>
             {isExpanded ? (
               <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             ) : (
@@ -436,7 +454,7 @@ function App() {
   }, []);
 
   // Handle adding a new website
-  const handleAddWebsite = async (url: string | null) => {
+  const handleAddWebsite = async (url: string | null, interval?: number) => {
     if (url === null) {
       setIsModalOpen(false);
       return;
@@ -447,6 +465,7 @@ function App() {
       const token = await getToken();
       await axios.post(`${API_BACKEND_URL}/api/v1/website`, {
         url,
+        interval
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -521,7 +540,28 @@ function App() {
           <div className="space-y-4">
             {processedWebsites.length > 0 ? (
               processedWebsites.map((website) => (
-                <WebsiteCard key={website.id} website={website} />
+                <WebsiteCard
+                  key={website.id}
+                  website={website}
+                  onDelete={async (id) => {
+                    try {
+                      const token = await getToken();
+                      await axios.delete(`${API_BACKEND_URL}/api/v1/website`, {
+                        headers: {
+                          Authorization: `Bearer ${token}`,
+                        },
+                        data: {
+                          websiteId: id
+                        }
+                      });
+                      await refreshWebsites();
+                      toast.success('Website deleted successfully');
+                      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    } catch (err) {
+                      toast.error('Failed to delete website');
+                    }
+                  }}
+                />
               ))
             ) : (
               <EmptyState onAddWebsite={() => setIsModalOpen(true)} />

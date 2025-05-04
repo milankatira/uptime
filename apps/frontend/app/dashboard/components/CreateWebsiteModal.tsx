@@ -14,12 +14,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Loader2 } from 'lucide-react';
+import { Slider } from '@/components/ui/slider';
 
 const websiteSchema = z.object({
-    url: z.string().url({ message: 'Please enter a valid URL including http:// or https://' })
+    url: z.string().url({ message: 'Please enter a valid URL including http:// or https://' }),
+    interval: z.number().min(10).max(1440)
 });
 
-export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClose: (url: string | null) => void }) {
+export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClose: (url: string | null, interval?: number) => void }) {
 
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
@@ -47,7 +49,7 @@ export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClo
                 <form onSubmit={handleSubmit(async (data) => {
                     setIsSubmitting(true);
                     try {
-                        await onClose(data.url);
+                        await onClose(data.url, data.interval);
                     } finally {
                         setIsSubmitting(false);
                     }
@@ -74,6 +76,24 @@ export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClo
                         <p className="mt-1 text-xs text-muted-foreground">
                             Enter the full URL including http:// or https://
                         </p>
+                    </div>
+
+                    <div>
+                        <Label htmlFor="check-interval">Check Interval (minutes)</Label>
+                        <div className="mt-3 space-y-2">
+                            <Slider
+                                defaultValue={[60]}
+                                min={10}
+                                max={1440}
+                                step={10}
+                                className="w-full"
+                                {...register('interval')}
+                            />
+                            <div className="flex justify-between text-xs text-muted-foreground">
+                                <span>10 min</span>
+                                <span>1440 min (24h)</span>
+                            </div>
+                        </div>
                     </div>
                     <div className="flex justify-end space-x-3 mt-6">
                         <Button
