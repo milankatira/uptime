@@ -7,7 +7,6 @@ export async function authMiddleware(
     res: Response,
     next: NextFunction
 ) {
-    // Get token from Authorization header (Bearer token)
     const authHeader = req.headers['authorization'];
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res
@@ -21,21 +20,16 @@ export async function authMiddleware(
     }
 
     try {
-        // Verify the token using Clerk's verifyToken function
         const verifiedToken = await verifyToken(token, {
             jwtKey: CLERK_PEM_PUBLIC_KEY,
-            // Optional: Add authorized parties if needed
+
             authorizedParties: process.env.CLERK_AUTHORIZED_PARTIES
                 ? process.env.CLERK_AUTHORIZED_PARTIES.split(',')
                 : undefined,
-            // Optional: Add clock skew tolerance (default is 5000ms)
+
             clockSkewInMs: 5000,
         });
 
-        // If verification fails, verifyToken will throw an error
-        // If we reach here, the token is valid
-
-        // Set user ID from subject claim
         if (!verifiedToken.sub) {
             return res
                 .status(401)
