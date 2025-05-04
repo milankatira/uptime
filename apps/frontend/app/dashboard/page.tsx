@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useMemo } from 'react';
 import { ChevronDown, ChevronUp, Globe, Plus, Moon, Sun, Activity, BarChart4, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
+import { CreateWebsiteModal } from './components/CreateWebsiteModal';
 import { useWebsites } from '@/hooks/useWebsites';
 import axios from 'axios';
 import { API_BACKEND_URL } from '@/config';
@@ -26,10 +27,10 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
   return (
     <div className="relative flex items-center justify-center">
       <div className={`w-3.5 h-3.5 rounded-full ${status === 'good'
-          ? 'bg-emerald-500 dark:bg-emerald-400'
-          : status === 'bad'
-            ? 'bg-rose-500 dark:bg-rose-400'
-            : 'bg-gray-400 dark:bg-gray-500'
+        ? 'bg-emerald-500 dark:bg-emerald-400'
+        : status === 'bad'
+          ? 'bg-rose-500 dark:bg-rose-400'
+          : 'bg-gray-400 dark:bg-gray-500'
         }`} />
       {status === 'good' && (
         <div className="absolute inset-0 rounded-full bg-emerald-400 dark:bg-emerald-300 animate-ping opacity-75" style={{ animationDuration: '3s' }}></div>
@@ -51,10 +52,10 @@ function UptimeTicks({ ticks, expanded }: { ticks: UptimeStatus[]; expanded: boo
           <Tooltip key={index} content={`${index * 3}-${(index + 1) * 3} min ago: ${tick.charAt(0).toUpperCase() + tick.slice(1)}`}>
             <div
               className={`w-8 ${height} rounded-t-sm transition-all duration-300 transform hover:translate-y-[-2px] ${tick === 'good'
-                  ? 'bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500'
-                  : tick === 'bad'
-                    ? 'bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500'
-                    : 'bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600'
+                ? 'bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500'
+                : tick === 'bad'
+                  ? 'bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500'
+                  : 'bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600'
                 }`}
               style={{ alignSelf: 'flex-end' }}
             />
@@ -65,79 +66,7 @@ function UptimeTicks({ ticks, expanded }: { ticks: UptimeStatus[]; expanded: boo
   );
 }
 
-function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClose: (url: string | null) => void }) {
-  const [url, setUrl] = useState('');
-  const [isValidUrl, setIsValidUrl] = useState(false);
 
-  React.useEffect(() => {
-    const websiteRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
-
-    if (websiteRegex.test(url)) {
-      try {
-        setIsValidUrl(true);
-      } catch {
-        setIsValidUrl(false);
-      }
-    } else {
-      setIsValidUrl(false);
-    }
-  }, [url]);
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
-      <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md shadow-2xl animate-scaleIn">
-        <h2 className="text-xl font-bold mb-5 dark:text-white flex items-center">
-          <Globe className="w-5 h-5 mr-2 text-indigo-600 dark:text-indigo-400" />
-          Add New Website
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Website URL
-            </label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <Globe className="w-4 h-4 text-gray-500 dark:text-gray-400" />
-              </div>
-              <input
-                type="url"
-                className="w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 outline-none dark:bg-gray-700 dark:text-white transition-colors duration-200"
-                placeholder="https://example.com"
-                value={url}
-                onChange={(e) => setUrl(e.target.value)}
-              />
-            </div>
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Enter the full URL including http:// or https://
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-end space-x-3 mt-6">
-          <button
-            type="button"
-            onClick={() => onClose(null)}
-            className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors duration-200"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={!isValidUrl && url !== ''}
-            onClick={() => onClose(url)}
-            className={`px-4 py-2 text-sm font-medium text-white rounded-lg transition-colors duration-200 ${isValidUrl || url === ''
-                ? 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
-                : 'bg-gray-400 cursor-not-allowed'
-              }`}
-          >
-            Add Website
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 interface ProcessedWebsite {
   id: string;
