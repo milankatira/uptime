@@ -65,16 +65,20 @@ function UptimeTicks({ ticks, expanded }: { ticks: UptimeStatus[]; expanded: boo
   );
 }
 
-// Redesigned modal with improved UI
 function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClose: (url: string | null) => void }) {
   const [url, setUrl] = useState('');
   const [isValidUrl, setIsValidUrl] = useState(false);
 
   React.useEffect(() => {
-    try {
-      new URL(url);
-      setIsValidUrl(true);
-    } catch {
+    const websiteRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+
+    if (websiteRegex.test(url)) {
+      try {
+        setIsValidUrl(true);
+      } catch {
+        setIsValidUrl(false);
+      }
+    } else {
       setIsValidUrl(false);
     }
   }, [url]);
