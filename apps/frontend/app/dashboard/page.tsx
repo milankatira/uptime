@@ -275,7 +275,7 @@ function App() {
             url,
           }, {
             headers: {
-              Authorization: token,
+              Authorization: `Bearer ${token}`,
             },
           })
             .then(() => {

@@ -9,8 +9,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@clerk/backend": "^1.31.2",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2"
   }

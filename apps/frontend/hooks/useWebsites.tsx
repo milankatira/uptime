@@ -19,11 +19,11 @@ export function useWebsites() {
     const { getToken } = useAuth();
     const [websites, setWebsites] = useState<Website[]>([]);
 
-    async function refreshWebsites() {    
+    async function refreshWebsites() {
         const token = await getToken();
         const response = await axios.get(`${API_BACKEND_URL}/api/v1/websites`, {
             headers: {
-                Authorization: token,
+                Authorization: `Bearer ${token}`,
             },
         });
 
