@@ -38,6 +38,7 @@ export function useWebsites() {
         }, 1000 * 60 * 1);
 
         return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return { websites, refreshWebsites };
