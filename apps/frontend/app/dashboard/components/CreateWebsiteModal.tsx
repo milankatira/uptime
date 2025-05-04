@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React from 'react';
 import { Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -10,24 +10,28 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Loader2 } from 'lucide-react';
+
+const websiteSchema = z.object({
+    url: z.string().url({ message: 'Please enter a valid URL including http:// or https://' })
+});
 
 export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClose: (url: string | null) => void }) {
-    const [url, setUrl] = useState('');
-    const [isValidUrl, setIsValidUrl] = useState(false);
 
-    React.useEffect(() => {
-        const websiteRegex = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[^\s]*)?$/;
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-        if (websiteRegex.test(url)) {
-            try {
-                setIsValidUrl(true);
-            } catch {
-                setIsValidUrl(false);
-            }
-        } else {
-            setIsValidUrl(false);
-        }
-    }, [url]);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isValid },
+        reset
+    } = useForm({
+        resolver: zodResolver(websiteSchema),
+        mode: 'onChange'
+    });
 
     if (!isOpen) return null;
 
@@ -40,7 +44,14 @@ export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClo
                         Add New Website
                     </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4">
+                <form onSubmit={handleSubmit(async (data) => {
+                    setIsSubmitting(true);
+                    try {
+                        await onClose(data.url);
+                    } finally {
+                        setIsSubmitting(false);
+                    }
+                })} className="space-y-6">
                     <div>
                         <Label htmlFor="website-url">Website URL</Label>
                         <div className="relative mt-1">
@@ -52,30 +63,42 @@ export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClo
                                 type="url"
                                 className="pl-10"
                                 placeholder="https://example.com"
-                                value={url}
-                                onChange={(e) => setUrl(e.target.value)}
+                                {...register('url')}
                             />
                         </div>
+                        {errors.url && (
+                            <p className="mt-1 text-xs text-red-500">
+                                {errors.url.message as string}
+                            </p>
+                        )}
                         <p className="mt-1 text-xs text-muted-foreground">
                             Enter the full URL including http:// or https://
                         </p>
                     </div>
-                </div>
-                <div className="flex justify-end space-x-3 mt-6">
-                    <Button
-                        variant="outline"
-                        onClick={() => onClose(null)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="submit"
-                        disabled={!isValidUrl && url !== ''}
-                        onClick={() => onClose(url)}
-                    >
-                        Add Website
-                    </Button>
-                </div>
+                    <div className="flex justify-end space-x-3 mt-6">
+                        <Button
+                            variant="outline"
+                            type="button"
+                            onClick={() => {
+                                reset();
+                                onClose(null);
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            disabled={!isValid || isSubmitting}
+                        >
+                            {isSubmitting ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Adding...
+                                </>
+                            ) : 'Add Website'}
+                        </Button>
+                    </div>
+                </form>
             </DialogContent>
         </Dialog>
     );

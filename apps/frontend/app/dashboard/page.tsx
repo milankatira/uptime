@@ -6,6 +6,7 @@ import { useWebsites } from '@/hooks/useWebsites';
 import axios from 'axios';
 import { API_BACKEND_URL } from '@/config';
 import { useAuth } from '@clerk/nextjs';
+import { toast } from 'sonner';
 
 type UptimeStatus = "good" | "bad" | "unknown";
 
@@ -442,7 +443,6 @@ function App() {
     }
 
     setIsModalOpen(false);
-    setLoading(true);
     try {
       const token = await getToken();
       await axios.post(`${API_BACKEND_URL}/api/v1/website`, {
@@ -453,11 +453,12 @@ function App() {
         },
       });
       await refreshWebsites();
-      setLoading(false);
+      toast.success(`${url} is now being monitored`);
+
+      toast(`${url} is now being monitored`,)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (err) {
       setError('Failed to add website');
-      setLoading(false);
     }
   };
 

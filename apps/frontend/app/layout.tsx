@@ -6,6 +6,7 @@ import {
 } from '@clerk/nextjs'
 import { Appbar } from "../components/Appbar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,6 +34,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
+          <Toaster />
           <ThemeProvider defaultTheme="dark" attribute="class" forcedTheme="dark">
             <Appbar />
             {children}
