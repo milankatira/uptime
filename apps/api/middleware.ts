@@ -21,7 +21,6 @@ export async function authMiddleware(
     }
 
     try {
-        console.log(CLERK_PEM_PUBLIC_KEY,"CLERK_PEM_PUBLIC_KEY",token)
         // Verify the token using Clerk's verifyToken function
         const verifiedToken = await verifyToken(token, {
             jwtKey: CLERK_PEM_PUBLIC_KEY,
