@@ -69,7 +69,7 @@ function IncidentsSection() {
   ];
 
   return (
-    <div className=" bg-gray-100 dark:bg-gray-900 w-full min-h-screen p-10">
+    <div className=" bg-gray-100 dark:bg-gray-900  w-full min-h-screen p-10">
       <h2 className="text-2xl font-semibold text-white mb-10">Incidents.</h2>
 
       <Alert className="bg-indigo-900/40 border-indigo-800 text-white mb-10">
