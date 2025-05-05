@@ -21,10 +21,45 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
       ),
     },
     {
-      label: "Status Pages",
-      href: "/status-pages",
+      label: "Monitoring",
+      href: "/monitoring",
+      icon: (
+        <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: "Incidents",
+      href: "/incidents",
+      icon: (
+        <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: "Status Page",
+      href: "/status-page",
       icon: (
         <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: "Maintenance",
+      href: "/maintenance",
+      icon: (
+        <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: "Team Members",
+      href: "/team-members",
+      icon: (
+        <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: "Integrations & API",
+      href: "/integrations-api",
+      icon: (
+        <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
