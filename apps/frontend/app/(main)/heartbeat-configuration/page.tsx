@@ -1,5 +1,9 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const HeartbeatPage = () => {
     return (
@@ -8,32 +12,51 @@ const HeartbeatPage = () => {
                 <h1 className="text-2xl font-bold">Heartbeat Configuration</h1>
                 <div className="mt-4">
                     <label className="block text-sm font-medium">Service URL</label>
-                    <input type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" placeholder="https://example.com" />
+                    <Input type="text" placeholder="https://example.com" />
                 </div>
                 <div className="mt-4">
                     <label className="block text-sm font-medium">Heartbeat Frequency</label>
-                    <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                        <option>1 day</option>
-                        <option>12 hours</option>
-                        <option>6 hours</option>
-                    </select>
+                    <Select>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select frequency" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="1day">1 day</SelectItem>
+                            <SelectItem value="12hours">12 hours</SelectItem>
+                            <SelectItem value="6hours">6 hours</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
                 <div className="mt-4">
                     <label className="block text-sm font-medium">Grace Period</label>
-                    <select className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
-                        <option>5 minutes</option>
-                        <option>10 minutes</option>
-                        <option>15 minutes</option>
-                    </select>
+                    <Select>
+                        <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Select grace period" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="5min">5 minutes</SelectItem>
+                            <SelectItem value="10min">10 minutes</SelectItem>
+                            <SelectItem value="15min">15 minutes</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
                 <div className="mt-4">
                     <h2 className="text-xl font-semibold">On-call Escalation</h2>
                     <div className="mt-2">
                         <label className="block text-sm font-medium">Notification Methods</label>
-                        <div className="flex items-center">
-                            <input type="checkbox" className="mr-2" /> Email
-                            <input type="checkbox" className="mr-2" /> SMS
-                            <input type="checkbox" className="mr-2" /> Push Notification
+                        <div className="flex items-center gap-4">
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="email" />
+                                <Label htmlFor="email">Email</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="sms" />
+                                <Label htmlFor="sms">SMS</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Checkbox id="push" />
+                                <Label htmlFor="push">Push Notification</Label>
+                            </div>
                         </div>
                     </div>
                 </div>
