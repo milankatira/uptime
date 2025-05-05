@@ -17,7 +17,6 @@ const statusPages: StatusPage[] = [
     accessLevel: "Public",
     status: "Published",
   },
-  // You can add more status pages here if needed
 ];
 
 function StatusPageList() {
