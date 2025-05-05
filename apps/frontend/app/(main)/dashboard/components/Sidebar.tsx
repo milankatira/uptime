@@ -14,31 +14,38 @@ import { UserButton } from "@clerk/nextjs";
 export function SidebarDemo({ children }: { children: React.ReactNode }) {
   const links = [
     {
-      label: "Dashboard",
-      href: "#",
+      label: "Monitors",
+      href: "/monitors",
       icon: (
         <IconBrandTabler className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
-      label: "Profile",
-      href: "#",
+      label: "Status Pages",
+      href: "/status-pages",
       icon: (
         <IconUserBolt className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
-      label: "Settings",
-      href: "#",
+      label: "Heartbeats",
+      href: "/heartbeats",
       icon: (
         <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
     {
-      label: "Logout",
-      href: "#",
+      label: "Incidents",
+      href: "/incidents",
       icon: (
         <IconArrowLeft className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
+      ),
+    },
+    {
+      label: "Settings",
+      href: "/settings",
+      icon: (
+        <IconSettings className="h-5 w-5 shrink-0 text-neutral-700 dark:text-neutral-200" />
       ),
     },
   ];
