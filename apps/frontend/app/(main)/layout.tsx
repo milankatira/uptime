@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import {
   ClerkProvider
 } from '@clerk/nextjs'
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner"
+import { SidebarDemo } from "./dashboard/components/Sidebar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,9 +36,9 @@ export default function RootLayout({
         >
           <Toaster />
           <ThemeProvider defaultTheme="dark" attribute="class" forcedTheme="dark">
-
+            <SidebarDemo>
               {children}
-
+            </SidebarDemo>
           </ThemeProvider>
         </body>
       </ClerkProvider>

@@ -29,8 +29,9 @@ export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClo
         register,
         handleSubmit,
         formState: { errors, isValid },
-        reset
-    } = useForm({
+        reset,
+        setValue
+    } = useForm<z.infer<typeof websiteSchema>>({
         resolver: zodResolver(websiteSchema),
         mode: 'onChange'
     });
@@ -87,7 +88,7 @@ export function CreateWebsiteModal({ isOpen, onClose }: { isOpen: boolean; onClo
                                 max={1440}
                                 step={10}
                                 className="w-full"
-                                {...register('interval')}
+                                onValueChange={(value) => setValue('interval', value[0])}
                             />
                             <div className="flex justify-between text-xs text-muted-foreground">
                                 <span>10 min</span>
