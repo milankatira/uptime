@@ -1,19 +1,24 @@
 'use server';
 
-import prismaClient from '@/lib/prisma';
+import prisma from '@/lib/prisma';
+import { currentUser } from '@clerk/nextjs/server';
 
-export async function addUserIfNotExists(email: string) {
-    const existingUser = await prismaClient.user.findUnique({
-        where: { email },
+export async function syncUserInDb() {
+    const auth = await currentUser();
+    if (!auth?.id) return;
+    const user = await prisma.user.findFirst({
+      where: { externalId: auth.id },
     });
 
-    if (existingUser) {
-        return existingUser;
+    if (!user) {
+      return await prisma.user.create({
+        data: {
+          externalId: auth?.id,
+          imageUrl: auth.imageUrl!,
+          email: auth.emailAddresses[0].emailAddress!,
+        },
+      });
     }
 
-    const newUser = await prismaClient.user.create({
-        data: { email },
-    });
-
-    return newUser;
-}
+    return user;
+  }

@@ -8,8 +8,11 @@ datasource db {
 }
 
 model User {
-  id    String @id @default(uuid())
-  email String @unique
+  id         String  @id @default(uuid())
+  email      String
+  imageUrl   String?
+  externalId String  @unique
+  websites   Website[]
 }
 
 model Website {
@@ -19,6 +22,7 @@ model Website {
   interval Int           @default(60)
   ticks    WebsiteTick[]
   disabled Boolean       @default(false)
+  user     User          @relation(fields: [userId], references: [id])
 }
 
 model Validator {
