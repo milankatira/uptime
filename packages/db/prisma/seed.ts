@@ -4,12 +4,6 @@ import { prismaClient } from "../src";
 const USER_ID = "4";
 
 async function seed() {
-    await prismaClient.user.create({
-        data: {
-            id: USER_ID,
-            email: "test@test.com",
-        }
-    })
 
     const website = await prismaClient.website.create({
         data: {
