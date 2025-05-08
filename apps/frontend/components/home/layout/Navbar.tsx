@@ -37,7 +37,7 @@ const Navbar = () => {
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
-        {/* Logo */}
+
         <div className="flex items-center gap-2">
           <div className="flex items-center justify-center w-10 h-10 bg-primary rounded-full">
             <div className="w-4 h-4 bg-primary-foreground rounded-full animate-pulse" />
@@ -45,7 +45,6 @@ const Navbar = () => {
           <span className="text-xl font-bold">uptime.com</span>
         </div>
 
-        {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-8">
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>
           <a href="#demo" className="text-sm font-medium hover:text-primary transition-colors">How It Works</a>
@@ -53,11 +52,10 @@ const Navbar = () => {
           <a href="#testimonials" className="text-sm font-medium hover:text-primary transition-colors">Testimonials</a>
         </nav>
 
-        {/* Desktop Auth / Action Buttons */}
+
         <div className="hidden md:flex items-center gap-4">
           <ModeToggle />
 
-          {/* When signed in, show avatar dropdown; otherwise show Sign In */}
           <SignedIn>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
@@ -70,7 +68,6 @@ const Navbar = () => {
 
         </div>
 
-        {/* Mobile Menu Button */}
         <div className="flex items-center gap-4 md:hidden">
           <ModeToggle />
           <Button variant="ghost" size="icon" onClick={toggleMobileMenu} aria-label="Toggle menu">
@@ -79,7 +76,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-background border-b border-border p-4 shadow-lg">
           <nav className="flex flex-col gap-4">
@@ -90,7 +86,6 @@ const Navbar = () => {
           </nav>
 
           <div className="flex flex-col gap-2 pt-4 border-t border-border">
-            {/* Auth buttons in mobile menu */}
             <SignedIn>
               <UserButton afterSignOutUrl="/" />
             </SignedIn>
