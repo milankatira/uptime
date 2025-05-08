@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { ChevronDown, ChevronUp, Globe, Plus, Moon, Sun, Activity, BarChart4, Clock, CheckCircle, XCircle, AlertTriangle } from 'lucide-react';
 import { CreateWebsiteModal } from './components/CreateWebsiteModal';
 import { useWebsites } from '@/hooks/useWebsites';
@@ -7,6 +7,8 @@ import axios from 'axios';
 import { API_BACKEND_URL } from '@/config';
 import { useAuth } from '@clerk/nextjs';
 import { toast } from 'sonner';
+
+import { syncUserInDb } from '@/action/user.action';
 
 type UptimeStatus = "good" | "bad" | "unknown";
 
@@ -453,6 +455,20 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const syncUser = async () => {
+      try {
+        await syncUserInDb();
+        toast.success('User synchronized successfully');
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (error) {
+        toast.error('Failed to synchronize user');
+      }
+    };
+
+    syncUser();
+  }, []);
+
   // Handle adding a new website
   const handleAddWebsite = async (url: string | null, interval?: number) => {
     if (url === null) {
@@ -578,5 +594,7 @@ function App() {
     </div>
   );
 }
+
+
 
 export default App;
