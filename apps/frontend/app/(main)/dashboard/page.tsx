@@ -5,7 +5,7 @@ import { CreateWebsiteModal } from './components/CreateWebsiteModal';
 import { useWebsites } from '@/hooks/useWebsites';
 import axios from 'axios';
 import { API_BACKEND_URL } from '@/config';
-import { useAuth } from '@clerk/nextjs';
+import { CreateOrganization, useAuth, useUser } from '@clerk/nextjs';
 import { toast } from 'sonner';
 
 import { syncUserInDb } from '@/action/user.action';
@@ -497,6 +497,14 @@ function App() {
     }
   };
 
+  const { user } = useUser();
+
+
+  if (user?.organizationMemberships?.length === 0) {
+    return <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200 max-w-full w-full flex justify-center items-center">
+      <CreateOrganization />
+    </div>
+  }
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 transition-colors duration-200 max-w-full w-full">
       <div className=" mx-auto py-6 px-4 sm:px-6">
