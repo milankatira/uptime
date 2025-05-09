@@ -13,6 +13,8 @@ export async function createWebsite(req: Request, res: Response) {
             return res.status(400).json({ error: 'URL is required' });
         }
 
+        console.log(userId,"userId")
+
         const result = await websiteService.createWebsite(userId, url);
         return res.json(result);
     } catch (error) {

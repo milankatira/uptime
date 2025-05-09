@@ -113,6 +113,10 @@
 }
 
 
+.cl-internal-1hp5nqm{
+  display: none;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

@@ -5,9 +5,14 @@ export class WebsiteService {
      * Create a new website
      */
     async createWebsite(userId: string, url: string) {
+        // Check if user exists
+        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
+        if (!user) {
+            throw new Error('User does not exist');
+        }
         const data = await prismaClient.website.create({
             data: {
-                userId,
+                userId:user.id,
                 url,
             },
         });
