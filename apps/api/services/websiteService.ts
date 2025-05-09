@@ -24,10 +24,14 @@ export class WebsiteService {
      * Get website status by ID
      */
     async getWebsiteStatus(websiteId: string, userId: string) {
+        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
+        if (!user) {
+            throw new Error('User does not exist');
+        }
         return prismaClient.website.findFirst({
             where: {
                 id: websiteId,
-                userId,
+                userId: user.id,
                 disabled: false,
             },
             include: {
@@ -40,9 +44,13 @@ export class WebsiteService {
      * Get all websites for a user
      */
     async getAllWebsites(userId: string) {
+        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
+        if (!user) {
+            throw new Error('User does not exist');
+        }
         const websites = await prismaClient.website.findMany({
             where: {
-                userId,
+                userId: user.id,
                 disabled: false,
             },
             include: {
