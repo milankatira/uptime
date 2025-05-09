@@ -45,6 +45,16 @@ model WebsiteTick {
   validator   Validator     @relation(fields: [validatorId], references: [id])
 }
 
+model Heartbeat {
+  id          String   @id @default(uuid())
+  userId      String
+  name        String
+  interval    Int
+  gracePeriod Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
 enum WebsiteStatus {
   Good
   Bad

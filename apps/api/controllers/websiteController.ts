@@ -79,3 +79,22 @@ export async function deleteWebsite(req: Request, res: Response) {
         return res.status(500).json({ error: 'Failed to delete website' });
     }
 }
+
+/**
+ * Create a new heartbeat
+ */
+export async function createHeartbeat(req: Request, res: Response) {
+    try {
+        const userId = req.userId!;
+        const { name, interval, gracePeriod } = req.body;
+        if (!name || !interval || !gracePeriod) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        
+        const result = await websiteService.createHeartbeat(userId, name, interval, gracePeriod);
+        return res.json(result);
+    } catch (error) {
+        console.error('Error creating heartbeat:', error);
+        return res.status(500).json({ error: 'Failed to create heartbeat' });
+    }
+}

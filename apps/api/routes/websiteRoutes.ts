@@ -4,6 +4,7 @@ import {
     deleteWebsite,
     getAllWebsites,
     getWebsiteStatus,
+    createHeartbeat
 } from '../controllers/websiteController';
 import { authMiddleware } from '../middleware';
 
@@ -24,5 +25,8 @@ router.get('/websites', authMiddleware, getAllWebsites);
 
 // @ts-expect-error - TODO: fix this type error
 router.delete('/website', authMiddleware, deleteWebsite);
+
+// @ts-expect-error - TODO: fix this type error
+router.post('/heartbeat', authMiddleware, createHeartbeat);
 
 export default router;

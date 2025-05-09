@@ -77,6 +77,26 @@ export class WebsiteService {
 
         return { message: 'Deleted website successfully' };
     }
+
+    /**
+     * Create a new heartbeat
+     */
+    async createHeartbeat(userId: string, name: string, interval: number, gracePeriod: number) {
+        // Check if user exists
+        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
+        if (!user) {
+            throw new Error('User does not exist');
+        }
+        const data = await prismaClient.heartbeat.create({
+            data: {
+                userId: user.id,
+                name,
+                interval,
+                gracePeriod
+            },
+        });
+        return { id: data.id };
+    }
 }
 
 export const websiteService = new WebsiteService();
