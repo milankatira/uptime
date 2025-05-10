@@ -23,15 +23,10 @@ export class WebsiteService {
     /**
      * Get website status by ID
      */
-    async getWebsiteStatus(websiteId: string, userId: string) {
-        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
+    async getWebsiteStatus(websiteId: string) {
         return prismaClient.website.findFirst({
             where: {
                 id: websiteId,
-                userId: user.id,
                 disabled: false,
             },
             include: {

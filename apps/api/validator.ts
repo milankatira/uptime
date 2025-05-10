@@ -33,7 +33,6 @@ const worker = new Worker(
                 await prismaClient.websiteTick.create({
                     data: {
                         websiteId,
-                        validatorId: '1',
                         status,
                         latency,
                         createdAt: new Date(),

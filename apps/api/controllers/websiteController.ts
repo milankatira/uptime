@@ -27,13 +27,13 @@ export async function createWebsite(req: Request, res: Response) {
 export async function getWebsiteStatus(req: Request, res: Response) {
     try {
         const websiteId = req.query.websiteId as string;
-        const userId = req.userId!;
+
 
         if (!websiteId) {
             return res.status(400).json({ error: 'Website ID is required' });
         }
 
-        const data = await websiteService.getWebsiteStatus(websiteId, userId);
+        const data = await websiteService.getWebsiteStatus(websiteId);
 
         if (!data) {
             return res.status(404).json({ error: 'Website not found' });

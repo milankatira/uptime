@@ -18,7 +18,6 @@ router.post('/website', authMiddleware, createWebsite);
 router.get(
     '/website/status',
     // @ts-expect-error - TODO: fix this type error
-    authMiddleware,
     getWebsiteStatus
 );
 

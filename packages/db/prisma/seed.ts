@@ -12,13 +12,6 @@ async function seed() {
         }
     })
 
-    const validator = await prismaClient.validator.create({
-        data: {
-            publicKey: "0x12341223123",
-            location: "Delhi",
-            ip: "127.0.0.1",
-        }
-    })
 
     await prismaClient.websiteTick.create({
         data: {
@@ -26,7 +19,6 @@ async function seed() {
             status: "Good",
             createdAt: new Date(),
             latency: 100,
-            validatorId: validator.id
         }
     })
 
@@ -36,7 +28,6 @@ async function seed() {
             status: "Good",
             createdAt: new Date(Date.now() - 1000 * 60 *10),
             latency: 100,
-            validatorId: validator.id
         }
     })
 
@@ -46,7 +37,6 @@ async function seed() {
             status: "Bad",
             createdAt: new Date(Date.now() - 1000 * 60 * 20),
             latency: 100,
-            validatorId: validator.id
         }
     })
 }

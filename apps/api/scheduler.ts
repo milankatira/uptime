@@ -18,4 +18,4 @@ async function enqueueAll() {
 
 // Enqueue immediately, then every minute
 enqueueAll();
-setInterval(enqueueAll, 60_000);
+setInterval(enqueueAll, 30_000);
