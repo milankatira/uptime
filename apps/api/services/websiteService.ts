@@ -81,7 +81,7 @@ export class WebsiteService {
     /**
      * Create a new heartbeat
      */
-    async createHeartbeat(userId: string, name: string, interval: number, gracePeriod: number) {
+    async createHeartbeat(userId: string, name: string, interval: number, gracePeriod: number, escalation?: any, maintenance?: any, metadata?: any) {
         // Check if user exists
         const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
         if (!user) {
@@ -92,7 +92,10 @@ export class WebsiteService {
                 userId: user.id,
                 name,
                 interval,
-                gracePeriod
+                gracePeriod,
+                escalation,
+                maintenance,
+                metadata
             },
         });
         return { id: data.id };

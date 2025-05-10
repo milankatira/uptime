@@ -86,12 +86,12 @@ export async function deleteWebsite(req: Request, res: Response) {
 export async function createHeartbeat(req: Request, res: Response) {
     try {
         const userId = req.userId!;
-        const { name, interval, gracePeriod } = req.body;
+        const { name, interval, gracePeriod,escalation,maintenance,metadata } = req.body;
         if (!name || !interval || !gracePeriod) {
             return res.status(400).json({ error: 'Missing required fields' });
         }
-        
-        const result = await websiteService.createHeartbeat(userId, name, interval, gracePeriod);
+
+        const result = await websiteService.createHeartbeat(userId, name, interval, gracePeriod,escalation,maintenance,metadata);
         return res.json(result);
     } catch (error) {
         console.error('Error creating heartbeat:', error);

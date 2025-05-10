@@ -51,6 +51,9 @@ model Heartbeat {
   name        String
   interval    Int
   gracePeriod Int
+  escalation  Json?
+  maintenance Json?
+  metadata    Json?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
