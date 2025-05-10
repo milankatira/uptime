@@ -2,9 +2,8 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { X, CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon, Clock } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
@@ -31,7 +30,7 @@ function MaintenanceWindow() {
       .then(res => setWindows(res.data.windows || []))
       .catch(() => setWindows([]))
       .finally(() => setLoading(false));
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showDialog]);
 
   // Sample time slots
@@ -156,51 +155,19 @@ function MaintenanceWindow() {
               </div>
               <DialogTitle className="text-lg">Create <span className="text-green-500">Maintenance</span> window</DialogTitle>
             </div>
-            <Button variant="ghost" size="icon" onClick={() => setShowDialog(false)} className="text-gray-400 hover:text-white">
-              <X className="h-4 w-4" />
-            </Button>
           </DialogHeader>
 
           <form className="space-y-5 mt-2" onSubmit={handleSubmit}>
-            <div>
+            <div className="w-full items-center justify-center m-auto">
               <label className="block text-sm font-medium text-gray-400 mb-2">Select Date</label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-full bg-gray-800 border-gray-700 text-left flex justify-between items-center",
-                      !date && "text-gray-400"
-                    )}
-                  >
-                    <div className="flex items-center">
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {date ? format(date, "PPP") : <span>Pick a date</span>}
-                    </div>
-                    <div className="text-gray-400">
-                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </div>
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0 bg-gray-800 border-gray-700" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                    className="bg-gray-800 text-white pointer-events-auto"
-                    classNames={{
-                      month: "text-white",
-                      caption_label: "text-white",
-                      day_selected: "bg-indigo-600 text-white hover:bg-indigo-700 focus:bg-indigo-700",
-                      day_today: "bg-gray-700 text-white",
-                      day: "text-gray-300 hover:bg-gray-700 focus:bg-gray-700"
-                    }}
-                  />
-                </PopoverContent>
-              </Popover>
+
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={setDate}
+                className="rounded-md borde m-auto w-full"
+              />
+
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-2">Select Time Slot</label>
