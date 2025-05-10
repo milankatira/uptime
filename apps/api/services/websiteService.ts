@@ -100,6 +100,41 @@ export class WebsiteService {
         });
         return { id: data.id };
     }
+
+    /**
+     * Create a new maintenance window
+     */
+    async createMaintenanceWindow(userId: string, date: Date, timeSlot: string, repeat: string | null) {
+        // Check if user exists
+        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
+        if (!user) {
+            throw new Error('User does not exist');
+        }
+        const data = await prismaClient.maintenanceWindow.create({
+            data: {
+                userId: user.id,
+                date,
+                timeSlot,
+                repeat,
+            },
+        });
+        return { id: data.id };
+    }
+
+    /**
+     * Get all maintenance windows for a user
+     */
+    async getAllMaintenanceWindows(userId: string) {
+        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
+        if (!user) {
+            throw new Error('User does not exist');
+        }
+        const windows = await prismaClient.maintenanceWindow.findMany({
+            where: { userId: user.id },
+            orderBy: { date: 'asc' }
+        });
+        return { windows };
+    }
 }
 
 export const websiteService = new WebsiteService();

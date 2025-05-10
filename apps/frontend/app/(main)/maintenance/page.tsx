@@ -2,18 +2,37 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { X, CalendarIcon, Clock } from "lucide-react";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useEffect } from "react";
+import { API_BACKEND_URL } from "@/config";
+import { useAxiosInstance } from "@/lib/axiosInstance";
+import { toast } from "sonner";
 
 function MaintenanceWindow() {
   const [showDialog, setShowDialog] = useState(false);
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+  const [repeat, setRepeat] = useState<string>("");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [windows, setWindows] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const instance = useAxiosInstance();
+
+  // Fetch maintenance windows
+  useEffect(() => {
+    setLoading(true);
+    instance.get(`${API_BACKEND_URL}/api/v1/maintenance-windows`)
+      .then(res => setWindows(res.data.windows || []))
+      .catch(() => setWindows([]))
+      .finally(() => setLoading(false));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showDialog]);
 
   // Sample time slots
   const timeSlots = [
@@ -30,6 +49,29 @@ function MaintenanceWindow() {
     "20:00 - 22:00",
     "22:00 - 00:00"
   ];
+
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    try {
+      await instance.post(`${API_BACKEND_URL}/api/v1/maintenance-window`, {
+        date: date?.toISOString(),
+        timeSlot: selectedTimeSlot,
+        repeat: repeat || null,
+      });
+      setShowDialog(false);
+      setDate(undefined);
+      setSelectedTimeSlot(null);
+      setRepeat("");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (err) {
+      toast.error("Failed to create maintenance window");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 relative overflow-hidden w-full">
@@ -72,35 +114,33 @@ function MaintenanceWindow() {
           {/* Upcoming Maintenance Windows */}
           <div className="mt-16">
             <h2 className="text-xl font-semibold text-white mb-6">Upcoming Maintenance Windows</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1, 2, 3].map((item) => (
-                <div key={item} className="bg-gray-800/60 border border-gray-700 rounded-lg p-5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-green-500 text-sm font-medium">Scheduled</span>
-                    <Button size="sm" variant="ghost" className="h-8 w-8 p-0 text-gray-400 hover:text-white">
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <div className="mt-3">
-                    <div className="flex items-center gap-2 mb-2">
-                      <CalendarIcon className="h-4 w-4 text-indigo-400" />
-                      <span className="text-white">May 10, 2025</span>
+            {loading ? (
+              <div className="text-gray-400">Loading...</div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {windows.length === 0 && <div className="text-gray-400">No upcoming maintenance windows.</div>}
+                {windows.map((item) => (
+                  <div key={item.id} className="bg-gray-800/60 border border-gray-700 rounded-lg p-5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-green-500 text-sm font-medium">Scheduled</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-indigo-400" />
-                      <span className="text-white">10:00 - 12:00</span>
+                    <div className="mt-3">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CalendarIcon className="h-4 w-4 text-indigo-400" />
+                        <span className="text-white">{item.date ? format(new Date(item.date), "PPP") : "-"}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4 text-indigo-400" />
+                        <span className="text-white">{item.timeSlot}</span>
+                      </div>
                     </div>
+                    {item.repeat && (
+                      <div className="mt-2 text-xs text-gray-400">Repeats: {item.repeat}</div>
+                    )}
                   </div>
-                  <div className="mt-4 pt-4 border-t border-gray-700">
-                    <span className="text-sm text-gray-400">Services affected:</span>
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      <span className="bg-gray-700 px-2 py-1 rounded text-xs text-gray-300">API</span>
-                      <span className="bg-gray-700 px-2 py-1 rounded text-xs text-gray-300">Dashboard</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -111,7 +151,7 @@ function MaintenanceWindow() {
             <div className="flex items-center gap-2">
               <div className="p-1 rounded-full bg-green-800/30">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-green-500">
-                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </div>
               <DialogTitle className="text-lg">Create <span className="text-green-500">Maintenance</span> window</DialogTitle>
@@ -121,12 +161,9 @@ function MaintenanceWindow() {
             </Button>
           </DialogHeader>
 
-          <div className="space-y-5 mt-2">
-            {/* Date Picker */}
+          <form className="space-y-5 mt-2" onSubmit={handleSubmit}>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Select Date
-              </label>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Select Date</label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -165,15 +202,13 @@ function MaintenanceWindow() {
                 </PopoverContent>
               </Popover>
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Select Time Slot
-              </label>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Select Time Slot</label>
               <div className="grid grid-cols-3 gap-2 max-h-60 overflow-y-auto">
                 {timeSlots.map((slot) => (
                   <button
                     key={slot}
+                    type="button"
                     className={cn(
                       "px-3 py-2 text-sm rounded-md border",
                       selectedTimeSlot === slot
@@ -187,62 +222,24 @@ function MaintenanceWindow() {
                 ))}
               </div>
             </div>
-
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Repeat
-              </label>
-              <div className="relative">
-                <select className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white appearance-none">
-                  <option>Repeat weekly</option>
-                  <option>Repeat monthly</option>
-                  <option>Repeat daily</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </div>
+              <label className="block text-sm font-medium text-gray-400 mb-2">Repeat</label>
+              <select
+                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white appearance-none"
+                value={repeat}
+                onChange={e => setRepeat(e.target.value)}
+              >
+                <option value="">No repeat</option>
+                <option value="weekly">Repeat weekly</option>
+                <option value="monthly">Repeat monthly</option>
+                <option value="daily">Repeat daily</option>
+              </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Days in week to repeat
-              </label>
-              <ToggleGroup type="multiple" className="flex gap-2">
-                <ToggleGroupItem value="sun" className="w-9 h-9 rounded-full bg-indigo-600 data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">S</ToggleGroupItem>
-                <ToggleGroupItem value="mon" className="w-9 h-9 rounded-full data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">M</ToggleGroupItem>
-                <ToggleGroupItem value="tue" className="w-9 h-9 rounded-full data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">T</ToggleGroupItem>
-                <ToggleGroupItem value="wed" className="w-9 h-9 rounded-full data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">W</ToggleGroupItem>
-                <ToggleGroupItem value="thu" className="w-9 h-9 rounded-full data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">T</ToggleGroupItem>
-                <ToggleGroupItem value="fri" className="w-9 h-9 rounded-full data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">F</ToggleGroupItem>
-                <ToggleGroupItem value="sat" className="w-9 h-9 rounded-full data-[state=on]:bg-indigo-600 data-[state=off]:bg-gray-700">S</ToggleGroupItem>
-              </ToggleGroup>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-400 mb-2">
-                Duration of maintenance
-              </label>
-              <div className="flex">
-                <Input type="number" className="bg-gray-800 border-gray-700 text-white rounded-r-none" />
-                <span className="inline-flex items-center px-3 bg-gray-700 border border-l-0 border-gray-700 rounded-r-md text-gray-400">
-                  minutes
-                </span>
-              </div>
-            </div>
-
-            <div className="flex gap-4 pt-4">
-              <Button variant="outline" className="w-1/2 border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-white"
-                onClick={() => setShowDialog(false)}>
-                Cancel
-              </Button>
-              <Button className="w-1/2 bg-indigo-600 hover:bg-indigo-700 text-white">
-                Create window
-              </Button>
-            </div>
-          </div>
+            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 text-white w-full" disabled={submitting || !date || !selectedTimeSlot}>
+              {submitting ? "Creating..." : "Create window"}
+            </Button>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

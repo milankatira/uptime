@@ -4,7 +4,9 @@ import {
     deleteWebsite,
     getAllWebsites,
     getWebsiteStatus,
-    createHeartbeat
+    createHeartbeat,
+    createMaintenanceWindow,
+    getAllMaintenanceWindows
 } from '../controllers/websiteController';
 import { authMiddleware } from '../middleware';
 
@@ -28,5 +30,11 @@ router.delete('/website', authMiddleware, deleteWebsite);
 
 // @ts-expect-error - TODO: fix this type error
 router.post('/heartbeat', authMiddleware, createHeartbeat);
+
+// @ts-expect-error - TODO: fix this type error
+router.post('/maintenance-window', authMiddleware, createMaintenanceWindow);
+
+// @ts-expect-error - TODO: fix this type error
+router.get('/maintenance-windows', authMiddleware, getAllMaintenanceWindows);
 
 export default router;

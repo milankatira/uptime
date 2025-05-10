@@ -98,3 +98,35 @@ export async function createHeartbeat(req: Request, res: Response) {
         return res.status(500).json({ error: 'Failed to create heartbeat' });
     }
 }
+
+/**
+ * Create a new maintenance window
+ */
+export async function createMaintenanceWindow(req: Request, res: Response) {
+    try {
+        const userId = req.userId!;
+        const { date, timeSlot, repeat } = req.body;
+        if (!date || !timeSlot) {
+            return res.status(400).json({ error: 'Missing required fields' });
+        }
+        const result = await websiteService.createMaintenanceWindow(userId, new Date(date), timeSlot, repeat ?? null,);
+        return res.json(result);
+    } catch (error) {
+        console.error('Error creating maintenance window:', error);
+        return res.status(500).json({ error: 'Failed to create maintenance window' });
+    }
+}
+
+/**
+ * Get all maintenance windows for a user
+ */
+export async function getAllMaintenanceWindows(req: Request, res: Response) {
+    try {
+        const userId = req.userId!;
+        const result = await websiteService.getAllMaintenanceWindows(userId);
+        return res.json(result);
+    } catch (error) {
+        console.error('Error getting maintenance windows:', error);
+        return res.status(500).json({ error: 'Failed to get maintenance windows' });
+    }
+}
