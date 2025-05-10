@@ -42,7 +42,7 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
   );
 }
 
-// Enhanced uptime visualization with interactive bars
+
 function UptimeTicks({ ticks, expanded }: { ticks: UptimeStatus[]; expanded: boolean }) {
   return (
     <div className={`flex gap-1 mt-3 transition-all duration-300 ${expanded ? 'h-10' : 'h-4'}`}>
