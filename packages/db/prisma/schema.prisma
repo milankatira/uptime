@@ -13,6 +13,8 @@ model User {
   imageUrl   String?
   externalId String    @unique
   websites   Website[]
+
+  Heartbeat Heartbeat[]
 }
 
 model Website {
@@ -46,7 +48,7 @@ model WebsiteTick {
 }
 
 model Heartbeat {
-  id          String   @id @default(uuid())
+  id          String          @id @default(uuid())
   userId      String
   name        String
   interval    Int
@@ -54,8 +56,16 @@ model Heartbeat {
   escalation  Json?
   maintenance Json?
   metadata    Json?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  status      HeartbeatStatus @default(UP)
+  user        User            @relation(fields: [userId], references: [id])
+}
+
+enum HeartbeatStatus {
+  DOWN
+  ACHNOWLEDGED
+  UP
 }
 
 enum WebsiteStatus {
