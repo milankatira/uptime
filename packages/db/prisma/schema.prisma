@@ -30,14 +30,13 @@ model Website {
   user     User          @relation(fields: [userId], references: [id])
 }
 
-
 model WebsiteTick {
-  id          String        @id @default(uuid())
-  websiteId   String
-  createdAt   DateTime
-  status      WebsiteStatus
-  latency     Float
-  website     Website       @relation(fields: [websiteId], references: [id])
+  id        String        @id @default(uuid())
+  websiteId String
+  createdAt DateTime
+  status    WebsiteStatus
+  latency   Float
+  website   Website       @relation(fields: [websiteId], references: [id])
 }
 
 model Heartbeat {
@@ -78,17 +77,17 @@ model MaintenanceWindow {
 }
 
 model Incident {
-  id          String    @id @default(uuid())
-  status      IncidentStatus
-  errorCode   String
-  errorText   String
-  comments    Int       @default(0)
-  date        DateTime
-  duration    Int
-  userId      String
-  user        User      @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String         @id @default(uuid())
+  status    IncidentStatus
+  errorCode String
+  errorText String
+  comments  Int            @default(0)
+  date      DateTime
+  duration  Int
+  userId    String
+  user      User           @relation(fields: [userId], references: [id])
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 }
 
 enum IncidentStatus {
