@@ -1,43 +1,36 @@
-'use client'
-import { useEffect } from 'react';
-import Navbar from '@/components/home/layout/Navbar';
-import Footer from '@/components/home/layout/Footer';
-import HeroSection from '@/components/home/sections/HeroSection';
-import FeaturesSection from '@/components/home/sections/FeaturesSection';
-import UptimeDemo from '@/components/home/sections/UptimeDemo';
-import MonitoringSection from '@/components/home/sections/MonitoringSection';
-import PricingSection from '@/components/home/sections/PricingSection';
-import TestimonialsSection from '@/components/home/sections/TestimonialsSection';
-import CtaSection from '@/components/home/sections/CtaSection';
-import StatsSection from '@/components/home/sections/StatsSection';
-
-
-
-
-
+"use client";
+import Footer from "@/components/home/layout/Footer";
+import Navbar from "@/components/home/layout/Navbar";
+import CtaSection from "@/components/home/sections/CtaSection";
+import FeaturesSection from "@/components/home/sections/FeaturesSection";
+import HeroSection from "@/components/home/sections/HeroSection";
+import MonitoringSection from "@/components/home/sections/MonitoringSection";
+import PricingSection from "@/components/home/sections/PricingSection";
+import StatsSection from "@/components/home/sections/StatsSection";
+import TestimonialsSection from "@/components/home/sections/TestimonialsSection";
+import UptimeDemo from "@/components/home/sections/UptimeDemo";
+import { useEffect } from "react";
 
 function App() {
   useEffect(() => {
-    document.title = 'Uptime.com - Website Monitoring & Performance';
+    document.title = "Uptime.com - Website Monitoring & Performance";
   }, []);
 
   return (
-
-      <div className="min-h-screen bg-background text-foreground flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          <HeroSection />
-          <StatsSection />
-          <FeaturesSection />
-          <MonitoringSection />
-          <UptimeDemo />
-          <PricingSection />
-          <TestimonialsSection />
-          <CtaSection />
-        </main>
-        <Footer />
-      </div>
-
+    <div className="bg-background text-foreground flex min-h-screen flex-col">
+      <Navbar />
+      <main className="flex-grow">
+        <HeroSection />
+        <StatsSection />
+        <FeaturesSection />
+        <MonitoringSection />
+        <UptimeDemo />
+        <PricingSection />
+        <TestimonialsSection />
+        <CtaSection />
+      </main>
+      <Footer />
+    </div>
   );
 }
 

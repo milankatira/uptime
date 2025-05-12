@@ -19,7 +19,7 @@ export const sendEmail = async (opts: ResendEmailOptions) => {
       subject,
       text,
       react,
-      from: from || process.env.SMTP_FROM_EMAIL || 'noreply@example.com'
+      from: from || process.env.SMTP_FROM_EMAIL || "noreply@example.com",
     });
   }
 

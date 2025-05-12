@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
-import { animate } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
+import { animate } from "framer-motion";
+import { useEffect, useRef } from "react";
 
 interface AnimatedNumbersProps {
   value: number;
@@ -29,7 +29,7 @@ export const AnimatedNumbers = ({
           node.textContent = formatValue(value);
         }
       },
-      ease: 'easeOut',
+      ease: "easeOut",
     });
 
     prevValue.current = value;

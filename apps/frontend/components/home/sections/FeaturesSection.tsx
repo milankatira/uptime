@@ -1,111 +1,107 @@
-import { motion } from 'framer-motion';
-import { TracingBeam } from '@/components/ui/TracingBeam';
-import { SpotlightCard } from '@/components/ui/SpotlightCard';
-import { 
-  Bell, 
-  LineChart, 
-  Shield, 
-  Clock, 
-  BarChart3, 
-  Globe, 
-  MessageSquare, 
-  Smartphone,
-  Zap,
-  Search,
+import { SpotlightCard } from "@/components/ui/SpotlightCard";
+import { TracingBeam } from "@/components/ui/TracingBeam";
+import { motion } from "framer-motion";
+import {
   AlertTriangle,
+  Bell,
   CheckCircle2,
+  Clock,
+  LineChart,
   RefreshCw,
-  Webhook,
+  Search,
+  Settings,
+  Shield,
   Users,
-  Settings
-} from 'lucide-react';
+  Webhook,
+  Zap,
+} from "lucide-react";
 
 const features = [
   {
-    icon: <Bell className="h-8 w-8 text-primary" />,
+    icon: <Bell className="text-primary h-8 w-8" />,
     title: "Instant Alerts",
     description:
-      "Get notified immediately when your website experiences issues via email, SMS, Slack, or other integrations."
+      "Get notified immediately when your website experiences issues via email, SMS, Slack, or other integrations.",
   },
   {
-    icon: <LineChart className="h-8 w-8 text-primary" />,
+    icon: <LineChart className="text-primary h-8 w-8" />,
     title: "Performance Monitoring",
     description:
-      "Track website speed and performance metrics to ensure optimal user experience."
+      "Track website speed and performance metrics to ensure optimal user experience.",
   },
   {
-    icon: <Shield className="h-8 w-8 text-primary" />,
+    icon: <Shield className="text-primary h-8 w-8" />,
     title: "SSL Certificate Monitoring",
     description:
-      "Never miss an SSL certificate expiration with automated monitoring and alerts."
+      "Never miss an SSL certificate expiration with automated monitoring and alerts.",
   },
   {
-    icon: <Clock className="h-8 w-8 text-primary" />,
+    icon: <Clock className="text-primary h-8 w-8" />,
     title: "Uptime Monitoring",
     description:
-      "24/7 monitoring to ensure your website is always available to your customers."
+      "24/7 monitoring to ensure your website is always available to your customers.",
   },
   {
-    icon: <Search className="h-8 w-8 text-primary" />,
+    icon: <Search className="text-primary h-8 w-8" />,
     title: "Root Cause Analysis",
     description:
-      "Quickly identify and diagnose issues with detailed error logs and traceback information."
+      "Quickly identify and diagnose issues with detailed error logs and traceback information.",
   },
   {
-    icon: <AlertTriangle className="h-8 w-8 text-primary" />,
+    icon: <AlertTriangle className="text-primary h-8 w-8" />,
     title: "Anomaly Detection",
     description:
-      "AI-powered system to detect unusual patterns and potential issues before they become critical."
+      "AI-powered system to detect unusual patterns and potential issues before they become critical.",
   },
   {
-    icon: <CheckCircle2 className="h-8 w-8 text-primary" />,
+    icon: <CheckCircle2 className="text-primary h-8 w-8" />,
     title: "Health Checks",
     description:
-      "Regular automated checks for DNS, SSL certificates, server response, and more."
+      "Regular automated checks for DNS, SSL certificates, server response, and more.",
   },
   {
-    icon: <RefreshCw className="h-8 w-8 text-primary" />,
+    icon: <RefreshCw className="text-primary h-8 w-8" />,
     title: "Automated Recovery",
     description:
-      "Set up automated actions to restart services or trigger webhooks when issues are detected."
+      "Set up automated actions to restart services or trigger webhooks when issues are detected.",
   },
   {
-    icon: <Webhook className="h-8 w-8 text-primary" />,
+    icon: <Webhook className="text-primary h-8 w-8" />,
     title: "API Monitoring",
     description:
-      "Monitor API endpoints with custom request headers, body data, and response validation."
+      "Monitor API endpoints with custom request headers, body data, and response validation.",
   },
   {
-    icon: <Users className="h-8 w-8 text-primary" />,
+    icon: <Users className="text-primary h-8 w-8" />,
     title: "Team Collaboration",
     description:
-      "Assign roles, manage permissions, and collaborate effectively with your team."
+      "Assign roles, manage permissions, and collaborate effectively with your team.",
   },
   {
-    icon: <Settings className="h-8 w-8 text-primary" />,
+    icon: <Settings className="text-primary h-8 w-8" />,
     title: "Custom Configurations",
     description:
-      "Tailor monitoring settings to your specific needs with flexible configuration options."
+      "Tailor monitoring settings to your specific needs with flexible configuration options.",
   },
   {
-    icon: <Zap className="h-8 w-8 text-primary" />,
+    icon: <Zap className="text-primary h-8 w-8" />,
     title: "Real-time Metrics",
     description:
-      "View real-time performance metrics and analytics from your monitoring dashboard."
-  }
+      "View real-time performance metrics and analytics from your monitoring dashboard.",
+  },
 ];
 
 const FeaturesSection = () => {
   return (
-    <section id="features" className="py-24 relative">
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-background/50 to-background" />
-      <div className="absolute top-1/4 left-0 -z-10 w-[300px] h-[300px] bg-primary/5 rounded-full blur-[100px]" />
-      <div className="absolute bottom-1/4 right-0 -z-10 w-[300px] h-[300px] bg-primary/5 rounded-full blur-[100px]" />
-      
+    <section id="features" className="relative py-24">
+      <div className="from-background via-background/50 to-background absolute inset-0 -z-10 bg-gradient-to-b" />
+      <div className="bg-primary/5 absolute top-1/4 left-0 -z-10 h-[300px] w-[300px] rounded-full blur-[100px]" />
+      <div className="bg-primary/5 absolute right-0 bottom-1/4 -z-10 h-[300px] w-[300px] rounded-full blur-[100px]" />
+
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <motion.span 
-            className="inline-block text-sm font-medium text-primary bg-primary/10 rounded-full py-1 px-3 mb-3"
+        <div className="mx-auto mb-16 max-w-3xl text-center">
+          <motion.span
+            className="text-primary bg-primary/10 mb-3 inline-block rounded-full px-3 py-1 text-sm font-medium"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -113,8 +109,8 @@ const FeaturesSection = () => {
           >
             Features
           </motion.span>
-          <motion.h2 
-            className="text-3xl md:text-4xl font-bold mb-4"
+          <motion.h2
+            className="mb-4 text-3xl font-bold md:text-4xl"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -122,19 +118,20 @@ const FeaturesSection = () => {
           >
             Everything You Need to Monitor Your Website
           </motion.h2>
-          <motion.p 
+          <motion.p
             className="text-muted-foreground text-lg"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Our comprehensive monitoring platform provides all the tools you need to ensure your website is performing optimally.
+            Our comprehensive monitoring platform provides all the tools you
+            need to ensure your website is performing optimally.
           </motion.p>
         </div>
 
         <TracingBeam className="w-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -144,12 +141,16 @@ const FeaturesSection = () => {
                 transition={{ duration: 0.5, delay: index * 0.05 }}
               >
                 <SpotlightCard className="h-full">
-                  <div className="flex flex-col h-full p-6">
-                    <div className="mb-4 p-3 bg-primary/10 rounded-full w-fit">
+                  <div className="flex h-full flex-col p-6">
+                    <div className="bg-primary/10 mb-4 w-fit rounded-full p-3">
                       {feature.icon}
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground text-sm">{feature.description}</p>
+                    <h3 className="mb-2 text-xl font-semibold">
+                      {feature.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {feature.description}
+                    </p>
                   </div>
                 </SpotlightCard>
               </motion.div>

@@ -1,15 +1,15 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
 const publicRoutes = createRouteMatcher([
-  '/',
-  '/api(.*)',
-  '/sign-in(.*)',
-  '/sign-up(.*)',
+  "/",
+  "/api(.*)",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
   // Allow static files and images
-  '/_next/static/(.*)',
-  '/images/(.*)',
-  '/favicon.ico',
-  '/api/webhook/(.*)',
+  "/_next/static/(.*)",
+  "/images/(.*)",
+  "/favicon.ico",
+  "/api/webhook/(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
@@ -21,6 +21,6 @@ export default clerkMiddleware(async (auth, req) => {
 export const config = {
   matcher: [
     // Match all routes except static files and API routes
-    '/((?!_next|api|images|favicon\\.ico|webhook).*)',
+    "/((?!_next|api|images|favicon\\.ico|webhook).*)",
   ],
 };

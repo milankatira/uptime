@@ -14,7 +14,7 @@ export const GlowingEffect = ({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
-    
+
     const rect = ref.current.getBoundingClientRect();
     setPosition({
       x: e.clientX - rect.left,
@@ -33,8 +33,8 @@ export const GlowingEffect = ({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative overflow-hidden rounded-xl border border-border bg-background",
-        className
+        "border-border bg-background relative overflow-hidden rounded-xl border",
+        className,
       )}
     >
       <div

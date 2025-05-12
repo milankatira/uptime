@@ -1,135 +1,158 @@
-import { prismaClient } from 'db/client';
+import { prismaClient } from "db/client";
 
 export class WebsiteService {
-    /**
-     * Create a new website
-     */
-    async createWebsite(userId: string, url: string) {
-        // Check if user exists
-        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const data = await prismaClient.website.create({
-            data: {
-                userId:user.id,
-                url,
-            },
-        });
-
-        return { id: data.id };
+  /**
+   * Create a new website
+   */
+  async createWebsite(userId: string, url: string) {
+    // Check if user exists
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
     }
+    const data = await prismaClient.website.create({
+      data: {
+        userId: user.id,
+        url,
+      },
+    });
 
-    /**
-     * Get website status by ID
-     */
-    async getWebsiteStatus(websiteId: string) {
-        return prismaClient.website.findFirst({
-            where: {
-                id: websiteId,
-                disabled: false,
-            },
-            include: {
-                ticks: true,
-            },
-        });
+    return { id: data.id };
+  }
+
+  /**
+   * Get website status by ID
+   */
+  async getWebsiteStatus(websiteId: string) {
+    return prismaClient.website.findFirst({
+      where: {
+        id: websiteId,
+        disabled: false,
+      },
+      include: {
+        ticks: true,
+      },
+    });
+  }
+
+  /**
+   * Get all websites for a user
+   */
+  async getAllWebsites(userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
     }
+    const websites = await prismaClient.website.findMany({
+      where: {
+        userId: user.id,
+        disabled: false,
+      },
+      include: {
+        ticks: true,
+      },
+    });
 
-    /**
-     * Get all websites for a user
-     */
-    async getAllWebsites(userId: string) {
-        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const websites = await prismaClient.website.findMany({
-            where: {
-                userId: user.id,
-                disabled: false,
-            },
-            include: {
-                ticks: true,
-            },
-        });
+    return { websites };
+  }
 
-        return { websites };
+  /**
+   * Soft delete a website
+   */
+  async deleteWebsite(websiteId: string, userId: string) {
+    await prismaClient.website.update({
+      where: {
+        id: websiteId,
+        userId,
+      },
+      data: {
+        disabled: true,
+      },
+    });
+
+    return { message: "Deleted website successfully" };
+  }
+
+  /**
+   * Create a new heartbeat
+   */
+  async createHeartbeat(
+    userId: string,
+    name: string,
+    interval: number,
+    gracePeriod: number,
+    escalation?: any,
+    maintenance?: any,
+    metadata?: any,
+  ) {
+    // Check if user exists
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
     }
+    const data = await prismaClient.heartbeat.create({
+      data: {
+        userId: user.id,
+        name,
+        interval,
+        gracePeriod,
+        escalation,
+        maintenance,
+        metadata,
+      },
+    });
+    return { id: data.id };
+  }
 
-    /**
-     * Soft delete a website
-     */
-    async deleteWebsite(websiteId: string, userId: string) {
-        await prismaClient.website.update({
-            where: {
-                id: websiteId,
-                userId,
-            },
-            data: {
-                disabled: true,
-            },
-        });
-
-        return { message: 'Deleted website successfully' };
+  /**
+   * Create a new maintenance window
+   */
+  async createMaintenanceWindow(
+    userId: string,
+    date: Date,
+    timeSlot: string,
+    repeat: string | null,
+  ) {
+    // Check if user exists
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
     }
+    const data = await prismaClient.maintenanceWindow.create({
+      data: {
+        userId: user.id,
+        date,
+        timeSlot,
+        repeat,
+      },
+    });
+    return { id: data.id };
+  }
 
-    /**
-     * Create a new heartbeat
-     */
-    async createHeartbeat(userId: string, name: string, interval: number, gracePeriod: number, escalation?: any, maintenance?: any, metadata?: any) {
-        // Check if user exists
-        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const data = await prismaClient.heartbeat.create({
-            data: {
-                userId: user.id,
-                name,
-                interval,
-                gracePeriod,
-                escalation,
-                maintenance,
-                metadata
-            },
-        });
-        return { id: data.id };
+  /**
+   * Get all maintenance windows for a user
+   */
+  async getAllMaintenanceWindows(userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
     }
-
-    /**
-     * Create a new maintenance window
-     */
-    async createMaintenanceWindow(userId: string, date: Date, timeSlot: string, repeat: string | null) {
-        // Check if user exists
-        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const data = await prismaClient.maintenanceWindow.create({
-            data: {
-                userId: user.id,
-                date,
-                timeSlot,
-                repeat,
-            },
-        });
-        return { id: data.id };
-    }
-
-    /**
-     * Get all maintenance windows for a user
-     */
-    async getAllMaintenanceWindows(userId: string) {
-        const user = await prismaClient.user.findUnique({ where: { externalId: userId } });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const windows = await prismaClient.maintenanceWindow.findMany({
-            where: { userId: user.id },
-            orderBy: { date: 'asc' }
-        });
-        return { windows };
-    }
+    const windows = await prismaClient.maintenanceWindow.findMany({
+      where: { userId: user.id },
+      orderBy: { date: "asc" },
+    });
+    return { windows };
+  }
 }
 
 export const websiteService = new WebsiteService();

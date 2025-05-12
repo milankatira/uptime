@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
 
 interface InfiniteMovingCardsProps {
   items: {
@@ -24,41 +24,47 @@ export const InfiniteMovingCards = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollerRef = useRef<HTMLUListElement>(null);
   const [start, setStart] = useState(false);
-  
+
   useEffect(() => {
     setStart(true);
   }, []);
-  
+
   useEffect(() => {
     addAnimation();
   }, [start]);
-  
+
   const addAnimation = () => {
     if (containerRef.current && scrollerRef.current) {
       const scrollerContent = Array.from(scrollerRef.current.children);
-      
+
       scrollerContent.forEach((item) => {
         const duplicatedItem = item.cloneNode(true);
         if (scrollerRef.current) {
           scrollerRef.current.appendChild(duplicatedItem);
         }
       });
-      
+
       getDirection();
       getSpeed();
     }
   };
-  
+
   const getDirection = () => {
     if (containerRef.current) {
       if (direction === "left") {
-        containerRef.current.style.setProperty("--animation-direction", "forwards");
+        containerRef.current.style.setProperty(
+          "--animation-direction",
+          "forwards",
+        );
       } else {
-        containerRef.current.style.setProperty("--animation-direction", "reverse");
+        containerRef.current.style.setProperty(
+          "--animation-direction",
+          "reverse",
+        );
       }
     }
   };
-  
+
   const getSpeed = () => {
     if (containerRef.current) {
       if (speed === "fast") {
@@ -70,17 +76,16 @@ export const InfiniteMovingCards = ({
       }
     }
   };
-  
+
   return (
     <div
       ref={containerRef}
-      className={cn(
-        "scroller relative z-20 overflow-hidden",
-        className
-      )}
+      className={cn("scroller relative z-20 overflow-hidden", className)}
       style={{
-        maskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
-        WebkitMaskImage: "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+        maskImage:
+          "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
+        WebkitMaskImage:
+          "linear-gradient(to right, transparent, black 20%, black 80%, transparent)",
       }}
     >
       <ul
@@ -88,29 +93,33 @@ export const InfiniteMovingCards = ({
         className={cn(
           "flex min-w-full shrink-0 gap-4 py-4",
           start && "animate-scroll",
-          pauseOnHover && "hover:[animation-play-state:paused]"
+          pauseOnHover && "hover:[animation-play-state:paused]",
         )}
       >
         {items.map((item, idx) => (
           <li
-            className="w-[350px] max-w-full flex-shrink-0 rounded-xl border border-border bg-card px-6 py-8"
+            className="border-border bg-card w-[350px] max-w-full flex-shrink-0 rounded-xl border px-6 py-8"
             key={idx}
           >
             <blockquote className="text-left">
               <div className="mb-4 flex items-center gap-4">
                 {item.image && (
-                  <img 
-                    src={item.image} 
+                  <img
+                    src={item.image}
                     alt={item.name}
                     className="h-12 w-12 rounded-full object-cover"
                   />
                 )}
                 <div>
                   <div className="text-base font-medium">{item.name}</div>
-                  <div className="text-sm text-muted-foreground">{item.title}</div>
+                  <div className="text-muted-foreground text-sm">
+                    {item.title}
+                  </div>
                 </div>
               </div>
-              <p className="text-sm leading-relaxed text-muted-foreground italic">"{item.quote}"</p>
+              <p className="text-muted-foreground text-sm leading-relaxed italic">
+                "{item.quote}"
+              </p>
             </blockquote>
           </li>
         ))}

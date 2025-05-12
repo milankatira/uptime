@@ -47,8 +47,8 @@ export const SpotlightEffect = ({
       onBlur={handleBlur}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        "relative overflow-hidden rounded-xl border border-border bg-background",
-        className
+        "border-border bg-background relative overflow-hidden rounded-xl border",
+        className,
       )}
     >
       <div

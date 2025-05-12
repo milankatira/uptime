@@ -1,6 +1,6 @@
-import axios from "axios";
 import { API_BACKEND_URL } from "@/config";
 import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
 
 import { useMemo } from "react";
 

@@ -1,15 +1,11 @@
 "use client";
-import React, { useState } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
-import {
-  IconAlertCircle,
-  IconApi,
-  IconHeartbeat,
-} from "@tabler/icons-react";
-import { motion } from "motion/react";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@clerk/nextjs";
-import { LayoutDashboard, Settings, Users,  Radio  } from "lucide-react";
+import { IconAlertCircle, IconApi, IconHeartbeat } from "@tabler/icons-react";
+import { LayoutDashboard, Radio, Settings, Users } from "lucide-react";
+import { motion } from "motion/react";
+import React, { useState } from "react";
 
 export function SidebarDemo({ children }: { children: React.ReactNode }) {
   const links = [
@@ -67,11 +63,11 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
   return (
     <div
       className={cn(
-        "mx-auto flex w-screen flex-1 flex-col overflow-hidden rounded-md border border-neutral-200 md:flex-row dark:border-neutral-700 bg-accent",
+        "bg-accent mx-auto flex w-screen flex-1 flex-col overflow-hidden rounded-md border border-neutral-200 md:flex-row dark:border-neutral-700",
         "h-screen",
       )}
     >
-      <Sidebar open={open} setOpen={setOpen} animate={false} >
+      <Sidebar open={open} setOpen={setOpen} animate={false}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-1 flex-col overflow-x-hidden overflow-y-auto">
             <>

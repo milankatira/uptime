@@ -1,6 +1,6 @@
-import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
 
 interface AnimatedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -27,16 +27,17 @@ export const AnimatedCard = ({
     <motion.div
       ref={cardRef}
       className={cn(
-        "relative overflow-hidden rounded-xl border border-border bg-background p-6",
-        className
+        "border-border bg-background relative overflow-hidden rounded-xl border p-6",
+        className,
       )}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{
         scale,
         zIndex: 10,
-        boxShadow: "0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3)",
-        transition: { duration: 0.3, ease: "easeOut" }
+        boxShadow:
+          "0 30px 60px -12px rgba(50, 50, 93, 0.25), 0 18px 36px -18px rgba(0, 0, 0, 0.3)",
+        transition: { duration: 0.3, ease: "easeOut" },
       }}
       {...props}
     >
@@ -46,7 +47,7 @@ export const AnimatedCard = ({
 
       {isHovered && (
         <motion.div
-          className="absolute inset-0 bg-gradient-to-r from-primary/10 to-secondary/10 opacity-0 backdrop-blur-sm transition-opacity duration-300 hover:opacity-100"
+          className="from-primary/10 to-secondary/10 absolute inset-0 bg-gradient-to-r opacity-0 backdrop-blur-sm transition-opacity duration-300 hover:opacity-100"
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.1 }}
           exit={{ opacity: 0 }}
