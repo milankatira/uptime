@@ -26,8 +26,8 @@ const MonitoringSection = () => {
               No false positives.
             </h2>
             <p className="mb-8 text-lg text-gray-400">
-              We've perfected HTTP monitoring over the years to ensure you never
-              get a false alert. Our advanced checks ensure accuracy.
+              {`We've perfected HTTP monitoring over the years to ensure you never
+              get a false alert. Our advanced checks ensure accuracy.`}
             </p>
             <button className="rounded-lg bg-indigo-500 px-6 py-3 text-white transition-colors hover:bg-indigo-600">
               Start Monitoring Now
