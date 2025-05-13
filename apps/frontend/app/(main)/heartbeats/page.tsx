@@ -17,7 +17,9 @@ interface Heartbeat {
 const HeartbeatsPage = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [heartbeats, setHeartbeats] = useState<Heartbeat[]>([]);
+  const [filteredHeartbeats, setFilteredHeartbeats] = useState<Heartbeat[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
   const instance = useAxiosInstance();
 
   useEffect(() => {
@@ -25,6 +27,7 @@ const HeartbeatsPage = () => {
       try {
         const response = await instance.get("/api/v1/heartbeat");
         setHeartbeats(response.data);
+        setFilteredHeartbeats(response.data);
       } catch (error) {
         console.error("Failed to fetch heartbeats:", error);
       } finally {
@@ -34,6 +37,13 @@ const HeartbeatsPage = () => {
 
     fetchHeartbeats();
   }, [instance]);
+
+  useEffect(() => {
+    const filtered = heartbeats.filter(heartbeat =>
+      heartbeat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredHeartbeats(filtered);
+  }, [searchQuery, heartbeats]);
 
   if (loading) {
     return (
@@ -80,7 +90,7 @@ const HeartbeatsPage = () => {
       <div className="max-w-full p-6 md:p-8">
         <div className="mb-10 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-white">
-            Heartbeats <span className="ml-1 text-sm text-gray-400">{heartbeats.length}</span>
+            Heartbeats <span className="ml-1 text-sm text-gray-400">{filteredHeartbeats.length}</span>
           </h1>
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -89,6 +99,8 @@ const HeartbeatsPage = () => {
                 type="text"
                 placeholder="Search"
                 className="w-[300px] border-gray-700 bg-gray-800 pl-9 text-white"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
               <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-gray-500">
                 /
@@ -125,7 +137,7 @@ const HeartbeatsPage = () => {
 
           {isExpanded && (
             <div className="border-t border-gray-700">
-              {heartbeats.map((heartbeat) => (
+              {filteredHeartbeats.map((heartbeat) => (
                 <div
                   key={heartbeat.id}
                   className="flex items-center justify-between px-6 py-4 hover:bg-gray-700/30"
