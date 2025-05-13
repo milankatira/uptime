@@ -1,4 +1,4 @@
-// components/Navbar.tsx
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ui/mode-toggle";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 // Clerk imports
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import Link from "next/link";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -72,6 +73,9 @@ const Navbar = () => {
           <ModeToggle />
 
           <SignedIn>
+            <Button variant="ghost" asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
             <UserButton afterSignOutUrl="/" />
           </SignedIn>
           <SignedOut>
