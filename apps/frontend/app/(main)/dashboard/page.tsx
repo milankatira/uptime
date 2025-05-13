@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
 
 import { syncUserInDb } from "@/action/user.action";
+import { Button } from "@/components/ui/button";
 
 type UptimeStatus = "good" | "bad" | "unknown";
 
@@ -613,22 +614,19 @@ function App() {
             </h1>
           </div>
           <div className="flex items-center space-x-3">
-            <button
+            <Button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-white shadow-sm transition-colors duration-200 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
             >
               <Plus className="h-4 w-4" />
               <span className="font-medium">Add Website</span>
-            </button>
+            </Button>
           </div>
         </div>
 
-        {/* Dashboard summary */}
         {!loading && !error && processedWebsites.length > 0 && (
           <DashboardSummary websites={processedWebsites} />
         )}
 
-        {/* Content */}
         {loading ? (
           <LoadingSpinner />
         ) : error ? (
@@ -679,7 +677,6 @@ function App() {
         )}
       </div>
 
-      {/* Add website modal */}
       <CreateWebsiteModal isOpen={isModalOpen} onClose={handleAddWebsite} />
     </div>
   );
