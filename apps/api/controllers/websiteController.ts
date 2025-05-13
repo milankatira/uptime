@@ -145,3 +145,22 @@ export async function getAllMaintenanceWindows(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to get maintenance windows" });
   }
 }
+
+/**
+ * Get heartbeat by ID
+ */
+export async function getHeartbeat(req: Request, res: Response) {
+  try {
+    const userId = req.userId!;
+    const data = await websiteService.getHeartbeat(userId);
+
+    if (!data) {
+      return res.status(404).json({ error: "Heartbeat not found" });
+    }
+
+    return res.json(data);
+  } catch (error) {
+    console.error("Error getting heartbeat:", error);
+    return res.status(500).json({ error: "Failed to get heartbeat" });
+  }
+}

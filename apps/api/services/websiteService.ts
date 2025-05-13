@@ -159,6 +159,23 @@ export class WebsiteService {
     });
     return { windows };
   }
+
+  /**
+   * Get heartbeat by ID
+   */
+  async getHeartbeat(userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    return prismaClient.heartbeat.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+  }
 }
 
 export const websiteService = new WebsiteService();
