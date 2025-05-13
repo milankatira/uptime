@@ -191,7 +191,7 @@ function WebsiteCard({
         <div className="flex items-center space-x-3">
           <div className="text-right">
             <div className="flex items-center justify-end">
-              <BarChart4 className="mr-1 h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+              <BarChart4 className="mr-1 h-4 w-4 text-green-600 dark:text-green-400" />
               <span className="text-sm font-semibold text-gray-900 dark:text-white">
                 {website.uptimePercentage.toFixed(1)}%
               </span>
@@ -298,9 +298,9 @@ function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center py-10">
       <div className="relative">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-indigo-200 border-t-indigo-600 dark:border-indigo-900 dark:border-t-indigo-400"></div>
+        <div className="h-16 w-16 animate-spin rounded-full border-4 border-green-200 border-t-green-600 dark:border-green-900 dark:border-t-green-400"></div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <Globe className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+          <Globe className="h-6 w-6 text-green-600 dark:text-green-400" />
         </div>
       </div>
       <p className="mt-4 animate-pulse text-gray-600 dark:text-gray-300">
@@ -355,8 +355,8 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800">
         <div className="flex items-center">
-          <div className="mr-4 rounded-full bg-indigo-100 p-3 dark:bg-indigo-900/30">
-            <Globe className="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
+          <div className="mr-4 rounded-full bg-green-100 p-3 dark:bg-green-900/30">
+            <Globe className="h-5 w-5 text-green-600 dark:text-green-400" />
           </div>
           <div>
             <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -425,8 +425,8 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
 function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-8 text-center shadow-md dark:border-gray-700 dark:bg-gray-800">
-      <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-indigo-100 p-5 dark:bg-indigo-900/30">
-        <Globe className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+      <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-100 p-5 dark:bg-green-900/30">
+        <Globe className="h-10 w-10 text-green-600 dark:text-green-400" />
       </div>
       <h3 className="mb-2 text-xl font-bold text-gray-900 dark:text-white">
         No websites to monitor
@@ -434,13 +434,12 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
       <p className="mx-auto mb-6 max-w-md text-gray-600 dark:text-gray-300">
         Add your first website to start monitoring its uptime and performance.
       </p>
-      <button
+      <Button
         onClick={onAddWebsite}
-        className="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2.5 font-medium text-white transition-colors duration-200 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
       >
         <Plus className="mr-2 h-4 w-4" />
         Add Your First Website
-      </button>
+      </Button>
     </div>
   );
 }
@@ -606,7 +605,7 @@ function App() {
       <div className="mx-auto px-4 py-6 sm:px-6">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="rounded-xl bg-indigo-600 p-2 dark:bg-indigo-500">
+            <div className="rounded-xl bg-green-600 p-2 dark:bg-green-500">
               <Globe className="h-7 w-7 text-white" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">

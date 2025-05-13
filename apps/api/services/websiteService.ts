@@ -64,10 +64,16 @@ export class WebsiteService {
    * Soft delete a website
    */
   async deleteWebsite(websiteId: string, userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
     await prismaClient.website.update({
       where: {
         id: websiteId,
-        userId,
+        userId: user.id,
       },
       data: {
         disabled: true,
