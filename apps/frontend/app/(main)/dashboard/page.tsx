@@ -12,9 +12,7 @@ import {
   ChevronUp,
   Clock,
   Globe,
-  Moon,
   Plus,
-  Sun,
   XCircle,
 } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
@@ -25,7 +23,7 @@ import { syncUserInDb } from "@/action/user.action";
 
 type UptimeStatus = "good" | "bad" | "unknown";
 
-// Custom tooltip component
+
 function Tooltip({
   content,
   children,
@@ -44,18 +42,17 @@ function Tooltip({
   );
 }
 
-// Redesigned status circle with pulsing animation for active status
+
 function StatusCircle({ status }: { status: UptimeStatus }) {
   return (
     <div className="relative flex items-center justify-center">
       <div
-        className={`h-3.5 w-3.5 rounded-full ${
-          status === "good"
+        className={`h-3.5 w-3.5 rounded-full ${status === "good"
             ? "bg-emerald-500 dark:bg-emerald-400"
             : status === "bad"
               ? "bg-rose-500 dark:bg-rose-400"
               : "bg-gray-400 dark:bg-gray-500"
-        }`}
+          }`}
       />
       {status === "good" && (
         <div
@@ -97,13 +94,12 @@ function UptimeTicks({
             content={`${index * 3}-${(index + 1) * 3} min ago: ${tick.charAt(0).toUpperCase() + tick.slice(1)}`}
           >
             <div
-              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${
-                tick === "good"
+              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
                   ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
                   : tick === "bad"
                     ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
                     : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
-              }`}
+                }`}
               style={{ alignSelf: "flex-end" }}
             />
           </Tooltip>
@@ -122,7 +118,7 @@ interface ProcessedWebsite {
   uptimeTicks: UptimeStatus[];
 }
 
-// Redesigned website card with enhanced visuals
+
 function WebsiteCard({
   website,
   onDelete,
@@ -133,7 +129,7 @@ function WebsiteCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  // Format the URL for display
+
   const displayUrl = useMemo(() => {
     try {
       const urlObj = new URL(website.url);
@@ -143,7 +139,7 @@ function WebsiteCard({
     }
   }, [website.url]);
 
-  // Status label with appropriate icon
+
   const statusLabel = useMemo(() => {
     if (website.status === "good") {
       return (
@@ -296,7 +292,7 @@ function WebsiteCard({
   );
 }
 
-// Enhanced loading spinner with logo overlay
+
 function LoadingSpinner() {
   return (
     <div className="flex flex-col items-center justify-center py-10">
@@ -313,7 +309,7 @@ function LoadingSpinner() {
   );
 }
 
-// Improved error message with retry button
+
 function ErrorMessage({
   message,
   onRetry,
@@ -335,7 +331,7 @@ function ErrorMessage({
   );
 }
 
-// Dashboard summary component
+
 function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
   const stats = useMemo(() => {
     const totalSites = websites.length;
@@ -348,7 +344,7 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     const averageUptime =
       websites.length > 0
         ? websites.reduce((sum, site) => sum + site.uptimePercentage, 0) /
-          websites.length
+        websites.length
         : 0;
 
     return { totalSites, sitesByStatus, averageUptime };
@@ -424,7 +420,7 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
   );
 }
 
-// Empty state component
+
 function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-8 text-center shadow-md dark:border-gray-700 dark:bg-gray-800">
@@ -449,7 +445,6 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
 }
 
 function App() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -458,19 +453,19 @@ function App() {
 
   const processedWebsites = useMemo(() => {
     return websites.map((website) => {
-      // Sort ticks by creation time
+
       const sortedTicks = [...website.ticks].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
 
-      // Get the most recent 30 minutes of ticks
+
       const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
       const recentTicks = sortedTicks.filter(
         (tick) => new Date(tick.createdAt) > thirtyMinutesAgo,
       );
 
-      // Aggregate ticks into 3-minute windows (10 windows total)
+
       const windows: UptimeStatus[] = [];
 
       for (let i = 0; i < 10; i++) {
@@ -493,7 +488,7 @@ function App() {
               : "bad";
       }
 
-      // Calculate overall uptime percentage
+
       const totalTicks = sortedTicks.length;
       const upTicks = sortedTicks.filter(
         (tick) => tick.status === "Good",
@@ -501,12 +496,12 @@ function App() {
       const uptimePercentage =
         totalTicks === 0 ? 100 : (upTicks / totalTicks) * 100;
 
-      // Format the last checked time
+
       const lastChecked = sortedTicks[0]
         ? new Date(sortedTicks[0].createdAt).toLocaleTimeString()
         : "Never";
 
-      // ✅ NEW: Derive status from last 3 uptime ticks
+
       const lastThreeTicks = windows.slice(-3);
       const goodCount = lastThreeTicks.filter(
         (status) => status === "good",
@@ -537,16 +532,8 @@ function App() {
     });
   }, [websites]);
 
-  // Toggle dark mode
-  React.useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDarkMode]);
 
-  // Fetch websites with loading and error handling
+
   React.useEffect(() => {
     setLoading(true);
     refreshWebsites()
@@ -555,7 +542,7 @@ function App() {
         setError("Failed to fetch websites");
         setLoading(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   useEffect(() => {
@@ -572,7 +559,7 @@ function App() {
     syncUser();
   }, []);
 
-  // Handle adding a new website
+
   const handleAddWebsite = async (url: string | null, interval?: number) => {
     if (url === null) {
       setIsModalOpen(false);
@@ -616,7 +603,6 @@ function App() {
   return (
     <div className="min-h-screen w-full max-w-full bg-gray-100 transition-colors duration-200 dark:bg-gray-900">
       <div className="mx-auto px-4 py-6 sm:px-6">
-        {/* Header */}
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="rounded-xl bg-indigo-600 p-2 dark:bg-indigo-500">
@@ -627,19 +613,6 @@ function App() {
             </h1>
           </div>
           <div className="flex items-center space-x-3">
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className="rounded-lg border border-gray-200 p-2.5 transition-colors duration-200 hover:bg-gray-200 dark:border-gray-700 dark:hover:bg-gray-700"
-              aria-label={
-                isDarkMode ? "Switch to light mode" : "Switch to dark mode"
-              }
-            >
-              {isDarkMode ? (
-                <Sun className="h-5 w-5 text-amber-500" />
-              ) : (
-                <Moon className="h-5 w-5 text-indigo-600" />
-              )}
-            </button>
             <button
               onClick={() => setIsModalOpen(true)}
               className="flex items-center space-x-2 rounded-lg bg-indigo-600 px-4 py-2.5 text-white shadow-sm transition-colors duration-200 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600"
