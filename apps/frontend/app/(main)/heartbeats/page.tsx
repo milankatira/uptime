@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
@@ -38,7 +39,7 @@ const HeartbeatsPage = () => {
               </div>
             </div>
             <Link href="/heartbeats/create">
-              <Button className="bg-indigo-600 text-white hover:bg-indigo-700">
+              <Button >
                 Create heartbeat
               </Button>
             </Link>

@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +9,8 @@ import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 const CreateHeartbeatPage = () => {
   const router = useRouter();
@@ -97,7 +100,7 @@ const CreateHeartbeatPage = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Example: Daily database backup"
-              className="w-full border-gray-700 bg-gray-800 text-white"
+              className="w-full"
             />
           </section>
           <div className="grid grid-cols-3 gap-6">
@@ -110,19 +113,23 @@ const CreateHeartbeatPage = () => {
                   type="number"
                   value={intervalValue}
                   onChange={(e) => setIntervalValue(Number(e.target.value))}
-                  className="border-gray-700 bg-gray-800 text-white"
+                  className="w-20"
                 />
-                <select
-                  className="h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
+                <Select
                   value={selectedFrequency}
-                  onChange={(e) => setSelectedFrequency(e.target.value)}
+                  onValueChange={setSelectedFrequency}
                 >
-                  <option value="minute">minute</option>
-                  <option value="hour">hour</option>
-                  <option value="day">day</option>
-                  <option value="week">week</option>
-                  <option value="month">month</option>
-                </select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Frequency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="minute">minute</SelectItem>
+                    <SelectItem value="hour">hour</SelectItem>
+                    <SelectItem value="day">day</SelectItem>
+                    <SelectItem value="week">week</SelectItem>
+                    <SelectItem value="month">month</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div>
@@ -134,17 +141,21 @@ const CreateHeartbeatPage = () => {
                   type="number"
                   value={gracePeriodValue}
                   onChange={(e) => setGracePeriodValue(Number(e.target.value))}
-                  className="border-gray-700 bg-gray-800 text-white"
+                  className="w-20"
                 />
-                <select
-                  className="h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
+                <Select
                   value={selectedGracePeriod}
-                  onChange={(e) => setSelectedGracePeriod(e.target.value)}
+                  onValueChange={setSelectedGracePeriod}
                 >
-                  <option value="seconds">seconds</option>
-                  <option value="minutes">minutes</option>
-                  <option value="hours">hours</option>
-                </select>
+                  <SelectTrigger className="w-[180px]">
+                    <SelectValue placeholder="Grace period" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="seconds">seconds</SelectItem>
+                    <SelectItem value="minutes">minutes</SelectItem>
+                    <SelectItem value="hours">hours</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </div>
           </div>
@@ -165,13 +176,12 @@ const CreateHeartbeatPage = () => {
                     key={type}
                     className="flex items-center gap-1 text-sm text-gray-300"
                   >
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       checked={Object.values(escalation)[idx] as boolean}
-                      onChange={() =>
+                      onCheckedChange={(checked) =>
                         setEscalation((e) => ({
                           ...e,
-                          [Object.keys(e)[idx]]: !Object.values(e)[idx],
+                          [Object.keys(e)[idx]]: checked,
                         }))
                       }
                     />
@@ -179,20 +189,28 @@ const CreateHeartbeatPage = () => {
                   </label>
                 ))}
               </div>
-              <select
-                className="mt-2 h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
+              <Select
                 value={escalation.fallback}
-                onChange={(e) =>
-                  setEscalation((es) => ({ ...es, fallback: e.target.value }))
+                onValueChange={(value) =>
+                  setEscalation((es) => ({ ...es, fallback: value }))
                 }
               >
-                <option>Within 3 minutes, alert all other team members</option>
-                <option>Within 5 minutes, alert all other team members</option>
-                <option>Do not escalate</option>
-              </select>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select fallback option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Within 3 minutes, alert all other team members">
+                    Within 3 minutes, alert all other team members
+                  </SelectItem>
+                  <SelectItem value="Within 5 minutes, alert all other team members">
+                    Within 5 minutes, alert all other team members
+                  </SelectItem>
+                  <SelectItem value="Do not escalate">Do not escalate</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </section>
-          <details className="mt-8" open>
+          <details className="mt-8">
             <summary className="text-md cursor-pointer font-semibold text-white">
               Advanced settings
             </summary>
