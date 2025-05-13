@@ -1,30 +1,86 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useAxiosInstance } from "@/lib/axiosInstance";
+
+interface Heartbeat {
+  id: string;
+  name: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const HeartbeatsPage = () => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [heartbeats, setHeartbeats] = useState<Heartbeat[]>([]);
+  const [loading, setLoading] = useState(true);
+  const instance = useAxiosInstance();
 
-  const heartbeats = [
-    {
-      id: 1,
-      url: "https://milankatira.vercel.app/",
-      status: "Pending",
-      time: "15h 3m",
-      lastChecked: "1d",
-    },
-  ];
+  useEffect(() => {
+    const fetchHeartbeats = async () => {
+      try {
+        const response = await instance.get("/api/v1/heartbeat");
+        setHeartbeats(response.data);
+      } catch (error) {
+        console.error("Failed to fetch heartbeats:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeartbeats();
+  }, [instance]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
+        <div className="max-w-full p-6 md:p-8">
+          <div className="mb-10 flex items-center justify-between">
+            <div className="h-9 w-48 animate-pulse rounded-lg bg-gray-800" />
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="h-10 w-[300px] animate-pulse rounded-lg bg-gray-800" />
+              </div>
+              <div className="h-10 w-32 animate-pulse rounded-lg bg-gray-800" />
+            </div>
+          </div>
+
+          <div className="overflow-hidden rounded-lg border border-gray-700 bg-gray-800/50">
+            <div className="flex items-center px-6 py-4">
+              <div className="h-4 w-4 animate-pulse rounded-full bg-gray-700" />
+              <div className="ml-2 h-4 w-24 animate-pulse rounded-lg bg-gray-700" />
+            </div>
+
+            <div className="border-t border-gray-700">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="flex items-center justify-between px-6 py-4">
+                  <div className="flex items-center">
+                    <div className="mr-4 h-2 w-2 animate-pulse rounded-full bg-gray-700" />
+                    <div>
+                      <div className="h-4 w-48 animate-pulse rounded-lg bg-gray-700" />
+                      <div className="mt-2 h-3 w-32 animate-pulse rounded-lg bg-gray-700" />
+                    </div>
+                  </div>
+                  <div className="h-4 w-20 animate-pulse rounded-lg bg-gray-700" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         <div className="mb-10 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-white">
-            Heartbeats <span className="ml-1 text-sm text-gray-400">1</span>
+            Heartbeats <span className="ml-1 text-sm text-gray-400">{heartbeats.length}</span>
           </h1>
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -39,7 +95,7 @@ const HeartbeatsPage = () => {
               </div>
             </div>
             <Link href="/heartbeats/create">
-              <Button >
+              <Button>
                 Create heartbeat
               </Button>
             </Link>
@@ -77,9 +133,9 @@ const HeartbeatsPage = () => {
                   <div className="flex items-center">
                     <div className="mr-4 h-2 w-2 rounded-full bg-gray-400"></div>
                     <div>
-                      <div className="text-sm text-white">{heartbeat.url}</div>
+                      <div className="text-sm text-white">{heartbeat.name}</div>
                       <div className="mt-1 text-xs text-gray-400">
-                        {heartbeat.status} · {heartbeat.time}
+                        {heartbeat.status} · {new Date(heartbeat.createdAt).toLocaleDateString()}
                       </div>
                     </div>
                   </div>
@@ -99,7 +155,7 @@ const HeartbeatsPage = () => {
                             d="M12 6v6l4 2"
                           />
                         </svg>
-                        {heartbeat.lastChecked}
+                        {new Date(heartbeat.updatedAt).toLocaleDateString()}
                       </span>
                     </div>
                     <div className="text-gray-400">
@@ -108,7 +164,7 @@ const HeartbeatsPage = () => {
                         viewBox="0 0 24 24"
                         fill="none"
                         stroke="currentColor"
-                      >
+                        >
                         <circle cx="12" cy="12" r="1" />
                         <circle cx="19" cy="12" r="1" />
                         <circle cx="5" cy="12" r="1" />
