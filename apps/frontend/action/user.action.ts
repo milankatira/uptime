@@ -38,8 +38,8 @@ export async function getUserFromDb() {
       select: {
         emailNotifications: true,
         email: true,
-        imageUrl: true
-      }
+        imageUrl: true,
+      },
     });
   } catch (error) {
     console.error("Error fetching user:", error);

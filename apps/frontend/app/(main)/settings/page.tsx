@@ -32,16 +32,28 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 import { API_BACKEND_URL } from "@/config";
+import { useEffect } from "react";
+import { getUserFromDb } from "@/action/user.action";
 
 const SettingsPage = () => {
   const { setTheme } = useTheme();
   const instance = useAxiosInstance();
 
-  const settingsForm = useForm({
-    defaultValues: {
-      emailNotifications: true,
-    },
-  });
+  const settingsForm = useForm();
+
+  useEffect(() => {
+    const fetchPreferences = async () => {
+      try {
+        const response = await getUserFromDb()
+        settingsForm.setValue('emailNotifications', response?.emailNotifications);
+      } catch (error) {
+        console.error("Failed to fetch preferences:", error);
+        toast.error("Failed to load settings");
+      }
+    };
+
+    fetchPreferences();
+  }, [instance, settingsForm]);
 
   const handleSettingsSubmit = async (data: { emailNotifications: boolean }) => {
     try {
