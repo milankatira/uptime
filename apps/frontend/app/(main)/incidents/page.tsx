@@ -1,29 +1,55 @@
 'use client'
 import React, { useEffect, useState } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { AlertCircle, Trash2, X } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { MessageSquare, FileText, Search, MoreHorizontal, ShieldAlert } from "lucide-react";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 
+interface Incident {
+  id: string;
+  status: "Ongoing" | "Resolved" | "Acknowledged";
+  errorCode: string;
+  errorText: string;
+  comments: number;
+  date: string;
+  duration: number;
+  monitorName?: string;
+}
+
+const ShimmerIncidentItem = () => (
+  <div className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-[#2a2a36]/70 p-4 animate-pulse">
+    <div className="col-span-3 md:col-span-1 flex items-center gap-3">
+      <div className="h-8 w-8 bg-gray-600 rounded-md flex-shrink-0"></div>
+      <div>
+        <div className="h-5 w-32 bg-gray-600 rounded mb-1"></div>
+        <div className="h-3 w-24 bg-gray-600 rounded"></div>
+      </div>
+    </div>
+    <div className="h-4 w-20 bg-gray-600 rounded md:text-left"></div>
+    <div className="h-4 w-16 bg-gray-600 rounded md:text-left"></div>
+    <div className="flex justify-end">
+      <div className="h-8 w-8 bg-gray-600 rounded-full"></div>
+    </div>
+  </div>
+);
+
 function IncidentsSection() {
-  const [incidentsData, setIncidentsData] = useState([]);
+  const [incidentsData, setIncidentsData] = useState<Incident[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const instance = useAxiosInstance();
 
   useEffect(() => {
     const fetchIncidents = async () => {
+      setLoading(true);
       try {
-        const response = await instance.get("/api/v1/incidents");
-        setIncidentsData(response.data?.incidents);
+        const response = await instance.get<{ incidents: Incident[] }>("/api/v1/incidents");
+        setIncidentsData(response.data.incidents || []);
       } catch (error) {
         console.error("Failed to fetch incidents:", error);
+        setIncidentsData([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -32,155 +58,133 @@ function IncidentsSection() {
 
   const formatDate = (dateString: string | number | Date) => {
     const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+    if (diffInSeconds < 60) return `${diffInSeconds} seconds ago`;
+    const diffInMinutes = Math.floor(diffInSeconds / 60);
+    if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    if (diffInHours < 24) return `${diffInHours} hours ago`;
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      timeZoneName: 'short'
     });
   };
 
-  const getStatusColor = (status: string) => {
-    return status === "Ongoing" ? "text-red-500" : "text-green-500";
-  };
-
-  const getErrorColor = (errorCode: string) => {
-    switch (errorCode) {
-      case "HEARTBEAT_DOWN":
-        return { bg: "bg-red-900/30", text: "text-red-300" };
-      // Add more cases as needed
+  const getStatusPill = (status: Incident["status"]) => {
+    switch (status) {
+      case "Ongoing":
+        return <span className="flex items-center text-red-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-red-500"></span>Ongoing</span>;
+      case "Resolved":
+        return <span className="flex items-center text-green-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-green-500"></span>Resolved</span>;
+      case "Acknowledged":
+        return <span className="flex items-center text-yellow-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-yellow-500"></span>Acknowledged</span>;
       default:
-        return { bg: "bg-gray-800", text: "text-gray-300" };
+        return <span className="flex items-center text-gray-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-gray-500"></span>{status}</span>;
     }
   };
 
+  const getIconColorByStatus = (status: Incident["status"]): string => {
+    switch (status) {
+      case "Ongoing":
+        return "text-red-500";
+      case "Resolved":
+        return "text-green-500";
+      case "Acknowledged":
+        return "text-yellow-500";
+      default:
+        return "text-gray-500";
+    }
+  };
+
+  const filteredIncidents = incidentsData.filter(incident =>
+    incident.errorText.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (incident.monitorName && incident.monitorName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    incident.errorCode.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
-    <div className="min-h-screen w-full bg-gray-100 p-10 dark:bg-gray-900">
-      <h2 className="mb-10 text-2xl font-semibold text-white">Incidents.</h2>
+    <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900 p-6 md:p-8">
+      <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
+        <h1 className="text-3xl font-semibold ">Incidents</h1>
+        <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+          <div className="relative flex-grow md:flex-grow-0">
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
+            <Input
+              type="text"
+              placeholder="Search"
 
-      <Alert className="mb-10 border-indigo-800 bg-indigo-900/40 text-white">
-        <AlertCircle className="h-4 w-4 text-white" />
-        <AlertDescription className="flex w-full items-center justify-between">
-          <div>
-            <span className="font-medium">Possible IP Allowlist Issue</span>
-            <span className="ml-2 text-gray-300">{`If you're using a firewall, please ensure our new IPs are allowlisted to avoid potential monitoring issues.`}</span>
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-          <div className="flex items-center gap-4">
-            <Button variant="link" className="text-white underline">
-              Check IP list
-            </Button>
-            <Button variant="ghost" size="sm" className="h-auto p-0">
-              <X className="h-5 w-5" />
-            </Button>
+          <Button >
+            Report a new incident
+          </Button>
+        </div>
+      </div>
+
+      <div className="mb-6 flex items-center gap-4">
+        <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-[#2a2a36] px-3 py-2">
+          <MessageSquare className="mr-2 h-4 w-4" /> Comments
+        </Button>
+        <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-[#2a2a36] px-3 py-2">
+          <FileText className="mr-2 h-4 w-4" /> Post-mortems
+        </Button>
+      </div>
+
+      <div className="mb-3 hidden md:grid grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 px-4 py-2 text-xs font-medium text-gray-500">
+        <div>MONITOR</div>
+        <div>STARTED AT</div>
+        <div>LENGTH</div>
+        <div>{/* Actions */}</div>
+      </div>
+
+
+      <div className="space-y-3">
+        {loading ? (
+          Array.from({ length: 5 }).map((_, index) => <ShimmerIncidentItem key={index} />)
+        ) : filteredIncidents.length > 0 ? (
+          filteredIncidents.map((incident) => (
+            <div
+              key={incident.id}
+              className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50"
+            >
+              <div className="col-span-3 md:col-span-1 flex items-center gap-3">
+                <ShieldAlert className={`h-8 w-8 ${getIconColorByStatus(incident.status)} flex-shrink-0`} />
+                <div>
+                  <div className="font-medium text-white truncate" title={incident.monitorName || incident.errorText}>
+                    {incident.monitorName || incident.errorText.split(" is down")[0] || incident.errorText}
+                  </div>
+                  <div className="text-xs text-gray-400">
+                    {incident.errorCode === "HEARTBEAT_DOWN" ? "Missed heartbeat" : incident.errorCode}
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-sm text-gray-400 md:text-left">
+                <span className="md:hidden text-xs text-gray-500 mr-2">Started:</span>
+                {formatDate(incident.date)}
+              </div>
+
+              <div className="text-sm md:text-left">
+                <span className="md:hidden text-xs text-gray-500 mr-2">Status:</span>
+                {getStatusPill(incident.status)}
+              </div>
+
+              <div className="flex justify-end">
+                <Button variant="ghost" size="icon" className="text-gray-500 hover:text-white h-8 w-8">
+                  <MoreHorizontal className="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="py-10 text-center text-gray-500">
+            {incidentsData.length === 0 && !searchQuery && !loading ? "No incidents found." : "No incidents match your search."}
           </div>
-        </AlertDescription>
-      </Alert>
-
-      <div className="mb-14 flex justify-between flex-col gap-10">
-        <div className="mb-10 lg:mb-0 w-full">
-          <h1 className="text-4xl font-bold">
-            Your <span className="text-green-500">incidents</span>{" "}
-            <span className="text-green-500">overview</span> on the way!
-          </h1>
-
-          <p className="mt-8 text-gray-300">
-            Once we detect some incidents, they will be neatly displayed for
-            quick and easy understanding. 🧠
-          </p>
-        </div>
-
-        <div className="w-full">
-          <Table className="overflow-hidden rounded-lg border border-gray-800">
-            <TableHeader className="bg-gray-900/60">
-              <TableRow className="border-b border-gray-800">
-                <TableHead className="font-medium text-gray-400">
-                  Status
-                </TableHead>
-                <TableHead className="font-medium text-gray-400">
-                  Root cause
-                </TableHead>
-                <TableHead className="font-medium text-gray-400">
-                  Comments
-                </TableHead>
-                <TableHead className="font-medium text-gray-400">
-                  Started
-                </TableHead>
-                <TableHead className="font-medium text-gray-400">
-                  Duration
-                </TableHead>
-                <TableHead className="font-medium text-gray-400"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody className="bg-gray-900/40">
-              {incidentsData?.length > 0 ? incidentsData.map((incident: {
-                id: string;
-                status: string;
-                errorCode: string;
-                errorText: string;
-                comments: number;
-                date: string;
-                duration: number;
-              }) => {
-                const errorColors = getErrorColor(incident.errorCode);
-                return (
-                  <TableRow key={incident.id} className="border-b border-gray-800">
-                    <TableCell>
-                      <div className="flex items-center">
-                        <span className="flex items-center">
-                          <span className={`mr-2 h-2 w-2 rounded-full ${incident.status === "Ongoing" ? "bg-red-500" : "bg-green-500"}`}></span>
-                          <span className={getStatusColor(incident.status)}>
-                            {incident.status}
-                          </span>
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className={`inline-flex items-center ${errorColors.bg} ${errorColors.text} rounded-md px-2 py-1`}>
-                        <span className="mr-2 font-medium">
-                          {incident.errorCode}
-                        </span>
-                        <span className="text-sm">{incident.errorText}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-gray-400">
-                        {incident.comments} comments
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-gray-300">
-                        {formatDate(incident.date)}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-gray-400">
-                        {incident.duration} min
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-500 hover:text-gray-300"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              }) : (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-gray-400">
-                    No incidents found
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
+        )}
       </div>
     </div>
   );
