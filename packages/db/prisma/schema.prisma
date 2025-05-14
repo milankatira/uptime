@@ -52,6 +52,17 @@ model Heartbeat {
   updatedAt   DateTime        @updatedAt
   status      HeartbeatStatus @default(UP)
   user        User            @relation(fields: [userId], references: [id])
+
+  HeartbeatRecord HeartbeatRecord[]
+}
+
+model HeartbeatRecord {
+  id          String          @id @default(uuid())
+  heartbeatId String
+  status      HeartbeatStatus
+  timestamp   DateTime        @default(now())
+  metadata    Json?
+  heartbeat   Heartbeat       @relation(fields: [heartbeatId], references: [id])
 }
 
 enum HeartbeatStatus {
