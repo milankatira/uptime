@@ -78,7 +78,7 @@ function StatusPageList() {
                           size="icon"
                           variant="ghost"
                           className="text-muted-foreground h-8 w-8 hover:text-white"
-                          onClick={() => router.push(`status-page/${site.id}`)}
+                          onClick={() => window.open(`/status-page/${site.id}`, '_blank', 'noopener,noreferrer')}
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
