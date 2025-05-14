@@ -42,8 +42,6 @@ const HeartbeatDetailPage = () => {
 
   console.log(heartbeatDetails,"heartbeatDetails")
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  // Add these new URLs
   const heartbeatDownUrl = `${API_BACKEND_URL}/api/v1/heartbeat/down/${id}`;
   const heartbeatUpUrl = `${API_BACKEND_URL}/api/v1/heartbeat/up/${id}`;
 
@@ -91,7 +89,9 @@ const HeartbeatDetailPage = () => {
         setHeartbeatDetails(response.data);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error:any) {
-        setError(error.message);
+        toast.error("Failed to fetch heartbeat details", {
+          description: error.message
+        });
       } finally {
         setLoading(false);
       }
@@ -100,6 +100,73 @@ const HeartbeatDetailPage = () => {
     fetchHeartbeatDetails();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 dark:bg-gray-900 w-full">
+        <div className="max-w-full p-6 md:p-8">
+          {/* Shimmer for breadcrumb */}
+          <div className="h-6 w-1/3 bg-gray-700 rounded mb-10 animate-pulse"></div>
+
+          {/* Shimmer for header */}
+          <div className="flex items-center mb-8">
+            <div className="h-12 w-12 bg-gray-700 rounded-full mr-4 animate-pulse"></div>
+            <div className="flex-1">
+              <div className="h-8 w-1/2 bg-gray-700 rounded mb-2 animate-pulse"></div>
+              <div className="h-4 w-3/4 bg-gray-700 rounded animate-pulse"></div>
+            </div>
+          </div>
+
+          {/* Shimmer for action buttons */}
+          <div className="flex gap-3 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-10 w-24 bg-gray-700 rounded animate-pulse"></div>
+            ))}
+          </div>
+
+          {/* Shimmer for URL section */}
+          <div className="bg-dark-lighter rounded-lg border border-dark-border p-6 mb-8">
+            <div className="h-6 w-1/2 bg-gray-700 rounded mb-5 animate-pulse"></div>
+            <div className="h-16 bg-gray-700 rounded mb-4 animate-pulse"></div>
+            <div className="h-16 bg-gray-700 rounded mb-6 animate-pulse"></div>
+            <div className="h-4 w-3/4 bg-gray-700 rounded animate-pulse"></div>
+          </div>
+
+          {/* Shimmer for stats grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-32 bg-gray-700 rounded-lg animate-pulse"></div>
+            ))}
+          </div>
+
+          {/* Shimmer for availability table */}
+          <div className="bg-dark-lighter rounded-lg border border-dark-border overflow-x-auto mb-8">
+            <div className="h-12 bg-gray-700 rounded-t-lg animate-pulse"></div>
+            <div className="p-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-12 bg-gray-700 rounded mb-2 animate-pulse"></div>
+              ))}
+            </div>
+          </div>
+
+          {/* Shimmer for date range selector */}
+          <div className="bg-dark-lighter rounded-lg border border-dark-border p-6 mb-8">
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <div className="h-6 w-16 bg-gray-700 rounded mb-2 animate-pulse"></div>
+                <div className="h-10 bg-gray-700 rounded animate-pulse"></div>
+              </div>
+              <div className="flex-1">
+                <div className="h-6 w-16 bg-gray-700 rounded mb-2 animate-pulse"></div>
+                <div className="h-10 bg-gray-700 rounded animate-pulse"></div>
+              </div>
+              <div className="h-10 w-24 bg-gray-700 rounded animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 w-full">
