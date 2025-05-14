@@ -1,3 +1,5 @@
+'use client'
+import React, { useEffect, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,70 +11,51 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { AlertCircle, Trash2, X } from "lucide-react";
+import { useAxiosInstance } from "@/lib/axiosInstance";
 
 function IncidentsSection() {
-  const incidents = [
-    {
-      id: 1,
-      status: "Ongoing",
-      statusColor: "text-red-500",
-      errorCode: 500,
-      errorBg: "bg-red-900/30",
-      errorColor: "text-red-300",
-      errorText: "Internal Server Error",
-      comments: 0,
-      date: "May 16, 2023, 14:44:23 GMT -2",
-      duration: "5 min",
-    },
-    {
-      id: 2,
-      status: "Resolved",
-      statusColor: "text-green-500",
-      errorCode: 500,
-      errorBg: "bg-red-900/30",
-      errorColor: "text-red-300",
-      errorText: "Internal Server Error",
-      comments: 2,
-      date: "May 11, 2023, 04:44:23 GMT -2",
-      duration: "5 min",
-    },
-    {
-      id: 3,
-      status: "Resolved",
-      statusColor: "text-green-500",
-      errorCode: 404,
-      errorBg: "bg-blue-900/30",
-      errorColor: "text-blue-300",
-      errorText: "Not found",
-      comments: 0,
-      date: "May 10, 2023, 15:23:23 GMT -2",
-      duration: "5 min",
-    },
-    {
-      id: 4,
-      status: "Resolved",
-      statusColor: "text-green-500",
-      errorCode: 500,
-      errorBg: "bg-red-900/30",
-      errorColor: "text-red-300",
-      errorText: "Internal Server Error",
-      comments: 0,
-      date: "Apr 10, 2023, 16:01:23 GMT -2",
-      duration: "5 min",
-    },
-    {
-      id: 5,
-      status: "Resolved",
-      statusColor: "text-green-500",
-      errorCode: "SLOW",
-      errorBg: "bg-yellow-900/30",
-      errorColor: "text-yellow-300",
-      errorText: "Degraded performance",
-      comments: 0,
-      date: "Apr 09, 2023, 14:24:23 GMT -2",
-      duration: "5 min",
-    },
-  ];
+  const [incidentsData, setIncidentsData] = useState([]);
+  const instance = useAxiosInstance();
+
+  useEffect(() => {
+    const fetchIncidents = async () => {
+      try {
+        const response = await instance.get("/api/v1/incidents");
+        setIncidentsData(response.data?.incidents);
+      } catch (error) {
+        console.error("Failed to fetch incidents:", error);
+      }
+    };
+
+    fetchIncidents();
+  }, [instance]);
+
+  const formatDate = (dateString: string | number | Date) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZoneName: 'short'
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    return status === "Ongoing" ? "text-red-500" : "text-green-500";
+  };
+
+  const getErrorColor = (errorCode: string) => {
+    switch (errorCode) {
+      case "HEARTBEAT_DOWN":
+        return { bg: "bg-red-900/30", text: "text-red-300" };
+      // Add more cases as needed
+      default:
+        return { bg: "bg-gray-800", text: "text-gray-300" };
+    }
+  };
 
   return (
     <div className="min-h-screen w-full bg-gray-100 p-10 dark:bg-gray-900">
@@ -96,8 +79,8 @@ function IncidentsSection() {
         </AlertDescription>
       </Alert>
 
-      <div className="mb-14 flex flex-col justify-between lg:flex-row">
-        <div className="mb-10 lg:mb-0 lg:w-1/3">
+      <div className="mb-14 flex justify-between flex-col gap-10">
+        <div className="mb-10 lg:mb-0 w-full">
           <h1 className="text-4xl font-bold">
             Your <span className="text-green-500">incidents</span>{" "}
             <span className="text-green-500">overview</span> on the way!
@@ -109,15 +92,12 @@ function IncidentsSection() {
           </p>
         </div>
 
-        <div className="lg:w-2/3">
+        <div className="w-full">
           <Table className="overflow-hidden rounded-lg border border-gray-800">
             <TableHeader className="bg-gray-900/60">
               <TableRow className="border-b border-gray-800">
                 <TableHead className="font-medium text-gray-400">
                   Status
-                </TableHead>
-                <TableHead className="font-medium text-gray-400">
-                  Monitor
                 </TableHead>
                 <TableHead className="font-medium text-gray-400">
                   Root cause
@@ -135,65 +115,69 @@ function IncidentsSection() {
               </TableRow>
             </TableHeader>
             <TableBody className="bg-gray-900/40">
-              {incidents.map((incident) => (
-                <TableRow
-                  key={incident.id}
-                  className="border-b border-gray-800"
-                >
-                  <TableCell>
-                    <div className="flex items-center">
-                      {incident.status === "Ongoing" ? (
+              {incidentsData?.length > 0 ? incidentsData.map((incident: {
+                id: string;
+                status: string;
+                errorCode: string;
+                errorText: string;
+                comments: number;
+                date: string;
+                duration: number;
+              }) => {
+                const errorColors = getErrorColor(incident.errorCode);
+                return (
+                  <TableRow key={incident.id} className="border-b border-gray-800">
+                    <TableCell>
+                      <div className="flex items-center">
                         <span className="flex items-center">
-                          <span className="mr-2 h-2 w-2 rounded-full bg-red-500"></span>
-                          <span className={incident.statusColor}>
+                          <span className={`mr-2 h-2 w-2 rounded-full ${incident.status === "Ongoing" ? "bg-red-500" : "bg-green-500"}`}></span>
+                          <span className={getStatusColor(incident.status)}>
                             {incident.status}
                           </span>
                         </span>
-                      ) : (
-                        <span className="flex items-center">
-                          <span className="mr-2 h-2 w-2 rounded-full bg-green-500"></span>
-                          <span className={incident.statusColor}>
-                            {incident.status}
-                          </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className={`inline-flex items-center ${errorColors.bg} ${errorColors.text} rounded-md px-2 py-1`}>
+                        <span className="mr-2 font-medium">
+                          {incident.errorCode}
                         </span>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="h-4 w-24 rounded bg-gray-800"></div>
-                  </TableCell>
-                  <TableCell>
-                    <div
-                      className={`inline-flex items-center ${incident.errorBg} ${incident.errorColor} rounded-md px-2 py-1`}
-                    >
-                      <span className="mr-2 font-medium">
-                        {incident.errorCode}
+                        <span className="text-sm">{incident.errorText}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-400">
+                        {incident.comments} comments
                       </span>
-                      <span className="text-sm">{incident.errorText}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-gray-400">
-                      {incident.comments} comments
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-gray-300">{incident.date}</span>
-                  </TableCell>
-                  <TableCell>
-                    <span className="text-gray-400">{incident.duration}</span>
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-gray-500 hover:text-gray-300"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-300">
+                        {formatDate(incident.date)}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-gray-400">
+                        {incident.duration} min
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-gray-500 hover:text-gray-300"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                );
+              }) : (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8 text-gray-400">
+                    No incidents found
                   </TableCell>
                 </TableRow>
-              ))}
+              )}
             </TableBody>
           </Table>
         </div>
