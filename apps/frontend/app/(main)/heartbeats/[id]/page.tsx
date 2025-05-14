@@ -1,5 +1,5 @@
 'use client'
-import React,{ useState } from "react";
+import React,{ useEffect, useState } from "react";
 import {
   AlertTriangle,
   Copy,
@@ -23,15 +23,26 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
 import { API_BACKEND_URL } from "@/config";
+import { useAxiosInstance } from "@/lib/axiosInstance";
 
 const HeartbeatDetailPage = () => {
   const { id } = useParams();
+  const instance=useAxiosInstance();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dateRange, setDateRange] = useState<{from: string, to: string}>({
     from: "2025-05-10",
     to: "2025-05-13"
   });
+  const [heartbeatDetails, setHeartbeatDetails] = useState({
+    name: '',
+    status: '',
+    interval: 0,
+    HeartbeatRecord: []
+  });
 
+  console.log(heartbeatDetails,"heartbeatDetails")
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   // Add these new URLs
   const heartbeatDownUrl = `${API_BACKEND_URL}/api/v1/heartbeat/down/${id}`;
   const heartbeatUpUrl = `${API_BACKEND_URL}/api/v1/heartbeat/up/${id}`;
@@ -68,6 +79,28 @@ const HeartbeatDetailPage = () => {
     });
   };
 
+
+  useEffect(() => {
+    const fetchHeartbeatDetails = async () => {
+      try {
+        const response = await instance.get(`${API_BACKEND_URL}/api/v1/heartbeat-details/${id}`);
+        if (!response) {
+          throw new Error('Failed to fetch heartbeat details');
+        }
+
+        setHeartbeatDetails(response.data);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error:any) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHeartbeatDetails();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-gray-900 w-full">
       <div className="max-w-full p-6 md:p-8">
@@ -78,7 +111,9 @@ const HeartbeatDetailPage = () => {
             Heartbeats
           </Link>
           <span className="text-gray-600 mx-2">/</span>
-          <span className="text-gray-200">dskndnjrd</span>
+          <span className="text-gray-200">
+            {heartbeatDetails?.name}
+          </span>
         </div>
 
         {/* Heartbeat header */}
@@ -89,7 +124,7 @@ const HeartbeatDetailPage = () => {
             </svg>
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-white">dskndnjrd</h1>
+            <h1 className="text-2xl font-semibold text-white">    {heartbeatDetails?.name}</h1>
             <div className="text-gray-400 text-sm flex items-center">
               <span className="mr-2">Pending</span>
               <span className="mx-2">•</span>
