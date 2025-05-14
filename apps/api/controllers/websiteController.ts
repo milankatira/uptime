@@ -335,3 +335,19 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
     `);
   }
 }
+
+export async function getHeartbeatDetails(req: Request, res: Response) {
+  try {
+    const { heartbeatId } = req.params;
+
+    if (!heartbeatId) {
+      return res.status(400).json({ error: "Heartbeat ID is required" });
+    }
+
+    const data = await websiteService.getHeartbeatDetails(heartbeatId);
+    return res.json(data);
+  } catch (error) {
+    console.error("Error getting heartbeat details:", error);
+    return res.status(500).json({ error: "Failed to get heartbeat details" });
+  }
+}

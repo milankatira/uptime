@@ -206,6 +206,23 @@ export class WebsiteService {
       orderBy: { timestamp: 'desc' },
     });
   }
+
+  async getHeartbeatDetails(heartbeatId: string) {
+    const heartbeat = await prismaClient.heartbeat.findUnique({
+      where: { id: heartbeatId },
+      include: {
+        HeartbeatRecord: {
+          orderBy: { timestamp: 'desc' },
+        },
+      },
+    });
+
+    if (!heartbeat) {
+      throw new Error('Heartbeat not found');
+    }
+
+    return heartbeat;
+  }
 }
 
 export const websiteService = new WebsiteService();

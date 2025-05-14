@@ -7,6 +7,7 @@ import {
   getAllMaintenanceWindows,
   getAllWebsites,
   getHeartbeat,
+  getHeartbeatDetails,
   getWebsiteStatus,
   updateHeartbeatStatus,
 } from "../controllers/websiteController";
@@ -49,6 +50,13 @@ router.get(
   "/heartbeat/:status/:heartbeatId",
   // @ts-expect-error - TODO: fix this type error
   updateHeartbeatStatus,
+);
+
+router.get(
+  "/heartbeat-details/:heartbeatId",
+  // @ts-expect-error - TODO: fix this type error
+  authMiddleware,
+  getHeartbeatDetails
 );
 
 export default router;
