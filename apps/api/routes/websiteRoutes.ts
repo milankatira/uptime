@@ -8,6 +8,7 @@ import {
   getAllWebsites,
   getHeartbeat,
   getWebsiteStatus,
+  updateHeartbeatStatus,
 } from "../controllers/websiteController";
 import { authMiddleware } from "../middleware";
 
@@ -42,6 +43,12 @@ router.get(
   // @ts-expect-error - TODO: fix this type error
   authMiddleware,
   getHeartbeat,
+);
+
+router.get(
+  "/heartbeat/:status/:heartbeatId",
+  // @ts-expect-error - TODO: fix this type error
+  updateHeartbeatStatus,
 );
 
 export default router;

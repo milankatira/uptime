@@ -176,6 +176,19 @@ export class WebsiteService {
       },
     });
   }
+
+  async updateHeartbeatStatus(heartbeatId: string, status: string) {
+    const validStatuses = ["UP", "DOWN", "ACHNOWLEDGED"];
+
+    if (!validStatuses.includes(status.toUpperCase())) {
+      throw new Error("Invalid status");
+    }
+
+    return prismaClient.heartbeat.update({
+      where: { id: heartbeatId },
+      data: { status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED' },
+    });
+  }
 }
 
 export const websiteService = new WebsiteService();

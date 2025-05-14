@@ -164,3 +164,14 @@ export async function getHeartbeat(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to get heartbeat" });
   }
 }
+
+export async function updateHeartbeatStatus(req: Request, res: Response) {
+  try {
+    const { heartbeatId, status } = req.params;
+    const result = await websiteService.updateHeartbeatStatus(heartbeatId, status);
+    return res.json(result);
+  } catch (error) {
+    console.error("Error updating heartbeat status:", error);
+    return res.status(500).json({ error: "Failed to update heartbeat status" });
+  }
+}

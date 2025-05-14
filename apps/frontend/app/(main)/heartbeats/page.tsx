@@ -85,7 +85,9 @@ const HeartbeatsPage = () => {
     );
   }
 
+  console.log(filteredHeartbeats,"filteredHeartbeats")
   return (
+
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         <div className="mb-10 flex items-center justify-between">
@@ -138,58 +140,62 @@ const HeartbeatsPage = () => {
           {isExpanded && (
             <div className="border-t border-gray-700">
               {filteredHeartbeats.map((heartbeat) => (
-                <div
-                  key={heartbeat.id}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-gray-700/30"
-                >
-                  <div className="flex items-center">
-                    <div className="mr-4 h-2 w-2 rounded-full bg-gray-400"></div>
-                    <div>
-                      <div className="text-sm text-white">{heartbeat.name}</div>
-                      <div className="mt-1 text-xs text-gray-400">
-                        {heartbeat.status} · {new Date(heartbeat.createdAt).toLocaleDateString()}
+                <Link href={`heartbeats/${heartbeat.id}`} key={heartbeat.id}>
+                  <div
+
+                    className="flex items-center justify-between px-6 py-4 hover:bg-gray-700/30"
+                  >
+                    <div className="flex items-center">
+                      <div className="mr-4 h-2 w-2 rounded-full bg-gray-400"></div>
+                      <div>
+                        <div className="text-sm text-white">{heartbeat.name}</div>
+                        <div className="mt-1 text-xs text-gray-400">
+                          {heartbeat.status} · {new Date(heartbeat.createdAt).toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="mr-2 text-sm text-gray-400">
-                      <span className="inline-flex items-center">
+                    <div className="flex items-center">
+                      <div className="mr-2 text-sm text-gray-400">
+                        <span className="inline-flex items-center">
+                          <svg
+                            className="mr-1 h-4 w-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                            <path
+                              strokeLinecap="round"
+                              strokeWidth="2"
+                              d="M12 6v6l4 2"
+                            />
+                          </svg>
+                          {new Date(heartbeat.updatedAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <div className="text-gray-400">
                         <svg
-                          className="mr-1 h-4 w-4"
+                          className="h-5 w-5"
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
                         >
-                          <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                          <path
-                            strokeLinecap="round"
-                            strokeWidth="2"
-                            d="M12 6v6l4 2"
-                          />
+                          <circle cx="12" cy="12" r="1" />
+                          <circle cx="19" cy="12" r="1" />
+                          <circle cx="5" cy="12" r="1" />
                         </svg>
-                        {new Date(heartbeat.updatedAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="text-gray-400">
-                      <svg
-                        className="h-5 w-5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        >
-                        <circle cx="12" cy="12" r="1" />
-                        <circle cx="19" cy="12" r="1" />
-                        <circle cx="5" cy="12" r="1" />
-                      </svg>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
         </div>
       </div>
     </div>
+
+
   );
 };
 

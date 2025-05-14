@@ -21,15 +21,16 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import Link from "next/link";
+import { useParams } from 'next/navigation';
 
 const HeartbeatDetailPage = () => {
+  const { id } = useParams();
+  const heartbeatUrl = `https://uptime.betterstack.com/api/v1/heartbeat/${id}`;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dateRange, setDateRange] = useState<{from: string, to: string}>({
     from: "2025-05-10",
     to: "2025-05-13"
   });
-
-  const heartbeatUrl = "https://uptime.betterstack.com/api/v1/heartbeat/7hvyqF2IqNFI5bJNDpXxW9R";
 
   const mockStats = {
     currentPending: {
