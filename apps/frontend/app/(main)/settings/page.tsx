@@ -1,370 +1,139 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client'
+import React from "react";
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
+  CardTitle
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
   FormDescription,
   FormField,
   FormItem,
-  FormLabel,
+  FormLabel
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Bell, Globe, Shield, User, Users } from "lucide-react";
+import { ArrowLeft, Bell, Moon, Sun } from "lucide-react";
+
 import Link from "next/link";
-import { useState } from "react";
+import { useTheme } from "next-themes";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 const SettingsPage = () => {
-  const [activeTab, setActiveTab] = useState("product");
+  const { setTheme } = useTheme();
 
-  const productForm = useForm({
+  const settingsForm = useForm({
     defaultValues: {
-      siteName: "UptimeRobot",
-      siteDescription: "Monitor your website uptime and performance.",
-      publicPage: true,
-      allowSubscribers: true,
       emailNotifications: true,
     },
   });
 
-  const userForm = useForm({
-    defaultValues: {
-      name: "John Doe",
-      email: "john@example.com",
-      notifications: true,
-      marketingEmails: false,
-    },
-  });
-
-  const handleProductSubmit = (data: never) => {
-    console.log("Product settings:", data);
-    toast("Settings updated");
-  };
-
-  const handleUserSubmit = (data: never) => {
-    console.log("User settings:", data);
-    toast("User settings updated");
+  const handleSettingsSubmit = (data: never) => {
+    console.log("Notification settings:", data);
+    toast("Notification settings updated");
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
-      <div className="border-dark-border flex items-center justify-between border-b p-4">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col w-full">
+      <div className="flex justify-between items-center p-4 border-b w-full">
         <div className="flex items-center gap-3">
-          <Link href="/" className="text-gray-300 hover:text-white">
+          <Link href="/">
             <ArrowLeft className="h-5 w-5" />
           </Link>
-          <h1 className="text-xl font-medium text-white">Settings</h1>
+          <h1 className="text-xl font-medium">Settings</h1>
         </div>
       </div>
 
-      <div className="mx-auto max-w-5xl px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="bg-dark-lighter mb-8 grid max-w-[400px] grid-cols-2">
-            <TabsTrigger
-              value="product"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <Shield className="mr-2 h-4 w-4" />
-              Product Settings
-            </TabsTrigger>
-            <TabsTrigger
-              value="user"
-              className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-            >
-              <User className="mr-2 h-4 w-4" />
-              User Settings
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="product">
-            <Card className="bg-dark-lighter border-dark-border">
-              <CardHeader>
-                <CardTitle className="text-white">
-                  Product Configuration
-                </CardTitle>
-                <CardDescription className="text-gray-400">
-                  Configure how your status page works and appears to visitors.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Form {...productForm}>
-                  <form
-                    onSubmit={productForm.handleSubmit((data) =>
-                      handleProductSubmit(data as never),
-                    )}
-                    className="space-y-6"
-                  >
-                    <FormField
-                      control={productForm.control}
-                      name="siteName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">
-                            Site Name
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Your status page name"
-                              {...field}
-                              className="bg-dark border-dark-border text-white"
-                            />
-                          </FormControl>
-                          <FormDescription className="text-gray-400">
-                            This will be displayed as the title of your status
-                            page.
-                          </FormDescription>
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={productForm.control}
-                      name="siteDescription"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">
-                            Description
-                          </FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Describe your status page purpose"
-                              {...field}
-                              className="bg-dark border-dark-border text-white"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="space-y-4">
-                      <FormField
-                        control={productForm.control}
-                        name="publicPage"
-                        render={({ field }) => (
-                          <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-white">
-                                <div className="flex items-center">
-                                  <Globe className="mr-2 h-4 w-4" />
-                                  Public Status Page
-                                </div>
-                              </FormLabel>
-                              <FormDescription className="text-gray-400">
-                                Make your status page publicly accessible.
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={productForm.control}
-                        name="allowSubscribers"
-                        render={({ field }) => (
-                          <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-white">
-                                <div className="flex items-center">
-                                  <Users className="mr-2 h-4 w-4" />
-                                  Allow Subscribers
-                                </div>
-                              </FormLabel>
-                              <FormDescription className="text-gray-400">
-                                Let visitors subscribe to incident
-                                notifications.
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={productForm.control}
-                        name="emailNotifications"
-                        render={({ field }) => (
-                          <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-white">
-                                <div className="flex items-center">
-                                  <Bell className="mr-2 h-4 w-4" />
-                                  Email Notifications
-                                </div>
-                              </FormLabel>
-                              <FormDescription className="text-gray-400">
-                                Send email notifications on status changes.
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <Button type="submit" className="w-full">
-                      Save Product Settings
+      <div className="max-w-5xl mx-auto ml-0 py-8 px-4">
+        <Card className="bg-dark-lighter border-dark-border mb-6">
+          <CardHeader>
+            <CardTitle>Theme Preferences</CardTitle>
+            <CardDescription className="text-gray-400">
+              Choose how you want the application to appear
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-white mb-3">Select Theme</h3>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="default" className="w-full">
+                      <Sun className="h-[1.2rem] w-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+                      <Moon className="absolute h-[1.2rem] w-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                      <span className="sr-only">Toggle theme</span>
                     </Button>
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-          </TabsContent>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="start">
+                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                      Light
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                      Dark
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                      System
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          <TabsContent value="user">
-            <Card className="bg-dark-lighter border-dark-border">
-              <CardHeader>
-                <CardTitle className="text-white">User Preferences</CardTitle>
-                <CardDescription className="text-gray-400">
-                  Manage your personal account settings and preferences.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Form {...userForm}>
-                  <form
-                    onSubmit={userForm.handleSubmit((data) =>
-                      handleUserSubmit(data as never),
-                    )}
-                    className="space-y-6"
-                  >
-                    <FormField
-                      control={userForm.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">
-                            Full Name
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Your name"
-                              {...field}
-                              className="bg-dark border-dark-border text-white"
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
-                    />
+        <Card className="bg-dark-lighter border-dark-border">
+          <CardHeader>
+            <CardTitle className="text-white">Notification Settings</CardTitle>
+            <CardDescription className="text-gray-400">
+              Manage your email notification preferences
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Form {...settingsForm}>
+              <form onSubmit={settingsForm.handleSubmit((data) => handleSettingsSubmit(data as never))} className="space-y-6">
+                <FormField
+                  control={settingsForm.control}
+                  name="emailNotifications"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border border-dark-border p-4">
+                      <div className="space-y-0.5">
+                        <FormLabel className="text-white">
+                          <div className="flex items-center">
+                            <Bell className="mr-2 h-4 w-4" />
+                            Email Notifications
+                          </div>
+                        </FormLabel>
+                        <FormDescription className="text-gray-400 mt-1">
+                          Receive email notifications on status changes and alerts.
+                        </FormDescription>
+                      </div>
+                      <FormControl>
+                        <Switch
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-                    <FormField
-                      control={userForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="text-white">
-                            Email Address
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              type="email"
-                              placeholder="your@email.com"
-                              {...field}
-                              className="bg-dark border-dark-border text-white"
-                            />
-                          </FormControl>
-                          <FormDescription className="text-gray-400">
-                            {`We'll never share your email with anyone else.`}
-                          </FormDescription>
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="space-y-4">
-                      <FormField
-                        control={userForm.control}
-                        name="notifications"
-                        render={({ field }) => (
-                          <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
-                            <div className="space-y-0.5">
-                              <FormLabel className="text-white">
-                                <div className="flex items-center">
-                                  <Bell className="mr-2 h-4 w-4" />
-                                  Notifications
-                                </div>
-                              </FormLabel>
-                              <FormDescription className="text-gray-400">
-                                Receive notifications about your services.
-                              </FormDescription>
-                            </div>
-                            <FormControl>
-                              <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={userForm.control}
-                        name="marketingEmails"
-                        render={({ field }) => (
-                          <FormItem className="flex items-start space-y-0 space-x-3">
-                            <FormControl>
-                              <Checkbox
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                              />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                              <FormLabel className="text-white">
-                                Marketing emails
-                              </FormLabel>
-                              <FormDescription className="text-gray-400">
-                                Receive emails about new features and
-                                improvements.
-                              </FormDescription>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Button type="submit" className="mb-2 w-full">
-                        Save User Settings
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="border-destructive text-destructive hover:text-destructive-foreground hover:bg-destructive w-full"
-                      >
-                        Delete Account
-                      </Button>
-                    </div>
-                  </form>
-                </Form>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+                <Button type="submit" className="w-full">Save Settings</Button>
+              </form>
+            </Form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
