@@ -184,9 +184,26 @@ export class WebsiteService {
       throw new Error("Invalid status");
     }
 
-    return prismaClient.heartbeat.update({
+    const updatedHeartbeat = await prismaClient.heartbeat.update({
       where: { id: heartbeatId },
       data: { status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED' },
+    });
+
+    await prismaClient.heartbeatRecord.create({
+      data: {
+        heartbeatId: heartbeatId,
+        status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED',
+        timestamp: new Date(),
+      },
+    });
+
+    return updatedHeartbeat;
+  }
+
+  async getHeartbeatRecords(heartbeatId: string) {
+    return prismaClient.heartbeatRecord.findMany({
+      where: { heartbeatId },
+      orderBy: { timestamp: 'desc' },
     });
   }
 }
