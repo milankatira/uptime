@@ -187,6 +187,7 @@ export class WebsiteService {
     const updatedHeartbeat = await prismaClient.heartbeat.update({
       where: { id: heartbeatId },
       data: { status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED' },
+      include: { user: true }
     });
 
     await prismaClient.heartbeatRecord.create({
@@ -197,8 +198,23 @@ export class WebsiteService {
       },
     });
 
+    if (status.toUpperCase() === "DOWN") {
+      if (updatedHeartbeat) {
+        await prismaClient.incident.create({
+          data: {
+            status: "Ongoing",
+            errorCode: "HEARTBEAT_DOWN",
+            errorText: `Heartbeat ${updatedHeartbeat.name} is down`,
+            date: new Date(),
+            duration: 0,
+            userId: updatedHeartbeat.userId,
+          }
+        });
+      }
+    }
+
     return updatedHeartbeat;
-  }
+}
 
   async getHeartbeatRecords(heartbeatId: string) {
     return prismaClient.heartbeatRecord.findMany({
