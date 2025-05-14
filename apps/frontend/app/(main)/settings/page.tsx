@@ -30,9 +30,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useAxiosInstance } from "@/lib/axiosInstance";
+import { API_BACKEND_URL } from "@/config";
 
 const SettingsPage = () => {
   const { setTheme } = useTheme();
+  const instance = useAxiosInstance();
 
   const settingsForm = useForm({
     defaultValues: {
@@ -40,9 +43,16 @@ const SettingsPage = () => {
     },
   });
 
-  const handleSettingsSubmit = (data: never) => {
-    console.log("Notification settings:", data);
-    toast("Notification settings updated");
+  const handleSettingsSubmit = async (data: { emailNotifications: boolean }) => {
+    try {
+      await instance.put(`${API_BACKEND_URL}/api/v1/user/preferences`, {
+        emailNotifications: data.emailNotifications
+      });
+      toast.success("Notification settings updated successfully");
+    } catch (error) {
+      console.error("Failed to update settings:", error);
+      toast.error("Failed to update notification settings");
+    }
   };
 
   return (

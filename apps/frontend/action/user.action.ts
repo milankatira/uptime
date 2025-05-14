@@ -27,3 +27,22 @@ export async function syncUserInDb() {
     throw error;
   }
 }
+
+export async function getUserFromDb() {
+  try {
+    const auth = await currentUser();
+    if (!auth?.id) return null;
+
+    return await prismaClient.user.findFirst({
+      where: { externalId: auth.id },
+      select: {
+        emailNotifications: true,
+        email: true,
+        imageUrl: true
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+}
