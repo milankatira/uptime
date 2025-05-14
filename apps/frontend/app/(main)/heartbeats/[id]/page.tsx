@@ -22,15 +22,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { toast } from "sonner";
 import Link from "next/link";
 import { useParams } from 'next/navigation';
+import { API_BACKEND_URL } from "@/config";
 
 const HeartbeatDetailPage = () => {
   const { id } = useParams();
-  const heartbeatUrl = `https://uptime.betterstack.com/api/v1/heartbeat/${id}`;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dateRange, setDateRange] = useState<{from: string, to: string}>({
     from: "2025-05-10",
     to: "2025-05-13"
   });
+
+  // Add these new URLs
+  const heartbeatDownUrl = `${API_BACKEND_URL}/api/v1/heartbeat/down/${id}`;
+  const heartbeatUpUrl = `${API_BACKEND_URL}/api/v1/heartbeat/up/${id}`;
 
   const mockStats = {
     currentPending: {
@@ -49,13 +53,6 @@ const HeartbeatDetailPage = () => {
     { period: "Last 365 days", availability: "100.0000%", downtime: "none", incidents: 0, longestIncident: "none", avgIncident: "none" },
     { period: "All time (Last 4 days)", availability: "100.0000%", downtime: "none", incidents: 0, longestIncident: "none", avgIncident: "none" }
   ];
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(heartbeatUrl);
-    toast.success("URL copied to clipboard", {
-      description: "The heartbeat URL has been copied to your clipboard"
-    });
-  };
 
   const handleSendTestAlert = () => {
     // This would handle sending a test alert
@@ -141,24 +138,45 @@ const HeartbeatDetailPage = () => {
         {/* URL instruction section */}
         <div className="bg-dark-lighter rounded-lg border border-dark-border p-6 mb-8">
           <div className="flex justify-between items-center mb-5">
-            <p className="text-gray-300">Make a HEAD, GET, or a POST request to the following URL</p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="text-gray-400 hover:text-gray-200"
-              onClick={handleCopy}
-            >
-              <Copy className="h-4 w-4 mr-2" />
-              Copy to clipboard
-            </Button>
+            <p className="text-gray-300">Make a HEAD, GET, or a POST request to the following URLs</p>
           </div>
 
+          {/* Down URL */}
+          <div className="bg-dark border border-dark-border rounded p-4 mb-4">
+            <div className="flex justify-between items-center">
+              <code className="text-red-500 break-all">{heartbeatDownUrl}</code>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-400 hover:text-gray-200"
+                onClick={() => navigator.clipboard.writeText(heartbeatDownUrl)}
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy
+              </Button>
+            </div>
+            <p className="text-sm text-gray-400 mt-2">Use this URL to report a failure (500 status)</p>
+          </div>
+
+          {/* Up URL */}
           <div className="bg-dark border border-dark-border rounded p-4 mb-6">
-            <code className="text-green-500 break-all">{heartbeatUrl}</code>
+            <div className="flex justify-between items-center">
+              <code className="text-green-500 break-all">{heartbeatUpUrl}</code>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-gray-400 hover:text-gray-200"
+                onClick={() => navigator.clipboard.writeText(heartbeatUpUrl)}
+              >
+                <Copy className="h-4 w-4 mr-2" />
+                Copy
+              </Button>
+            </div>
+            <p className="text-sm text-gray-400 mt-2">Use this URL to report a successful heartbeat</p>
           </div>
 
           <p className="text-sm text-gray-400">
-            You can directly report a failure by appending <code className="text-gray-300">/fail</code> or <code className="text-gray-300">/&lt;exit-code&gt;</code> to the URL. Read our <a href="#" className="text-blue-400 hover:underline">documentation</a> for more details.
+            You can also append <code className="text-gray-300">/fail</code> or <code className="text-gray-300">/&lt;exit-code&gt;</code> to the URL. Read our <a href="#" className="text-blue-400 hover:underline">documentation</a> for more details.
           </p>
         </div>
 
