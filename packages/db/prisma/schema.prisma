@@ -8,15 +8,16 @@ datasource db {
 }
 
 model User {
-  id              String    @id @default(uuid())
-  email           String
-  imageUrl        String?
-  externalId      String    @unique
-  emailNotifications Boolean @default(true)
-  websites        Website[]
-  Heartbeat         Heartbeat[]
-  MaintenanceWindow MaintenanceWindow[]
-  Incident          Incident[]
+  id                 String              @id @default(uuid())
+  email              String
+  imageUrl           String?
+  externalId         String              @unique
+  emailNotifications Boolean             @default(true)
+  websites           Website[]
+  Heartbeat          Heartbeat[]
+  MaintenanceWindow  MaintenanceWindow[]
+  Incident           Incident[]
+  FCMTOKEN           String?
 }
 
 model Website {

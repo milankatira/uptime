@@ -49,10 +49,10 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
     <div className="relative flex items-center justify-center">
       <div
         className={`h-3.5 w-3.5 rounded-full ${status === "good"
-            ? "bg-emerald-500 dark:bg-emerald-400"
-            : status === "bad"
-              ? "bg-rose-500 dark:bg-rose-400"
-              : "bg-gray-400 dark:bg-gray-500"
+          ? "bg-emerald-500 dark:bg-emerald-400"
+          : status === "bad"
+            ? "bg-rose-500 dark:bg-rose-400"
+            : "bg-gray-400 dark:bg-gray-500"
           }`}
       />
       {status === "good" && (
@@ -96,10 +96,10 @@ function UptimeTicks({
           >
             <div
               className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
-                  ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
-                  : tick === "bad"
-                    ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
-                    : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
+                ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
+                : tick === "bad"
+                  ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
+                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
                 }`}
               style={{ alignSelf: "flex-end" }}
             />
@@ -296,16 +296,26 @@ function WebsiteCard({
 
 function LoadingSpinner() {
   return (
-    <div className="flex flex-col items-center justify-center py-10">
-      <div className="relative">
-        <div className="h-16 w-16 animate-spin rounded-full border-4 border-green-200 border-t-green-600 dark:border-green-900 dark:border-t-green-400"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Globe className="h-6 w-6 text-green-600 dark:text-green-400" />
-        </div>
+    <div className="space-y-4 w-full">
+      {/* Shimmer effect for summary cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            className="h-32 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-700"
+          />
+        ))}
       </div>
-      <p className="mt-4 animate-pulse text-gray-600 dark:text-gray-300">
-        Loading websites...
-      </p>
+
+      {/* Shimmer effect for website cards */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="h-40 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-700"
+          />
+        ))}
+      </div>
     </div>
   );
 }
@@ -605,11 +615,8 @@ function App() {
       <div className="mx-auto px-4 py-6 sm:px-6">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="rounded-xl bg-green-600 p-2 dark:bg-green-500">
-              <Globe className="h-7 w-7 text-white" />
-            </div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Uptime Monitor
+              Dashboard
             </h1>
           </div>
           <div className="flex items-center space-x-3">

@@ -1,9 +1,10 @@
 "use client";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import { useNotifications } from "@/hooks/useNotifications";
 import { cn } from "@/lib/utils";
 import { UserButton } from "@clerk/nextjs";
 import { IconAlertCircle, IconApi, IconHeartbeat } from "@tabler/icons-react";
-import { LayoutDashboard, Radio, Settings, Users } from "lucide-react";
+import { LayoutDashboard, Radio, Settings, ShieldCheck, Users } from "lucide-react";
 import { motion } from "motion/react";
 import React, { useState } from "react";
 
@@ -60,6 +61,8 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
     },
   ];
   const [open, setOpen] = useState(false);
+
+  useNotifications();
   return (
     <div
       className={cn(
@@ -94,13 +97,13 @@ export const Logo = () => {
       href="#"
       className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
     >
-      <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
+      <ShieldCheck className="text-primary" />
       <motion.span
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="font-medium whitespace-pre text-black dark:text-white"
       >
-        Uptime Monitor
+        Uptime
       </motion.span>
     </a>
   );
