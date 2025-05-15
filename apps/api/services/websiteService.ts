@@ -1,4 +1,8 @@
+import { IncidentNotification } from '@dub/email/emails/IncidentNotification';
+
+import {sendEmail } from '@dub/email/send-via-nodemailer';
 import { prismaClient } from "db/client";
+import type { IncidentStatus } from '../types/index';
 
 export class WebsiteService {
   /**
@@ -181,45 +185,100 @@ export class WebsiteService {
     const validStatuses = ["UP", "DOWN", "ACHNOWLEDGED"];
 
     if (!validStatuses.includes(status.toUpperCase())) {
-      throw new Error("Invalid status");
+      throw new Error("Invalid status: " + status);
+    }
+
+    const currentHeartbeat = await prismaClient.heartbeat.findUnique({
+      where: { id: heartbeatId },
+      include: { user: true }, // Ensure user is included to get email and notification preferences
+    });
+
+    if (!currentHeartbeat) {
+      throw new Error("Heartbeat not found");
+    }
+    if (!currentHeartbeat.user) {
+        console.warn(`Heartbeat ${heartbeatId} does not have an associated user. Skipping email notification.`);
     }
 
     const updatedHeartbeat = await prismaClient.heartbeat.update({
       where: { id: heartbeatId },
-      data: { status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED' },
-      include: { user: true }
+      data: { status: status.toUpperCase() as "UP" | "DOWN" | "ACHNOWLEDGED" },
+      include: { user: true },
     });
+
+    // Send email notification if status is DOWN and user has notifications enabled
+    if (status.toUpperCase() === "DOWN" && updatedHeartbeat?.user && updatedHeartbeat?.user?.email) {
+      try {
+        const incidentProps = {
+          userName: updatedHeartbeat.user.email,
+          heartbeatName: updatedHeartbeat.name,
+          incidentCause: `Heartbeat "${updatedHeartbeat.name}" reported as DOWN.`,
+          startedAt: new Date().toLocaleString(),
+        };
+
+        await sendEmail(
+          "milankatira07@gmail.com",
+          `🔴 Incident Alert: ${updatedHeartbeat.name} is DOWN`,
+          IncidentNotification,
+          incidentProps
+        );
+        console.log(`Incident notification email sent to ${updatedHeartbeat.user.email}`);
+      } catch (emailError) {
+        console.error(`Failed to send incident notification email:`, emailError);
+      }
+    }
 
     await prismaClient.heartbeatRecord.create({
       data: {
         heartbeatId: heartbeatId,
-        status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED',
+        status: status.toUpperCase() as "UP" | "DOWN" | "ACHNOWLEDGED",
         timestamp: new Date(),
       },
     });
 
     if (status.toUpperCase() === "DOWN") {
-      if (updatedHeartbeat) {
-        await prismaClient.incident.create({
-          data: {
-            status: "Ongoing",
-            errorCode: "HEARTBEAT_DOWN",
-            errorText: `Heartbeat ${updatedHeartbeat.name} is down`,
-            date: new Date(),
-            duration: 0,
-            userId: updatedHeartbeat.userId,
-          }
+      // Ensure incident is created after status update and email attempt
+      await prismaClient.incident.create({
+        data: {
+          status: "Ongoing", // Or "Investigating"
+          errorCode: "HEARTBEAT_DOWN",
+          errorText: `Heartbeat ${updatedHeartbeat.name} is down`,
+          date: new Date(),
+          duration: 0, // Duration can be calculated later when resolved
+          userId: updatedHeartbeat.userId,
+        },
+      });
+    } else if (status.toUpperCase() === "UP") {
+        // Optionally, find and resolve open incidents for this heartbeat
+        const openIncident = await prismaClient.incident.findFirst({
+            where: {
+                status: "Ongoing", // Or other active statuses
+            },
+            orderBy: {
+                date: 'desc',
+            }
         });
-      }
+        if (openIncident) {
+            const duration = Math.round((new Date().getTime() - new Date(openIncident.date).getTime()) / 1000); // Duration in seconds
+            await prismaClient.incident.update({
+                where: { id: openIncident.id },
+                data: {
+                    status: "Resolved",
+                    duration: duration,
+                }
+            });
+            // Optionally send a "Resolved" notification email here
+        }
     }
 
+
     return updatedHeartbeat;
-}
+  }
 
   async getHeartbeatRecords(heartbeatId: string) {
     return prismaClient.heartbeatRecord.findMany({
       where: { heartbeatId },
-      orderBy: { timestamp: 'desc' },
+      orderBy: { timestamp: "desc" },
     });
   }
 
@@ -228,13 +287,13 @@ export class WebsiteService {
       where: { id: heartbeatId },
       include: {
         HeartbeatRecord: {
-          orderBy: { timestamp: 'desc' },
+          orderBy: { timestamp: "desc" },
         },
       },
     });
 
     if (!heartbeat) {
-      throw new Error('Heartbeat not found');
+      throw new Error("Heartbeat not found");
     }
 
     return heartbeat;

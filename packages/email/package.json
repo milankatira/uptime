@@ -32,6 +32,10 @@
       "import": "./src/templates/*.tsx",
       "require": "./src/templates/*.tsx"
     },
+    "./emails/*": {
+      "import": "./src/emails/*.tsx",
+      "require": "./src/emails/*.tsx"
+    },
     "./resend": {
       "import": "./src/resend/index.ts",
       "require": "./src/resend/index.ts"
