@@ -8,22 +8,32 @@ export class WebsiteService {
   /**
    * Create a new website
    */
-  async createWebsite(userId: string, url: string) {
-    // Check if user exists
+  async createWebsite(userId: string, url: string, orgId?: string) {
     const user = await prismaClient.user.findUnique({
       where: { externalId: userId },
     });
     if (!user) {
       throw new Error("User does not exist");
     }
-    const data = await prismaClient.website.create({
+
+    if (orgId && !user.cleakOrganizationIds.includes(orgId)) {
+      await prismaClient.user.update({
+        where: { id: user.id },
+        data: {
+          cleakOrganizationIds: {
+            push: orgId
+          }
+        }
+      });
+    }
+
+    return await prismaClient.website.create({
       data: {
         userId: user.id,
         url,
+        orgId,  // Add this line to include orgId in the creation
       },
     });
-
-    return { id: data.id };
   }
 
   /**
@@ -44,18 +54,26 @@ export class WebsiteService {
   /**
    * Get all websites for a user
    */
-  async getAllWebsites(userId: string) {
+  async getAllWebsites(userId: string, orgId?: string) {
     const user = await prismaClient.user.findUnique({
       where: { externalId: userId },
     });
     if (!user) {
       throw new Error("User does not exist");
     }
+
+    const whereClause: any = {
+      userId: user.id,
+      disabled: false,
+    };
+
+    if (orgId) {
+      whereClause.orgId = orgId;
+    }
+
+    console.log(whereClause,"whereClause")
     const websites = await prismaClient.website.findMany({
-      where: {
-        userId: user.id,
-        disabled: false,
-      },
+      where: whereClause,
       include: {
         ticks: true,
       },

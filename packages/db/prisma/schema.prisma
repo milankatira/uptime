@@ -25,6 +25,7 @@ model Website {
   id       String        @id @default(uuid())
   url      String
   userId   String
+  orgId    String?       // Add this line for optional organization ID
   interval Int           @default(60)
   ticks    WebsiteTick[]
   disabled Boolean       @default(false)

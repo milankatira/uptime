@@ -8,12 +8,13 @@ export async function createWebsite(req: Request, res: Response) {
   try {
     const userId = req.userId!;
     const { url } = req.body;
+    const orgId = req.headers['orgid'] as string | undefined;
 
     if (!url) {
       return res.status(400).json({ error: "URL is required" });
     }
 
-    const result = await websiteService.createWebsite(userId, url);
+    const result = await websiteService.createWebsite(userId, url, orgId);
     return res.json(result);
   } catch (error) {
     console.error("Error creating website:", error);
@@ -51,7 +52,8 @@ export async function getWebsiteStatus(req: Request, res: Response) {
 export async function getAllWebsites(req: Request, res: Response) {
   try {
     const userId = req.userId!;
-    const result = await websiteService.getAllWebsites(userId);
+    const orgId = req.headers['orgid'] as string | undefined;
+    const result = await websiteService.getAllWebsites(userId, orgId);
     return res.json(result);
   } catch (error) {
     console.error("Error getting websites:", error);
