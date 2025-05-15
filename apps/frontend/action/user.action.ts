@@ -46,3 +46,28 @@ export async function getUserFromDb() {
     throw error;
   }
 }
+
+export async function updateUserOrganizationIds(organizationIds: string[]) {
+  try {
+    const auth = await currentUser();
+    if (!auth?.id) return null;
+
+    const user = await prismaClient.user.findFirst({
+      where: { externalId: auth.id },
+    });
+
+    if (!user) {
+      throw new Error("User not found in database");
+    }
+
+    return await prismaClient.user.update({
+      where: { id: user.id },
+      data: {
+        cleakOrganizationIds: organizationIds,
+      },
+    });
+  } catch (error) {
+    console.error("Error updating user organization IDs:", error);
+    throw error;
+  }
+}

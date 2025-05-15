@@ -19,7 +19,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
 
-import { syncUserInDb } from "@/action/user.action";
+import { syncUserInDb, updateUserOrganizationIds } from "@/action/user.action";
 import { Button } from "@/components/ui/button";
 
 type UptimeStatus = "good" | "bad" | "unknown";
@@ -553,6 +553,7 @@ function App() {
         setLoading(false);
       });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -602,6 +603,16 @@ function App() {
   };
 
   const { user } = useUser();
+
+  useEffect(() => {
+    if (user?.organizationMemberships) {
+      const organizationIds = user.organizationMemberships.map(m => m.id);
+      updateUserOrganizationIds(organizationIds)
+        .catch(err => console.error("Failed to update organization IDs:", err));
+    }
+  }, [user?.organizationMemberships]);
+
+  console.log(user?.organizationMemberships,"user?.organizationMemberships")
 
   if (user?.organizationMemberships?.length === 0) {
     return (

@@ -5,7 +5,7 @@ import axios from "axios";
 import { useMemo } from "react";
 
 export function useAxiosInstance() {
-  const { getToken } = useAuth();
+  const { getToken, orgId } = useAuth();
   return useMemo(() => {
     const instance = axios.create({
       baseURL: API_BACKEND_URL,
@@ -15,9 +15,12 @@ export function useAxiosInstance() {
       if (token) {
         config.headers = config.headers || {};
         config.headers["Authorization"] = `Bearer ${token}`;
+        if (orgId) {
+          config.headers["orgId"] = orgId;
+        }
       }
       return config;
     });
     return instance;
-  }, [getToken]);
+  }, [getToken, orgId]);
 }

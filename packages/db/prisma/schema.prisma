@@ -18,6 +18,7 @@ model User {
   MaintenanceWindow  MaintenanceWindow[]
   Incident           Incident[]
   FCMTOKEN           String?
+  cleakOrganizationIds String[]           @default([]) @map("cleak_organization_ids")
 }
 
 model Website {

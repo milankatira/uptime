@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import React, { createContext, useContext, useState } from "react";
 
 interface Links {
@@ -145,7 +146,8 @@ export const MobileSidebar = ({
               >
                 <IconX />
               </div>
-              {children}
+               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {children as any}
             </motion.div>
           )}
         </AnimatePresence>
@@ -164,7 +166,7 @@ export const SidebarLink = ({
 }) => {
   const { open, animate } = useSidebar();
   return (
-    <a
+    <Link
       href={link.href}
       className={cn(
         "group/sidebar flex items-center justify-start gap-2 py-2",
@@ -172,7 +174,8 @@ export const SidebarLink = ({
       )}
       {...props}
     >
-      {link.icon}
+      {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+      {link.icon as unknown as any}
 
       <motion.span
         animate={{
@@ -183,6 +186,6 @@ export const SidebarLink = ({
       >
         {link.label}
       </motion.span>
-    </a>
+    </Link>
   );
 };
