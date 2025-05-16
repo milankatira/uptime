@@ -1,12 +1,13 @@
-'use client'
+"use client";
 import React from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import {
   Form,
@@ -14,26 +15,25 @@ import {
   FormDescription,
   FormField,
   FormItem,
-  FormLabel
+  FormLabel,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Bell, Moon, Sun } from "lucide-react";
 
-import Link from "next/link";
-import { useTheme } from "next-themes";
+import { getUserFromDb } from "@/action/user.action";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { API_BACKEND_URL } from "@/config";
+import { useAxiosInstance } from "@/lib/axiosInstance";
+import { useTheme } from "next-themes";
+import Link from "next/link";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useAxiosInstance } from "@/lib/axiosInstance";
-import { API_BACKEND_URL } from "@/config";
-import { useEffect } from "react";
-import { getUserFromDb } from "@/action/user.action";
 
 const SettingsPage = () => {
   const { setTheme } = useTheme();
@@ -44,8 +44,11 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const response = await getUserFromDb()
-        settingsForm.setValue('emailNotifications', response?.emailNotifications);
+        const response = await getUserFromDb();
+        settingsForm.setValue(
+          "emailNotifications",
+          response?.emailNotifications,
+        );
       } catch (error) {
         console.error("Failed to fetch preferences:", error);
         toast.error("Failed to load settings");
@@ -55,10 +58,12 @@ const SettingsPage = () => {
     fetchPreferences();
   }, [instance, settingsForm]);
 
-  const handleSettingsSubmit = async (data: { emailNotifications: boolean }) => {
+  const handleSettingsSubmit = async (data: {
+    emailNotifications: boolean;
+  }) => {
     try {
       await instance.put(`${API_BACKEND_URL}/api/v1/user/preferences`, {
-        emailNotifications: data.emailNotifications
+        emailNotifications: data.emailNotifications,
       });
       toast.success("Notification settings updated successfully");
     } catch (error) {
@@ -68,8 +73,8 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 flex flex-col w-full">
-      <div className="flex justify-between items-center p-4 border-b w-full">
+    <div className="flex min-h-screen w-full flex-col bg-gray-100 dark:bg-gray-900">
+      <div className="flex w-full items-center justify-between border-b p-4">
         <div className="flex items-center gap-3">
           <Link href="/">
             <ArrowLeft className="h-5 w-5" />
@@ -78,7 +83,7 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto ml-0 py-8 px-4">
+      <div className="mx-auto ml-0 max-w-5xl px-4 py-8">
         <Card className="bg-dark-lighter border-dark-border mb-6">
           <CardHeader>
             <CardTitle>Theme Preferences</CardTitle>
@@ -89,7 +94,9 @@ const SettingsPage = () => {
           <CardContent>
             <div className="space-y-6">
               <div>
-                <h3 className="text-sm font-medium text-white mb-3">Select Theme</h3>
+                <h3 className="mb-3 text-sm font-medium text-white">
+                  Select Theme
+                </h3>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="default" className="w-full">
@@ -124,12 +131,17 @@ const SettingsPage = () => {
           </CardHeader>
           <CardContent>
             <Form {...settingsForm}>
-              <form onSubmit={settingsForm.handleSubmit((data) => handleSettingsSubmit(data as never))} className="space-y-6">
+              <form
+                onSubmit={settingsForm.handleSubmit((data) =>
+                  handleSettingsSubmit(data as never),
+                )}
+                className="space-y-6"
+              >
                 <FormField
                   control={settingsForm.control}
                   name="emailNotifications"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border border-dark-border p-4">
+                    <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
                         <FormLabel className="text-white">
                           <div className="flex items-center">
@@ -137,8 +149,9 @@ const SettingsPage = () => {
                             Email Notifications
                           </div>
                         </FormLabel>
-                        <FormDescription className="text-gray-400 mt-1">
-                          Receive email notifications on status changes and alerts.
+                        <FormDescription className="mt-1 text-gray-400">
+                          Receive email notifications on status changes and
+                          alerts.
                         </FormDescription>
                       </div>
                       <FormControl>
@@ -151,7 +164,9 @@ const SettingsPage = () => {
                   )}
                 />
 
-                <Button type="submit" className="w-full">Save Settings</Button>
+                <Button type="submit" className="w-full">
+                  Save Settings
+                </Button>
               </form>
             </Form>
           </CardContent>

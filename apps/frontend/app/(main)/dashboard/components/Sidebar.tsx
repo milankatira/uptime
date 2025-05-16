@@ -5,7 +5,13 @@ import { cn } from "@/lib/utils";
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { IconAlertCircle, IconApi, IconHeartbeat } from "@tabler/icons-react";
-import { LayoutDashboard, Radio, Settings, ShieldCheck, Users } from "lucide-react";
+import {
+  LayoutDashboard,
+  Radio,
+  Settings,
+  ShieldCheck,
+  Users,
+} from "lucide-react";
 import { motion } from "motion/react";
 import React, { useState } from "react";
 
@@ -93,7 +99,6 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
             />
           </div>
           <div className="text-white">
-
             <UserButton />
           </div>
         </SidebarBody>

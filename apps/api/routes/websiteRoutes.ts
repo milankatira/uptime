@@ -56,7 +56,7 @@ router.get(
   "/heartbeat-details/:heartbeatId",
   // @ts-expect-error - TODO: fix this type error
   authMiddleware,
-  getHeartbeatDetails
+  getHeartbeatDetails,
 );
 
 export default router;

@@ -10,4 +10,6 @@ module.exports = {
     "prettier-plugin-organize-imports",
     "prettier-plugin-tailwindcss",
   ],
+  organizeImportsSkipDestructiveCodeActions: true,
+  organizeImportsIncludeReactImports: true,
 };

@@ -1,6 +1,7 @@
 import {
   Body,
   Button,
+  Column,
   Container,
   Head,
   Heading,
@@ -8,11 +9,10 @@ import {
   Img,
   Link,
   Preview,
+  Row,
   Section,
   Text,
-  Row,
-  Column,
-} from '@react-email/components';
+} from "@react-email/components";
 interface IncidentNotificationProps {
   userName?: string;
   acknowledgeLink?: string;
@@ -28,17 +28,17 @@ interface IncidentNotificationProps {
 }
 
 const defaultProps: IncidentNotificationProps = {
-  userName: 'milankatira',
-  acknowledgeLink: '#',
-  viewIncidentLink: '#',
-  unavailableLink: '#',
-  heartbeatName: 'njnj',
-  incidentCause: 'Missed heartbeat',
-  startedAt: 'May 14, 2025 at 7:49pm IST',
-  companyName: 'Better Stack',
-  logoUrl: 'https://your-logo-url.com/better-stack-logo.png', // Replace with actual logo URL
-  supportUrl: '#',
-  signInUrl: '#',
+  userName: "milankatira",
+  acknowledgeLink: "#",
+  viewIncidentLink: "#",
+  unavailableLink: "#",
+  heartbeatName: "njnj",
+  incidentCause: "Missed heartbeat",
+  startedAt: "May 14, 2025 at 7:49pm IST",
+  companyName: "Better Stack",
+  logoUrl: "https://your-logo-url.com/better-stack-logo.png", // Replace with actual logo URL
+  supportUrl: "#",
+  signInUrl: "#",
 };
 
 export const IncidentNotification = ({
@@ -61,8 +61,8 @@ export const IncidentNotification = ({
       <Container style={container}>
         <Section style={headerBar}></Section>
         <Section style={content}>
-          <Row style={{ marginBottom: '16px' }}>
-            <Column style={{ width: '16px', verticalAlign: 'top' }}>
+          <Row style={{ marginBottom: "16px" }}>
+            <Column style={{ width: "16px", verticalAlign: "top" }}>
               <div style={statusDot}></div>
             </Column>
             <Column>
@@ -72,7 +72,9 @@ export const IncidentNotification = ({
 
           <Text style={text}>Hello {userName},</Text>
           <Text style={text}>Please acknowledge the incident.</Text>
-          <Text style={text}>You can reply to this email to add a comment.</Text>
+          <Text style={text}>
+            You can reply to this email to add a comment.
+          </Text>
           <Text style={textSmall}>
             P.S. We can also call you next time, just upgrade your account.
           </Text>
@@ -111,7 +113,7 @@ export const IncidentNotification = ({
             <Link href={supportUrl} style={link}>
               Help & Support
             </Link>
-            {' • '}
+            {" • "}
             <Link href={signInUrl} style={link}>
               Sign in
             </Link>
@@ -125,132 +127,132 @@ export const IncidentNotification = ({
 export default IncidentNotification;
 
 const main = {
-  backgroundColor: '#ffffff',
+  backgroundColor: "#ffffff",
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
 };
 
 const container = {
-  margin: '0 auto',
-  padding: '0',
-  maxWidth: '600px',
-  border: '1px solid #eaeaea',
-  borderRadius: '4px',
+  margin: "0 auto",
+  padding: "0",
+  maxWidth: "600px",
+  border: "1px solid #eaeaea",
+  borderRadius: "4px",
 };
 
 const headerBar = {
-  backgroundColor: '#e00', // Red bar at the top
-  height: '4px',
-  width: '100%',
+  backgroundColor: "#e00", // Red bar at the top
+  height: "4px",
+  width: "100%",
 };
 
 const content = {
-  padding: '32px',
-  paddingBottom: '24px',
+  padding: "32px",
+  paddingBottom: "24px",
 };
 
 const statusDot = {
-  width: '10px',
-  height: '10px',
-  backgroundColor: '#e00', // Red dot
-  borderRadius: '50%',
-  display: 'inline-block',
-  marginRight: '8px',
-  marginTop: '7px',
+  width: "10px",
+  height: "10px",
+  backgroundColor: "#e00", // Red dot
+  borderRadius: "50%",
+  display: "inline-block",
+  marginRight: "8px",
+  marginTop: "7px",
 };
 
 const h1 = {
-  color: '#1a1a1a',
-  fontSize: '20px',
-  fontWeight: 'bold',
-  lineHeight: '28px',
-  margin: '0',
+  color: "#1a1a1a",
+  fontSize: "20px",
+  fontWeight: "bold",
+  lineHeight: "28px",
+  margin: "0",
 };
 
 const text = {
-  color: '#333',
-  fontSize: '14px',
-  lineHeight: '22px',
-  marginBottom: '12px',
+  color: "#333",
+  fontSize: "14px",
+  lineHeight: "22px",
+  marginBottom: "12px",
 };
 
 const textSmall = {
-  color: '#555',
-  fontSize: '12px',
-  lineHeight: '18px',
-  marginBottom: '24px',
+  color: "#555",
+  fontSize: "12px",
+  lineHeight: "18px",
+  marginBottom: "24px",
 };
 
 const buttonContainer = {
-  textAlign: 'left' as const,
-  marginTop: '24px',
-  marginBottom: '24px',
+  textAlign: "left" as const,
+  marginTop: "24px",
+  marginBottom: "24px",
 };
 
 const buttonShared = {
-  borderRadius: '6px',
-  fontSize: '14px',
-  fontWeight: '600',
-  padding: '10px 20px',
-  textDecoration: 'none',
-  textAlign: 'center' as const,
-  display: 'inline-block',
-  marginRight: '10px',
-  border: '1px solid transparent',
+  borderRadius: "6px",
+  fontSize: "14px",
+  fontWeight: "600",
+  padding: "10px 20px",
+  textDecoration: "none",
+  textAlign: "center" as const,
+  display: "inline-block",
+  marginRight: "10px",
+  border: "1px solid transparent",
 };
 
 const buttonPrimary = {
   ...buttonShared,
-  backgroundColor: '#4A4AFF', // Blue button
-  color: '#ffffff',
+  backgroundColor: "#4A4AFF", // Blue button
+  color: "#ffffff",
 };
 
 const buttonSecondary = {
   ...buttonShared,
-  backgroundColor: '#ffffff',
-  color: '#555',
-  border: '1px solid #ccc',
+  backgroundColor: "#ffffff",
+  color: "#555",
+  border: "1px solid #ccc",
 };
 
 const detailsSection = {
-  backgroundColor: '#f7f7f7',
-  padding: '24px 32px',
-  borderTop: '1px solid #eaeaea',
+  backgroundColor: "#f7f7f7",
+  padding: "24px 32px",
+  borderTop: "1px solid #eaeaea",
 };
 
 const detailRow = {
-  marginBottom: '8px',
+  marginBottom: "8px",
 };
 
 const detailHeader = {
-  color: '#333',
-  fontSize: '14px',
-  fontWeight: 'bold',
-  width: '100px',
+  color: "#333",
+  fontSize: "14px",
+  fontWeight: "bold",
+  width: "100px",
 };
 
 const detailValue = {
-  color: '#555',
-  fontSize: '14px',
+  color: "#555",
+  fontSize: "14px",
 };
 
 const footer = {
-  padding: '24px 32px',
-  borderTop: '1px solid #eaeaea',
-  textAlign: 'left' as const,
+  padding: "24px 32px",
+  borderTop: "1px solid #eaeaea",
+  textAlign: "left" as const,
 };
 
 const footerLogo = {
-  marginBottom: '16px',
+  marginBottom: "16px",
 };
 
 const footerLinks = {
-  color: '#007bff',
-  fontSize: '12px',
-  lineHeight: '18px',
+  color: "#007bff",
+  fontSize: "12px",
+  lineHeight: "18px",
 };
 
 const link = {
-  color: '#007bff',
-  textDecoration: 'none',
+  color: "#007bff",
+  textDecoration: "none",
 };

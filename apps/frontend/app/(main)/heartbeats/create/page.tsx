@@ -1,16 +1,21 @@
 "use client";
-import React from "react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { API_BACKEND_URL } from "@/config";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import React, { useState } from "react";
 
 const CreateHeartbeatPage = () => {
   const router = useRouter();
@@ -205,7 +210,9 @@ const CreateHeartbeatPage = () => {
                   <SelectItem value="Within 5 minutes, alert all other team members">
                     Within 5 minutes, alert all other team members
                   </SelectItem>
-                  <SelectItem value="Do not escalate">Do not escalate</SelectItem>
+                  <SelectItem value="Do not escalate">
+                    Do not escalate
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>

@@ -131,10 +131,7 @@ function StatusPage() {
   }
 
   return (
-    <div
-      ref={containerRef}
-      className="min-h-screen w-full bg-gray-900"
-    >
+    <div ref={containerRef} className="min-h-screen w-full bg-gray-900">
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">

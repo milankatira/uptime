@@ -1,8 +1,8 @@
 import cors from "cors";
 import express from "express";
-import websiteRoutes from "./routes/websiteRoutes";
 import incidentRoutes from "./routes/incidentRoutes.ts";
 import userRoutes from "./routes/userRoutes";
+import websiteRoutes from "./routes/websiteRoutes";
 
 const app = express();
 

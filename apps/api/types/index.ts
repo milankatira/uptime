@@ -1,4 +1,4 @@
 export enum IncidentStatus {
-    Ongoing = "Ongoing",
-    Resolved = "Resolved"
-  }
+  Ongoing = "Ongoing",
+  Resolved = "Resolved",
+}

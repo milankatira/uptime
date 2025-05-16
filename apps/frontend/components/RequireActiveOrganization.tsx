@@ -1,8 +1,8 @@
-import { OrganizationList } from "@clerk/nextjs"
+import { OrganizationList } from "@clerk/nextjs";
 
 export const RequireActiveOrganization = () => {
   return (
-    <div className=" flex h-full w-full flex-col gap-5">
+    <div className="flex h-full w-full flex-col gap-5">
       <section className="col-span-2 m-auto flex w-full max-w-lg items-center justify-center space-y-6 pt-6">
         <div className="space-y-4">
           <h1>Welcome</h1>
@@ -16,5 +16,5 @@ export const RequireActiveOrganization = () => {
         </div>
       </section>
     </div>
-  )
-}
+  );
+};

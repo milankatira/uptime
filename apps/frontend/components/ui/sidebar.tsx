@@ -89,7 +89,7 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          "hidden h-full w-[300px] shrink-0 bg-gray-100 px-4 py-4 md:flex md:flex-col dark:bg-gray-900 border-r",
+          "hidden h-full w-[300px] shrink-0 border-r bg-gray-100 px-4 py-4 md:flex md:flex-col dark:bg-gray-900",
           className,
         )}
         animate={{
@@ -146,7 +146,7 @@ export const MobileSidebar = ({
               >
                 <IconX />
               </div>
-               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
               {children as any}
             </motion.div>
           )}

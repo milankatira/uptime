@@ -1,8 +1,8 @@
-import { IncidentNotification } from '@dub/email/emails/IncidentNotification';
+import { IncidentNotification } from "@dub/email/emails/IncidentNotification";
 
-import {sendEmail } from '@dub/email/send-via-nodemailer';
+import { sendEmail } from "@dub/email/send-via-nodemailer";
 import { prismaClient } from "db/client";
-import type { IncidentStatus } from '../types/index';
+import type { IncidentStatus } from "../types/index";
 
 export class WebsiteService {
   /**
@@ -21,9 +21,9 @@ export class WebsiteService {
         where: { id: user.id },
         data: {
           cleakOrganizationIds: {
-            push: orgId
-          }
-        }
+            push: orgId,
+          },
+        },
       });
     }
 
@@ -31,7 +31,7 @@ export class WebsiteService {
       data: {
         userId: user.id,
         url,
-        orgId,  // Add this line to include orgId in the creation
+        orgId, // Add this line to include orgId in the creation
       },
     });
   }
@@ -71,7 +71,6 @@ export class WebsiteService {
       whereClause.orgId = orgId;
     }
 
-    console.log(whereClause,"whereClause")
     const websites = await prismaClient.website.findMany({
       where: whereClause,
       include: {
@@ -215,7 +214,9 @@ export class WebsiteService {
       throw new Error("Heartbeat not found");
     }
     if (!currentHeartbeat.user) {
-        console.warn(`Heartbeat ${heartbeatId} does not have an associated user. Skipping email notification.`);
+      console.warn(
+        `Heartbeat ${heartbeatId} does not have an associated user. Skipping email notification.`,
+      );
     }
 
     const updatedHeartbeat = await prismaClient.heartbeat.update({
@@ -225,7 +226,11 @@ export class WebsiteService {
     });
 
     // Send email notification if status is DOWN and user has notifications enabled
-    if (status.toUpperCase() === "DOWN" && updatedHeartbeat?.user && updatedHeartbeat?.user?.email) {
+    if (
+      status.toUpperCase() === "DOWN" &&
+      updatedHeartbeat?.user &&
+      updatedHeartbeat?.user?.email
+    ) {
       try {
         const incidentProps = {
           userName: updatedHeartbeat.user.email,
@@ -238,11 +243,16 @@ export class WebsiteService {
           "milankatira07@gmail.com",
           `🔴 Incident Alert: ${updatedHeartbeat.name} is DOWN`,
           IncidentNotification,
-          incidentProps
+          incidentProps,
         );
-        console.log(`Incident notification email sent to ${updatedHeartbeat.user.email}`);
+        console.log(
+          `Incident notification email sent to ${updatedHeartbeat.user.email}`,
+        );
       } catch (emailError) {
-        console.error(`Failed to send incident notification email:`, emailError);
+        console.error(
+          `Failed to send incident notification email:`,
+          emailError,
+        );
       }
     }
 
@@ -267,28 +277,29 @@ export class WebsiteService {
         },
       });
     } else if (status.toUpperCase() === "UP") {
-        // Optionally, find and resolve open incidents for this heartbeat
-        const openIncident = await prismaClient.incident.findFirst({
-            where: {
-                status: "Ongoing", // Or other active statuses
-            },
-            orderBy: {
-                date: 'desc',
-            }
+      // Optionally, find and resolve open incidents for this heartbeat
+      const openIncident = await prismaClient.incident.findFirst({
+        where: {
+          status: "Ongoing", // Or other active statuses
+        },
+        orderBy: {
+          date: "desc",
+        },
+      });
+      if (openIncident) {
+        const duration = Math.round(
+          (new Date().getTime() - new Date(openIncident.date).getTime()) / 1000,
+        ); // Duration in seconds
+        await prismaClient.incident.update({
+          where: { id: openIncident.id },
+          data: {
+            status: "Resolved",
+            duration: duration,
+          },
         });
-        if (openIncident) {
-            const duration = Math.round((new Date().getTime() - new Date(openIncident.date).getTime()) / 1000); // Duration in seconds
-            await prismaClient.incident.update({
-                where: { id: openIncident.id },
-                data: {
-                    status: "Resolved",
-                    duration: duration,
-                }
-            });
-            // Optionally send a "Resolved" notification email here
-        }
+        // Optionally send a "Resolved" notification email here
+      }
     }
-
 
     return updatedHeartbeat;
   }

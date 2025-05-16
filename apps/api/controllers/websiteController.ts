@@ -8,7 +8,7 @@ export async function createWebsite(req: Request, res: Response) {
   try {
     const userId = req.userId!;
     const { url } = req.body;
-    const orgId = req.headers['orgid'] as string | undefined;
+    const orgId = req.headers["orgid"] as string | undefined;
 
     if (!url) {
       return res.status(400).json({ error: "URL is required" });
@@ -52,7 +52,7 @@ export async function getWebsiteStatus(req: Request, res: Response) {
 export async function getAllWebsites(req: Request, res: Response) {
   try {
     const userId = req.userId!;
-    const orgId = req.headers['orgid'] as string | undefined;
+    const orgId = req.headers["orgid"] as string | undefined;
     const result = await websiteService.getAllWebsites(userId, orgId);
     return res.json(result);
   } catch (error) {
@@ -172,10 +172,13 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
     const { heartbeatId, status } = req.params;
 
     // Update the status
-    const result = await websiteService.updateHeartbeatStatus(heartbeatId, status);
+    const result = await websiteService.updateHeartbeatStatus(
+      heartbeatId,
+      status,
+    );
 
     // Render HTML response
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader("Content-Type", "text/html");
     return res.send(`
       <!DOCTYPE html>
       <html lang="en">
@@ -304,7 +307,7 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
     `);
   } catch (error) {
     console.error("Error updating heartbeat status:", error);
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader("Content-Type", "text/html");
     return res.status(500).send(`
       <!DOCTYPE html>
       <html>

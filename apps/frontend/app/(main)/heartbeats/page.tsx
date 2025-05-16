@@ -1,10 +1,10 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAxiosInstance } from "@/lib/axiosInstance";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import { useAxiosInstance } from "@/lib/axiosInstance";
+import React, { useEffect, useState } from "react";
 
 interface Heartbeat {
   id: string;
@@ -19,7 +19,7 @@ const HeartbeatsPage = () => {
   const [heartbeats, setHeartbeats] = useState<Heartbeat[]>([]);
   const [filteredHeartbeats, setFilteredHeartbeats] = useState<Heartbeat[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const instance = useAxiosInstance();
 
   useEffect(() => {
@@ -39,8 +39,8 @@ const HeartbeatsPage = () => {
   }, [instance]);
 
   useEffect(() => {
-    const filtered = heartbeats.filter(heartbeat =>
-      heartbeat.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = heartbeats.filter((heartbeat) =>
+      heartbeat.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     setFilteredHeartbeats(filtered);
   }, [searchQuery, heartbeats]);
@@ -67,7 +67,10 @@ const HeartbeatsPage = () => {
 
             <div className="border-t border-gray-700">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex items-center justify-between px-6 py-4">
+                <div
+                  key={i}
+                  className="flex items-center justify-between px-6 py-4"
+                >
                   <div className="flex items-center">
                     <div className="mr-4 h-2 w-2 animate-pulse rounded-full bg-gray-700" />
                     <div>
@@ -85,14 +88,16 @@ const HeartbeatsPage = () => {
     );
   }
 
-  console.log(filteredHeartbeats,"filteredHeartbeats")
+  console.log(filteredHeartbeats, "filteredHeartbeats");
   return (
-
     <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         <div className="mb-10 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-white">
-            Heartbeats <span className="ml-1 text-sm text-gray-400">{filteredHeartbeats.length}</span>
+            Heartbeats{" "}
+            <span className="ml-1 text-sm text-gray-400">
+              {filteredHeartbeats.length}
+            </span>
           </h1>
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -109,9 +114,7 @@ const HeartbeatsPage = () => {
               </div>
             </div>
             <Link href="/heartbeats/create">
-              <Button>
-                Create heartbeat
-              </Button>
+              <Button>Create heartbeat</Button>
             </Link>
           </div>
         </div>
@@ -141,16 +144,16 @@ const HeartbeatsPage = () => {
             <div className="border-t border-gray-700">
               {filteredHeartbeats.map((heartbeat) => (
                 <Link href={`heartbeats/${heartbeat.id}`} key={heartbeat.id}>
-                  <div
-
-                    className="flex items-center justify-between px-6 py-4 hover:bg-gray-700/30"
-                  >
+                  <div className="flex items-center justify-between px-6 py-4 hover:bg-gray-700/30">
                     <div className="flex items-center">
                       <div className="mr-4 h-2 w-2 rounded-full bg-gray-400"></div>
                       <div>
-                        <div className="text-sm text-white">{heartbeat.name}</div>
+                        <div className="text-sm text-white">
+                          {heartbeat.name}
+                        </div>
                         <div className="mt-1 text-xs text-gray-400">
-                          {heartbeat.status} · {new Date(heartbeat.createdAt).toLocaleDateString()}
+                          {heartbeat.status} ·{" "}
+                          {new Date(heartbeat.createdAt).toLocaleDateString()}
                         </div>
                       </div>
                     </div>
@@ -194,8 +197,6 @@ const HeartbeatsPage = () => {
         </div>
       </div>
     </div>
-
-
   );
 };
 

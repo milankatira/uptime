@@ -1,9 +1,15 @@
-'use client'
-import React, { useEffect, useState } from "react";
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { MessageSquare, FileText, Search, MoreHorizontal, ShieldAlert } from "lucide-react";
 import { useAxiosInstance } from "@/lib/axiosInstance";
+import {
+  FileText,
+  MessageSquare,
+  MoreHorizontal,
+  Search,
+  ShieldAlert,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
 
 interface Incident {
   id: string;
@@ -17,25 +23,25 @@ interface Incident {
 }
 
 const ShimmerIncidentItem = () => (
-  <div className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-[#2a2a36]/70 p-4 animate-pulse">
-    <div className="col-span-3 md:col-span-1 flex items-center gap-3">
-      <div className="h-8 w-8 bg-gray-600 rounded-md flex-shrink-0"></div>
+  <div className="grid animate-pulse grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-[#2a2a36]/70 p-4 md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto]">
+    <div className="col-span-3 flex items-center gap-3 md:col-span-1">
+      <div className="h-8 w-8 flex-shrink-0 rounded-md bg-gray-600"></div>
       <div>
-        <div className="h-5 w-32 bg-gray-600 rounded mb-1"></div>
-        <div className="h-3 w-24 bg-gray-600 rounded"></div>
+        <div className="mb-1 h-5 w-32 rounded bg-gray-600"></div>
+        <div className="h-3 w-24 rounded bg-gray-600"></div>
       </div>
     </div>
-    <div className="h-4 w-20 bg-gray-600 rounded md:text-left"></div>
-    <div className="h-4 w-16 bg-gray-600 rounded md:text-left"></div>
+    <div className="h-4 w-20 rounded bg-gray-600 md:text-left"></div>
+    <div className="h-4 w-16 rounded bg-gray-600 md:text-left"></div>
     <div className="flex justify-end">
-      <div className="h-8 w-8 bg-gray-600 rounded-full"></div>
+      <div className="h-8 w-8 rounded-full bg-gray-600"></div>
     </div>
   </div>
 );
 
 function IncidentsSection() {
   const [incidentsData, setIncidentsData] = useState<Incident[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const instance = useAxiosInstance();
 
@@ -43,7 +49,9 @@ function IncidentsSection() {
     const fetchIncidents = async () => {
       setLoading(true);
       try {
-        const response = await instance.get<{ incidents: Incident[] }>("/api/v1/incidents");
+        const response = await instance.get<{ incidents: Incident[] }>(
+          "/api/v1/incidents",
+        );
         setIncidentsData(response.data.incidents || []);
       } catch (error) {
         console.error("Failed to fetch incidents:", error);
@@ -65,23 +73,43 @@ function IncidentsSection() {
     if (diffInMinutes < 60) return `${diffInMinutes} minutes ago`;
     const diffInHours = Math.floor(diffInMinutes / 60);
     if (diffInHours < 24) return `${diffInHours} hours ago`;
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getStatusPill = (status: Incident["status"]) => {
     switch (status) {
       case "Ongoing":
-        return <span className="flex items-center text-red-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-red-500"></span>Ongoing</span>;
+        return (
+          <span className="flex items-center text-red-400">
+            <span className="mr-1.5 h-2 w-2 rounded-full bg-red-500"></span>
+            Ongoing
+          </span>
+        );
       case "Resolved":
-        return <span className="flex items-center text-green-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-green-500"></span>Resolved</span>;
+        return (
+          <span className="flex items-center text-green-400">
+            <span className="mr-1.5 h-2 w-2 rounded-full bg-green-500"></span>
+            Resolved
+          </span>
+        );
       case "Acknowledged":
-        return <span className="flex items-center text-yellow-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-yellow-500"></span>Acknowledged</span>;
+        return (
+          <span className="flex items-center text-yellow-400">
+            <span className="mr-1.5 h-2 w-2 rounded-full bg-yellow-500"></span>
+            Acknowledged
+          </span>
+        );
       default:
-        return <span className="flex items-center text-gray-400"><span className="mr-1.5 h-2 w-2 rounded-full bg-gray-500"></span>{status}</span>;
+        return (
+          <span className="flex items-center text-gray-400">
+            <span className="mr-1.5 h-2 w-2 rounded-full bg-gray-500"></span>
+            {status}
+          </span>
+        );
     }
   };
 
@@ -98,83 +126,108 @@ function IncidentsSection() {
     }
   };
 
-  const filteredIncidents = incidentsData.filter(incident =>
-    incident.errorText.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (incident.monitorName && incident.monitorName.toLowerCase().includes(searchQuery.toLowerCase())) ||
-    incident.errorCode.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredIncidents = incidentsData.filter(
+    (incident) =>
+      incident.errorText.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (incident.monitorName &&
+        incident.monitorName
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase())) ||
+      incident.errorCode.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900 p-6 md:p-8">
-      <div className="mb-8 flex flex-col md:flex-row items-center justify-between gap-4">
-        <h1 className="text-3xl font-semibold ">Incidents</h1>
-        <div className="flex items-center gap-3 md:gap-4 w-full md:w-auto">
+    <div className="min-h-screen w-full bg-gray-100 p-6 md:p-8 dark:bg-gray-900">
+      <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
+        <h1 className="text-3xl font-semibold">Incidents</h1>
+        <div className="flex w-full items-center gap-3 md:w-auto md:gap-4">
           <div className="relative flex-grow md:flex-grow-0">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-gray-500" />
             <Input
               type="text"
               placeholder="Search"
-
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button >
-            Report a new incident
-          </Button>
+          <Button>Report a new incident</Button>
         </div>
       </div>
 
       <div className="mb-6 flex items-center gap-4">
-        <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-[#2a2a36] px-3 py-2">
+        <Button
+          variant="ghost"
+          className="px-3 py-2 text-gray-400 hover:bg-[#2a2a36] hover:text-white"
+        >
           <MessageSquare className="mr-2 h-4 w-4" /> Comments
         </Button>
-        <Button variant="ghost" className="text-gray-400 hover:text-white hover:bg-[#2a2a36] px-3 py-2">
+        <Button
+          variant="ghost"
+          className="px-3 py-2 text-gray-400 hover:bg-[#2a2a36] hover:text-white"
+        >
           <FileText className="mr-2 h-4 w-4" /> Post-mortems
         </Button>
       </div>
 
-      <div className="mb-3 hidden md:grid grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 px-4 py-2 text-xs font-medium text-gray-500">
+      <div className="mb-3 hidden grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 px-4 py-2 text-xs font-medium text-gray-500 md:grid">
         <div>MONITOR</div>
         <div>STARTED AT</div>
         <div>LENGTH</div>
         <div>{/* Actions */}</div>
       </div>
 
-
       <div className="space-y-3">
         {loading ? (
-          Array.from({ length: 5 }).map((_, index) => <ShimmerIncidentItem key={index} />)
+          Array.from({ length: 5 }).map((_, index) => (
+            <ShimmerIncidentItem key={index} />
+          ))
         ) : filteredIncidents.length > 0 ? (
           filteredIncidents.map((incident) => (
             <div
               key={incident.id}
-              className="grid grid-cols-[auto_1fr_auto] md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50"
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50 md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto]"
             >
-              <div className="col-span-3 md:col-span-1 flex items-center gap-3">
-                <ShieldAlert className={`h-8 w-8 ${getIconColorByStatus(incident.status)} flex-shrink-0`} />
+              <div className="col-span-3 flex items-center gap-3 md:col-span-1">
+                <ShieldAlert
+                  className={`h-8 w-8 ${getIconColorByStatus(incident.status)} flex-shrink-0`}
+                />
                 <div>
-                  <div className="font-medium text-white truncate" title={incident.monitorName || incident.errorText}>
-                    {incident.monitorName || incident.errorText.split(" is down")[0] || incident.errorText}
+                  <div
+                    className="truncate font-medium text-white"
+                    title={incident.monitorName || incident.errorText}
+                  >
+                    {incident.monitorName ||
+                      incident.errorText.split(" is down")[0] ||
+                      incident.errorText}
                   </div>
                   <div className="text-xs text-gray-400">
-                    {incident.errorCode === "HEARTBEAT_DOWN" ? "Missed heartbeat" : incident.errorCode}
+                    {incident.errorCode === "HEARTBEAT_DOWN"
+                      ? "Missed heartbeat"
+                      : incident.errorCode}
                   </div>
                 </div>
               </div>
 
               <div className="text-sm text-gray-400 md:text-left">
-                <span className="md:hidden text-xs text-gray-500 mr-2">Started:</span>
+                <span className="mr-2 text-xs text-gray-500 md:hidden">
+                  Started:
+                </span>
                 {formatDate(incident.date)}
               </div>
 
               <div className="text-sm md:text-left">
-                <span className="md:hidden text-xs text-gray-500 mr-2">Status:</span>
+                <span className="mr-2 text-xs text-gray-500 md:hidden">
+                  Status:
+                </span>
                 {getStatusPill(incident.status)}
               </div>
 
               <div className="flex justify-end">
-                <Button variant="ghost" size="icon" className="text-gray-500 hover:text-white h-8 w-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="h-8 w-8 text-gray-500 hover:text-white"
+                >
                   <MoreHorizontal className="h-5 w-5" />
                 </Button>
               </div>
@@ -182,7 +235,9 @@ function IncidentsSection() {
           ))
         ) : (
           <div className="py-10 text-center text-gray-500">
-            {incidentsData.length === 0 && !searchQuery && !loading ? "No incidents found." : "No incidents match your search."}
+            {incidentsData.length === 0 && !searchQuery && !loading
+              ? "No incidents found."
+              : "No incidents match your search."}
           </div>
         )}
       </div>

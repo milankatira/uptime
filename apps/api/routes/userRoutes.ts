@@ -1,5 +1,8 @@
 import { Router } from "express";
-import { updateUserPreferences, updateFcmToken } from "../controllers/userController";
+import {
+  updateFcmToken,
+  updateUserPreferences,
+} from "../controllers/userController";
 import { authMiddleware } from "../middleware";
 
 const router = Router();

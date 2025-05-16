@@ -24,7 +24,6 @@ import { Button } from "@/components/ui/button";
 
 type UptimeStatus = "good" | "bad" | "unknown";
 
-
 function Tooltip({
   content,
   children,
@@ -43,17 +42,17 @@ function Tooltip({
   );
 }
 
-
 function StatusCircle({ status }: { status: UptimeStatus }) {
   return (
     <div className="relative flex items-center justify-center">
       <div
-        className={`h-3.5 w-3.5 rounded-full ${status === "good"
-          ? "bg-emerald-500 dark:bg-emerald-400"
-          : status === "bad"
-            ? "bg-rose-500 dark:bg-rose-400"
-            : "bg-gray-400 dark:bg-gray-500"
-          }`}
+        className={`h-3.5 w-3.5 rounded-full ${
+          status === "good"
+            ? "bg-emerald-500 dark:bg-emerald-400"
+            : status === "bad"
+              ? "bg-rose-500 dark:bg-rose-400"
+              : "bg-gray-400 dark:bg-gray-500"
+        }`}
       />
       {status === "good" && (
         <div
@@ -95,12 +94,13 @@ function UptimeTicks({
             content={`${index * 3}-${(index + 1) * 3} min ago: ${tick.charAt(0).toUpperCase() + tick.slice(1)}`}
           >
             <div
-              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
-                ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
-                : tick === "bad"
-                  ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
-                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
-                }`}
+              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${
+                tick === "good"
+                  ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
+                  : tick === "bad"
+                    ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
+                    : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
+              }`}
               style={{ alignSelf: "flex-end" }}
             />
           </Tooltip>
@@ -119,7 +119,6 @@ interface ProcessedWebsite {
   uptimeTicks: UptimeStatus[];
 }
 
-
 function WebsiteCard({
   website,
   onDelete,
@@ -130,7 +129,6 @@ function WebsiteCard({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
-
   const displayUrl = useMemo(() => {
     try {
       const urlObj = new URL(website.url);
@@ -139,7 +137,6 @@ function WebsiteCard({
       return website.url;
     }
   }, [website.url]);
-
 
   const statusLabel = useMemo(() => {
     if (website.status === "good") {
@@ -293,10 +290,9 @@ function WebsiteCard({
   );
 }
 
-
 function LoadingSpinner() {
   return (
-    <div className="space-y-4 w-full">
+    <div className="w-full space-y-4">
       {/* Shimmer effect for summary cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {[...Array(3)].map((_, i) => (
@@ -320,7 +316,6 @@ function LoadingSpinner() {
   );
 }
 
-
 function ErrorMessage({
   message,
   onRetry,
@@ -342,7 +337,6 @@ function ErrorMessage({
   );
 }
 
-
 function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
   const stats = useMemo(() => {
     const totalSites = websites.length;
@@ -355,7 +349,7 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     const averageUptime =
       websites.length > 0
         ? websites.reduce((sum, site) => sum + site.uptimePercentage, 0) /
-        websites.length
+          websites.length
         : 0;
 
     return { totalSites, sitesByStatus, averageUptime };
@@ -431,7 +425,6 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
   );
 }
 
-
 function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-8 text-center shadow-md dark:border-gray-700 dark:bg-gray-800">
@@ -444,9 +437,7 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
       <p className="mx-auto mb-6 max-w-md text-gray-600 dark:text-gray-300">
         Add your first website to start monitoring its uptime and performance.
       </p>
-      <Button
-        onClick={onAddWebsite}
-      >
+      <Button onClick={onAddWebsite}>
         <Plus className="mr-2 h-4 w-4" />
         Add Your First Website
       </Button>
@@ -463,18 +454,15 @@ function App() {
 
   const processedWebsites = useMemo(() => {
     return websites.map((website) => {
-
       const sortedTicks = [...website.ticks].sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
 
-
       const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
       const recentTicks = sortedTicks.filter(
         (tick) => new Date(tick.createdAt) > thirtyMinutesAgo,
       );
-
 
       const windows: UptimeStatus[] = [];
 
@@ -498,7 +486,6 @@ function App() {
               : "bad";
       }
 
-
       const totalTicks = sortedTicks.length;
       const upTicks = sortedTicks.filter(
         (tick) => tick.status === "Good",
@@ -506,11 +493,9 @@ function App() {
       const uptimePercentage =
         totalTicks === 0 ? 100 : (upTicks / totalTicks) * 100;
 
-
       const lastChecked = sortedTicks[0]
         ? new Date(sortedTicks[0].createdAt).toLocaleTimeString()
         : "Never";
-
 
       const lastThreeTicks = windows.slice(-3);
       const goodCount = lastThreeTicks.filter(
@@ -542,8 +527,6 @@ function App() {
     });
   }, [websites]);
 
-
-
   React.useEffect(() => {
     setLoading(true);
     refreshWebsites()
@@ -553,7 +536,7 @@ function App() {
         setLoading(false);
       });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -569,7 +552,6 @@ function App() {
 
     syncUser();
   }, []);
-
 
   const handleAddWebsite = async (url: string | null, interval?: number) => {
     if (url === null) {
@@ -606,13 +588,14 @@ function App() {
 
   useEffect(() => {
     if (user?.organizationMemberships) {
-      const organizationIds = user.organizationMemberships.map(m => m.id);
-      updateUserOrganizationIds(organizationIds)
-        .catch(err => console.error("Failed to update organization IDs:", err));
+      const organizationIds = user.organizationMemberships.map((m) => m.id);
+      updateUserOrganizationIds(organizationIds).catch((err) =>
+        console.error("Failed to update organization IDs:", err),
+      );
     }
   }, [user?.organizationMemberships]);
 
-  console.log(user?.organizationMemberships,"user?.organizationMemberships")
+  console.log(user?.organizationMemberships, "user?.organizationMemberships");
 
   if (user?.organizationMemberships?.length === 0) {
     return (
@@ -631,9 +614,7 @@ function App() {
             </h1>
           </div>
           <div className="flex items-center space-x-3">
-            <Button
-              onClick={() => setIsModalOpen(true)}
-            >
+            <Button onClick={() => setIsModalOpen(true)}>
               <Plus className="h-4 w-4" />
               <span className="font-medium">Add Website</span>
             </Button>
