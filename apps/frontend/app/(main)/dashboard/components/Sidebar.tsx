@@ -13,6 +13,7 @@ import {
   Users,
 } from "lucide-react";
 import { motion } from "motion/react";
+import { useTheme } from "next-themes";
 import React, { useState } from "react";
 
 export function SidebarDemo({ children }: { children: React.ReactNode }) {
@@ -69,6 +70,8 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
   ];
   const [open, setOpen] = useState(false);
 
+  const { theme } = useTheme();
+
   useNotifications();
   return (
     <div
@@ -84,19 +87,21 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
               <Logo />
             </>
             <div className="mt-8 flex flex-col gap-2">
+            <OrganizationSwitcher
+              appearance={{
+                baseTheme: theme === 'dark' ? dark : undefined,
+                elements: {
+                  rootBox: "w-full",
+                  organizationSwitcherTrigger: "w-full justify-between",
+                },
+              }}
+            />
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
 
-            <OrganizationSwitcher
-              appearance={{
-                baseTheme: dark,
-                elements: {
-                  rootBox: "flex text-white ",
-                },
-              }}
-            />
+
           </div>
           <div className="text-white">
             <UserButton />

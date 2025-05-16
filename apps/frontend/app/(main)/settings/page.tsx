@@ -94,7 +94,7 @@ const SettingsPage = () => {
           <CardContent>
             <div className="space-y-6">
               <div>
-                <h3 className="mb-3 text-sm font-medium text-white">
+                <h3 className="mb-3 text-sm font-medium">
                   Select Theme
                 </h3>
                 <DropdownMenu>
@@ -124,7 +124,7 @@ const SettingsPage = () => {
 
         <Card className="bg-dark-lighter border-dark-border">
           <CardHeader>
-            <CardTitle className="text-white">Notification Settings</CardTitle>
+            <CardTitle>Notification Settings</CardTitle>
             <CardDescription className="text-gray-400">
               Manage your email notification preferences
             </CardDescription>
@@ -143,7 +143,7 @@ const SettingsPage = () => {
                   render={({ field }) => (
                     <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel className="text-white">
+                        <FormLabel >
                           <div className="flex items-center">
                             <Bell className="mr-2 h-4 w-4" />
                             Email Notifications
