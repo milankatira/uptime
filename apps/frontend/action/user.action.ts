@@ -39,6 +39,7 @@ export async function getUserFromDb() {
         emailNotifications: true,
         email: true,
         imageUrl: true,
+        id: true,
       },
     });
   } catch (error) {
