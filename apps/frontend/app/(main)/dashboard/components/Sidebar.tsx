@@ -104,10 +104,9 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
 
           <UserButton
             appearance={{
-              baseTheme: theme === "dark" ? dark : undefined
+              baseTheme: theme === "dark" ? dark : undefined,
             }}
           />
-
         </SidebarBody>
       </Sidebar>
       {children}

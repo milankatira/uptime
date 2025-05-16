@@ -231,7 +231,9 @@ const HeartbeatDetailPage = () => {
             Heartbeats
           </Link>
           <span className="mx-2 text-gray-400 dark:text-gray-600">/</span>
-          <span className="text-gray-900 dark:text-gray-200">{heartbeatDetails?.name}</span>
+          <span className="text-gray-900 dark:text-gray-200">
+            {heartbeatDetails?.name}
+          </span>
         </div>
 
         {/* Heartbeat header */}
@@ -252,7 +254,7 @@ const HeartbeatDetailPage = () => {
             </svg>
           </div>
           <div>
-            <h1 className="text-2xl font-semibold ">
+            <h1 className="text-2xl font-semibold">
               {" "}
               {heartbeatDetails?.name}
             </h1>
@@ -319,9 +321,7 @@ const HeartbeatDetailPage = () => {
         {/* URL instruction section */}
         <div className="bg-dark-lighter border-dark-border mb-8 rounded-lg border p-6">
           <div className="mb-5 flex items-center justify-between">
-            <p >
-              Make a HEAD, GET, or a POST request to the following URLs
-            </p>
+            <p>Make a HEAD, GET, or a POST request to the following URLs</p>
           </div>
 
           {/* Down URL */}
@@ -387,16 +387,12 @@ const HeartbeatDetailPage = () => {
             <p className="mb-1 text-sm text-gray-400">
               Last heartbeat recorded
             </p>
-            <h2 className="text-xl font-semibold ">
-              {mockStats.lastRecorded}
-            </h2>
+            <h2 className="text-xl font-semibold">{mockStats.lastRecorded}</h2>
           </div>
 
           <div className="bg-dark-lighter border-dark-border rounded-lg border p-6">
             <p className="mb-1 text-sm text-gray-400">Incidents</p>
-            <h2 className="text-xl font-semibold ">
-              {mockStats.incidentCount}
-            </h2>
+            <h2 className="text-xl font-semibold">{mockStats.incidentCount}</h2>
           </div>
         </div>
 
@@ -405,14 +401,12 @@ const HeartbeatDetailPage = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-dark border-dark-border hover:bg-dark">
-                <TableHead >Time period</TableHead>
-                <TableHead >Availability</TableHead>
-                <TableHead >Downtime</TableHead>
-                <TableHead >Incidents</TableHead>
-                <TableHead >
-                  Longest incident
-                </TableHead>
-                <TableHead >Avg. incident</TableHead>
+                <TableHead>Time period</TableHead>
+                <TableHead>Availability</TableHead>
+                <TableHead>Downtime</TableHead>
+                <TableHead>Incidents</TableHead>
+                <TableHead>Longest incident</TableHead>
+                <TableHead>Avg. incident</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -421,22 +415,14 @@ const HeartbeatDetailPage = () => {
                   key={index}
                   className="border-dark-border hover:bg-dark/40"
                 >
-                  <TableCell >{row.period}</TableCell>
+                  <TableCell>{row.period}</TableCell>
                   <TableCell className="text-green-500">
                     {row.availability}
                   </TableCell>
-                  <TableCell >
-                    {row.downtime}
-                  </TableCell>
-                  <TableCell >
-                    {row.incidents}
-                  </TableCell>
-                  <TableCell >
-                    {row.longestIncident}
-                  </TableCell>
-                  <TableCell >
-                    {row.avgIncident}
-                  </TableCell>
+                  <TableCell>{row.downtime}</TableCell>
+                  <TableCell>{row.incidents}</TableCell>
+                  <TableCell>{row.longestIncident}</TableCell>
+                  <TableCell>{row.avgIncident}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -507,9 +493,9 @@ const HeartbeatDetailPage = () => {
                   <Input
                     type="number"
                     defaultValue="1"
-                    className="bg-dark border-dark-border "
+                    className="bg-dark border-dark-border"
                   />
-                  <select className="bg-dark border-dark-border rounded-md border px-3 py-2 ">
+                  <select className="bg-dark border-dark-border rounded-md border px-3 py-2">
                     <option>minute</option>
                     <option>hour</option>
                     <option selected>day</option>
