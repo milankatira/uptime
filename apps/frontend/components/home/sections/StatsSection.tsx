@@ -1,10 +1,11 @@
+import React from "react";
 import { AnimatedNumbers } from "@/components/ui/AnimatedNumbers";
 import { motion } from "framer-motion";
 import { BellRing, CheckCircle, Clock, Globe } from "lucide-react";
 
 const StatsSection = () => {
   return (
-    <section className="bg-muted/50 relative overflow-hidden py-16">
+    <section className=" relative overflow-hidden py-16">
       <div className="from-background via-background/50 to-background absolute inset-0 -z-10 bg-gradient-to-b opacity-50" />
       <div className="bg-primary/5 absolute top-1/2 left-1/4 -z-10 h-[300px] w-[300px] rounded-full blur-[100px]" />
       <div className="bg-primary/5 absolute top-1/2 right-1/4 -z-10 h-[300px] w-[300px] rounded-full blur-[100px]" />

@@ -1,12 +1,12 @@
-import { cn } from "@/lib/utils";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import {
   motion,
+  useTransform,
   useScroll,
   useSpring,
-  useTransform,
-  useVelocity,
-} from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
+} from "motion/react";
+import { cn } from "@/lib/utils";
 
 export const TracingBeam = ({
   children,
@@ -18,7 +18,7 @@ export const TracingBeam = ({
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start start", "end end"],
+    offset: ["start start", "end start"],
   });
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -30,67 +30,153 @@ export const TracingBeam = ({
     }
   }, []);
 
-  const y1 = useTransform(scrollYProgress, [0, 0.8], [50, svgHeight - 50]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [50, svgHeight - 50]);
-
-  const pathLength = useTransform(
-    scrollYProgress,
-    [0, 0.5, 1],
-    [0.1, 0.5, 0.9],
+  const y1 = useSpring(
+    useTransform(scrollYProgress, [0, 0.8], [50, svgHeight]),
+    {
+      stiffness: 500,
+      damping: 90,
+    },
+  );
+  const y2 = useSpring(
+    useTransform(scrollYProgress, [0, 1], [50, svgHeight - 200]),
+    {
+      stiffness: 500,
+      damping: 90,
+    },
   );
 
-  const scrollVelocity = useVelocity(scrollYProgress);
-  const smoothVelocity = useSpring(scrollVelocity, {
-    damping: 50,
-    stiffness: 400,
-  });
-
-  const radius = useTransform(smoothVelocity, [-0.5, 0, 0.5], [0, 25, 0]);
-
   return (
-    <motion.div ref={ref} className={cn("relative mb-[100vh]", className)}>
+    <motion.div
+      ref={ref}
+      className={cn("relative mx-auto h-full w-full max-w-4xl", className)}
+    >
+      {/* Left Beam */}
       <div className="absolute top-3 -left-4 md:-left-20">
         <motion.div
           transition={{
             duration: 0.2,
+            delay: 0.5,
           }}
-          className="relative h-full"
+          animate={{
+            boxShadow:
+              scrollYProgress.get() > 0
+                ? "none"
+                : "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+          }}
+          className="border-netural-200 ml-[27px] flex h-4 w-4 items-center justify-center rounded-full border shadow-sm"
         >
-          <svg
-            width="40"
-            viewBox="0 0 40 100"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-full"
-            style={{ height: svgHeight }}
-          >
-            <motion.path
-              d={`M20 0L20 ${svgHeight}`}
-              stroke="hsl(var(--primary))"
-              strokeWidth="2"
-              strokeDasharray="10 5"
-              className="opacity-30"
-            />
-            <motion.path
-              d={`M20 0L20 ${svgHeight}`}
-              stroke="hsl(var(--primary))"
-              strokeWidth="2"
-              strokeLinecap="round"
-              style={{ pathLength }}
-              className="relative z-10"
-            />
-            <motion.circle
-              cx="20"
-              cy={y1}
-              r="6"
-              fill="hsl(var(--background))"
-              stroke="hsl(var(--primary))"
-              strokeWidth="2"
-              className="relative z-20"
-            />
-          </svg>
+          <motion.div
+            transition={{
+              duration: 0.2,
+              delay: 0.5,
+            }}
+            animate={{
+              backgroundColor: scrollYProgress.get() > 0 ? "white" : "#10b981",
+              borderColor: scrollYProgress.get() > 0 ? "white" : "#059669",
+            }}
+            className="h-2 w-2 rounded-full border border-neutral-300 bg-white"
+          />
         </motion.div>
+        <svg
+          viewBox={`0 0 20 ${svgHeight}`}
+          width="20"
+          height={svgHeight} // Set the SVG height
+          className="ml-4 block"
+          aria-hidden="true"
+        >
+          <motion.path
+            d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
+            fill="none"
+            stroke="#9091A0"
+            strokeOpacity="0.16"
+            transition={{
+              duration: 10,
+            }}
+          ></motion.path>
+          <motion.path
+            d={`M 1 0V -36 l 18 24 V ${svgHeight * 0.8} l -18 24V ${svgHeight}`}
+            fill="none"
+            stroke="url(#gradient)"
+            strokeWidth="1.25"
+            className="motion-reduce:hidden"
+            transition={{
+              duration: 10,
+            }}
+          ></motion.path>
+          <defs>
+            <motion.linearGradient
+              id="gradient"
+              gradientUnits="userSpaceOnUse"
+              x1="0"
+              x2="0"
+              y1={y1} // set y1 for gradient
+              y2={y2} // set y2 for gradient
+            >
+              <stop stopColor="#18CCFC" stopOpacity="0"></stop>
+              <stop stopColor="#18CCFC"></stop>
+              <stop offset="0.325" stopColor="#6344F5"></stop>
+              <stop offset="1" stopColor="#AE48FF" stopOpacity="0"></stop>
+            </motion.linearGradient>
+          </defs>
+        </svg>
       </div>
+
+      {/* Right Beam (new) */}
+      <div className="absolute top-3 -right-4 md:-right-20">
+        <motion.div
+          transition={{
+            duration: 0.2,
+            delay: 0.5,
+          }}
+          animate={{
+            boxShadow:
+              scrollYProgress.get() > 0
+                ? "none"
+                : "rgba(0, 0, 0, 0.24) 0px 3px 8px",
+          }}
+          className="border-netural-200 mr-[27px] flex h-4 w-4 items-center justify-center rounded-full border shadow-sm"
+        >
+          <motion.div
+            transition={{
+              duration: 0.2,
+              delay: 0.5,
+            }}
+            animate={{
+              backgroundColor: scrollYProgress.get() > 0 ? "white" : "#10b981",
+              borderColor: scrollYProgress.get() > 0 ? "white" : "#059669",
+            }}
+            className="h-2 w-2 rounded-full border border-neutral-300 bg-white"
+          />
+        </motion.div>
+        <svg
+          viewBox={`0 0 20 ${svgHeight}`}
+          width="20"
+          height={svgHeight}
+          className="mr-4 block"
+          aria-hidden="true"
+        >
+          <motion.path
+            d={`M 19 0V -36 l -18 24 V ${svgHeight * 0.8} l 18 24V ${svgHeight}`}
+            fill="none"
+            stroke="#9091A0"
+            strokeOpacity="0.16"
+            transition={{
+              duration: 10,
+            }}
+          ></motion.path>
+          <motion.path
+            d={`M 19 0V -36 l -18 24 V ${svgHeight * 0.8} l 18 24V ${svgHeight}`}
+            fill="none"
+            stroke="url(#gradient)"
+            strokeWidth="1.25"
+            className="motion-reduce:hidden"
+            transition={{
+              duration: 10,
+            }}
+          ></motion.path>
+        </svg>
+      </div>
+
       <div ref={contentRef}>{children}</div>
     </motion.div>
   );

@@ -1,3 +1,4 @@
+import React from "react";
 import { SpotlightCard } from "@/components/ui/SpotlightCard";
 import { TracingBeam } from "@/components/ui/TracingBeam";
 import { motion } from "framer-motion";
