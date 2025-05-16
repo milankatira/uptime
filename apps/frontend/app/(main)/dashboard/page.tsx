@@ -599,13 +599,13 @@ function App() {
 
   if (user?.organizationMemberships?.length === 0) {
     return (
-      <div className="flex min-h-screen w-full max-w-full items-center justify-center bg-gray-100 transition-colors duration-200 dark:bg-gray-900">
+      <div className="flex min-h-screen w-full max-w-full items-center justify-center transition-colors duration-200">
         <CreateOrganization />
       </div>
     );
   }
   return (
-    <div className="min-h-screen w-full max-w-full bg-gray-100 transition-colors duration-200 dark:bg-gray-900">
+    <div className="min-h-screen w-full max-w-full bg-white transition-colors duration-200 dark:bg-gray-900">
       <div className="mx-auto px-4 py-6 sm:px-6">
         <div className="mb-6 flex items-center justify-between">
           <div className="flex items-center space-x-3">

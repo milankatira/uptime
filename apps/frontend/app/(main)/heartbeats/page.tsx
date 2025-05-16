@@ -47,7 +47,7 @@ const HeartbeatsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
+      <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
         <div className="max-w-full p-6 md:p-8">
           <div className="mb-10 flex items-center justify-between">
             <div className="h-9 w-48 animate-pulse rounded-lg bg-gray-800" />
@@ -90,7 +90,7 @@ const HeartbeatsPage = () => {
 
   console.log(filteredHeartbeats, "filteredHeartbeats");
   return (
-    <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         <div className="mb-10 flex items-center justify-between">
           <h1 className="text-2xl font-semibold text-white">

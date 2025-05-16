@@ -74,7 +74,7 @@ const CreateHeartbeatPage = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
       <div className="max-w-full">
         <div className="flex items-start p-6">
           <Link href="/heartbeats" className="mr-6">

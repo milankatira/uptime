@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AlertCircle, MessageCircle, Slack, Webhook } from "lucide-react";
@@ -85,7 +86,7 @@ function IntegrationsSection() {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 p-6 md:p-10 dark:bg-gray-900">
+    <div className="min-h-screen w-full  bg-white p-6 md:p-10 dark:bg-gray-900">
       <h2 className="mb-8 text-2xl font-semibold text-white">Integrations.</h2>
 
       <div className="mb-8 flex flex-col gap-8 md:flex-row">

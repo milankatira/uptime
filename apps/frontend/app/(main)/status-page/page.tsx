@@ -1,15 +1,14 @@
 "use client";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { useWebsites } from "@/hooks/useWebsites";
 import { Eye, MoreHorizontal } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 function StatusPageList() {
   const { websites } = useWebsites();
-  const router = useRouter();
 
   return (
-    <div className="w-full bg-gray-100 px-4 py-8 sm:px-6 lg:px-8 dark:bg-gray-900">
+    <div className="w-full  bg-white px-4 py-8 sm:px-6 lg:px-8 dark:bg-gray-900">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-medium text-white">Status pages.</h1>
         <Button className="bg-primary hover:bg-primary/90 text-white">

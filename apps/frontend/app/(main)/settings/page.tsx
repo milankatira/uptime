@@ -73,7 +73,7 @@ const SettingsPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-gray-100 dark:bg-gray-900">
+    <div className="flex min-h-screen w-full flex-col  bg-white dark:bg-gray-900">
       <div className="flex w-full items-center justify-between border-b p-4">
         <div className="flex items-center gap-3">
           <Link href="/">

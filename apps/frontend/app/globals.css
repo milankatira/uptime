@@ -128,3 +128,8 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+.nextjs-toast{
+  display: none;
+}

@@ -144,7 +144,7 @@ const HeartbeatDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
+      <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
         <div className="max-w-full p-6 md:p-8">
           {/* Shimmer for breadcrumb */}
           <div className="mb-10 h-6 w-1/3 animate-pulse rounded bg-gray-700"></div>
@@ -219,7 +219,7 @@ const HeartbeatDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         {/* Breadcrumb navigation */}
         <div className="mb-10 flex items-center text-sm">

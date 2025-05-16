@@ -76,7 +76,7 @@ function MaintenanceWindow() {
   };
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gray-100 dark:bg-gray-900">
+    <div className="relative min-h-screen w-full overflow-hidden  bg-white dark:bg-gray-900">
       {/* Background decorative circles */}
 
       <div className="relative z-10 mx-auto max-w-full px-4 py-10 sm:px-6">

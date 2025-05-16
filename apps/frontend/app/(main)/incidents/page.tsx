@@ -137,7 +137,7 @@ function IncidentsSection() {
   );
 
   return (
-    <div className="min-h-screen w-full bg-gray-100 p-6 md:p-8 dark:bg-gray-900">
+    <div className="min-h-screen w-full  bg-white p-6 md:p-8 dark:bg-gray-900">
       <div className="mb-8 flex flex-col items-center justify-between gap-4 md:flex-row">
         <h1 className="text-3xl font-semibold">Incidents</h1>
         <div className="flex w-full items-center gap-3 md:w-auto md:gap-4">
