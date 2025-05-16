@@ -101,9 +101,13 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
               ))}
             </div>
           </div>
-          <div className="text-white">
-            <UserButton />
-          </div>
+
+          <UserButton
+            appearance={{
+              baseTheme: theme === "dark" ? dark : undefined
+            }}
+          />
+
         </SidebarBody>
       </Sidebar>
       {children}

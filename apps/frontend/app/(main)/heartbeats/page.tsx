@@ -47,38 +47,38 @@ const HeartbeatsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
+      <div className="min-h-screen w-full bg-white dark:bg-gray-900">
         <div className="max-w-full p-6 md:p-8">
           <div className="mb-10 flex items-center justify-between">
-            <div className="h-9 w-48 animate-pulse rounded-lg bg-gray-800" />
+            <div className="h-9 w-48 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800" />
             <div className="flex items-center gap-4">
               <div className="relative">
-                <div className="h-10 w-[300px] animate-pulse rounded-lg bg-gray-800" />
+                <div className="h-10 w-[300px] animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800" />
               </div>
-              <div className="h-10 w-32 animate-pulse rounded-lg bg-gray-800" />
+              <div className="h-10 w-32 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-800" />
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-lg border border-gray-700 bg-gray-800/50">
+          <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100/50 dark:border-gray-700 dark:bg-gray-800/50">
             <div className="flex items-center px-6 py-4">
-              <div className="h-4 w-4 animate-pulse rounded-full bg-gray-700" />
-              <div className="ml-2 h-4 w-24 animate-pulse rounded-lg bg-gray-700" />
+              <div className="h-4 w-4 animate-pulse rounded-full bg-gray-300 dark:bg-gray-600" />
+              <div className="ml-2 h-4 w-24 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-600" />
             </div>
 
-            <div className="border-t border-gray-700">
+            <div className="border-t border-gray-200 dark:border-gray-700">
               {[...Array(5)].map((_, i) => (
                 <div
                   key={i}
                   className="flex items-center justify-between px-6 py-4"
                 >
                   <div className="flex items-center">
-                    <div className="mr-4 h-2 w-2 animate-pulse rounded-full bg-gray-700" />
+                    <div className="mr-4 h-2 w-2 animate-pulse rounded-full bg-gray-300 dark:bg-gray-600" />
                     <div>
-                      <div className="h-4 w-48 animate-pulse rounded-lg bg-gray-700" />
-                      <div className="mt-2 h-3 w-32 animate-pulse rounded-lg bg-gray-700" />
+                      <div className="h-4 w-48 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-600" />
+                      <div className="mt-2 h-3 w-32 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-600" />
                     </div>
                   </div>
-                  <div className="h-4 w-20 animate-pulse rounded-lg bg-gray-700" />
+                  <div className="h-4 w-20 animate-pulse rounded-lg bg-gray-300 dark:bg-gray-600" />
                 </div>
               ))}
             </div>
@@ -88,14 +88,13 @@ const HeartbeatsPage = () => {
     );
   }
 
-  console.log(filteredHeartbeats, "filteredHeartbeats");
   return (
-    <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
+    <div className="min-h-screen w-full bg-white dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         <div className="mb-10 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-white">
+          <h1 className="flex items-center justify-center gap-4 text-2xl font-semibold text-gray-900 dark:text-white">
             Heartbeats{" "}
-            <span className="ml-1 text-sm text-gray-400">
+            <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
               {filteredHeartbeats.length}
             </span>
           </h1>
@@ -105,11 +104,11 @@ const HeartbeatsPage = () => {
               <Input
                 type="text"
                 placeholder="Search"
-                className="w-[300px] border-gray-700 bg-gray-800 pl-9 text-white"
+                className="w-[300px] border-gray-300 pl-9 text-gray-900 dark:border-gray-700 dark:text-white"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-gray-500">
+              <div className="absolute top-1/2 right-3 -translate-y-1/2 text-xs text-gray-400">
                 /
               </div>
             </div>
@@ -119,9 +118,9 @@ const HeartbeatsPage = () => {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-lg border border-gray-700 bg-gray-800/50">
+        <div className="overflow-hidden rounded-lg border border-gray-200 bg-gray-100/50 dark:border-gray-700 dark:bg-gray-800/50">
           <div
-            className="flex cursor-pointer items-center px-6 py-4"
+            className="flex cursor-pointer items-center px-6 py-4 hover:bg-gray-200/50 dark:hover:bg-gray-700/30"
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <svg
@@ -137,21 +136,21 @@ const HeartbeatsPage = () => {
                 d="M19 9l-7 7-7-7"
               />
             </svg>
-            <span className="text-white">Heartbeats</span>
+            <span className="text-gray-900 dark:text-white">Heartbeats</span>
           </div>
 
           {isExpanded && (
-            <div className="border-t border-gray-700">
+            <div className="border-t border-gray-200 dark:border-gray-700">
               {filteredHeartbeats.map((heartbeat) => (
                 <Link href={`heartbeats/${heartbeat.id}`} key={heartbeat.id}>
-                  <div className="flex items-center justify-between px-6 py-4 hover:bg-gray-700/30">
+                  <div className="flex items-center justify-between px-6 py-4 hover:bg-gray-200/50 dark:hover:bg-gray-700/30">
                     <div className="flex items-center">
-                      <div className="mr-4 h-2 w-2 rounded-full bg-gray-400"></div>
+                      <div className="mr-4 h-2 w-2 rounded-full bg-gray-400 dark:bg-gray-500"></div>
                       <div>
-                        <div className="text-sm text-white">
+                        <div className="text-sm text-gray-900 dark:text-white">
                           {heartbeat.name}
                         </div>
-                        <div className="mt-1 text-xs text-gray-400">
+                        <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                           {heartbeat.status} ·{" "}
                           {new Date(heartbeat.createdAt).toLocaleDateString()}
                         </div>

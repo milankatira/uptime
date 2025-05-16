@@ -144,17 +144,17 @@ const HeartbeatDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
+      <div className="min-h-screen w-full bg-white dark:bg-gray-900">
         <div className="max-w-full p-6 md:p-8">
           {/* Shimmer for breadcrumb */}
-          <div className="mb-10 h-6 w-1/3 animate-pulse rounded bg-gray-700"></div>
+          <div className="mb-10 h-6 w-1/3 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
 
           {/* Shimmer for header */}
           <div className="mb-8 flex items-center">
-            <div className="mr-4 h-12 w-12 animate-pulse rounded-full bg-gray-700"></div>
+            <div className="mr-4 h-12 w-12 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700"></div>
             <div className="flex-1">
-              <div className="mb-2 h-8 w-1/2 animate-pulse rounded bg-gray-700"></div>
-              <div className="h-4 w-3/4 animate-pulse rounded bg-gray-700"></div>
+              <div className="mb-2 h-8 w-1/2 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
+              <div className="h-4 w-3/4 animate-pulse rounded bg-gray-200 dark:bg-gray-700"></div>
             </div>
           </div>
 
@@ -219,19 +219,19 @@ const HeartbeatDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen w-full  bg-white dark:bg-gray-900">
+    <div className="min-h-screen w-full bg-white dark:bg-gray-900">
       <div className="max-w-full p-6 md:p-8">
         {/* Breadcrumb navigation */}
         <div className="mb-10 flex items-center text-sm">
           <Link
             href="/heartbeats"
-            className="flex items-center text-gray-400 hover:text-gray-200"
+            className="flex items-center text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200"
           >
             <ArrowLeftCircle className="mr-2 h-4 w-4" />
             Heartbeats
           </Link>
-          <span className="mx-2 text-gray-600">/</span>
-          <span className="text-gray-200">{heartbeatDetails?.name}</span>
+          <span className="mx-2 text-gray-400 dark:text-gray-600">/</span>
+          <span className="text-gray-900 dark:text-gray-200">{heartbeatDetails?.name}</span>
         </div>
 
         {/* Heartbeat header */}
@@ -252,11 +252,11 @@ const HeartbeatDetailPage = () => {
             </svg>
           </div>
           <div>
-            <h1 className="text-2xl font-semibold text-white">
+            <h1 className="text-2xl font-semibold ">
               {" "}
               {heartbeatDetails?.name}
             </h1>
-            <div className="flex items-center text-sm text-gray-400">
+            <div className="flex items-center text-sm text-gray-500">
               <span className="mr-2">Pending</span>
               <span className="mx-2">•</span>
               <span>Expected every 1 day</span>
@@ -268,7 +268,7 @@ const HeartbeatDetailPage = () => {
         <div className="mb-8 flex flex-wrap gap-3">
           <Button
             variant="outline"
-            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter text-gray-300 hover:text-white"
+            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter"
             onClick={handleSendTestAlert}
           >
             <Send className="mr-2 h-4 w-4" />
@@ -276,21 +276,21 @@ const HeartbeatDetailPage = () => {
           </Button>
           <Button
             variant="outline"
-            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter text-gray-300 hover:text-white"
+            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter"
           >
             <AlertTriangle className="mr-2 h-4 w-4" />
             Incidents
           </Button>
           <Button
             variant="outline"
-            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter text-gray-300 hover:text-white"
+            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter"
           >
             <Pause className="mr-2 h-4 w-4" />
             Pause
           </Button>
           <Button
             variant="outline"
-            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter text-gray-300 hover:text-white"
+            className="bg-dark-lighter border-dark-border hover:bg-dark-lighter"
             onClick={() => setIsDialogOpen(true)}
           >
             <svg
@@ -319,7 +319,7 @@ const HeartbeatDetailPage = () => {
         {/* URL instruction section */}
         <div className="bg-dark-lighter border-dark-border mb-8 rounded-lg border p-6">
           <div className="mb-5 flex items-center justify-between">
-            <p className="text-gray-300">
+            <p >
               Make a HEAD, GET, or a POST request to the following URLs
             </p>
           </div>
@@ -331,14 +331,14 @@ const HeartbeatDetailPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-gray-200"
+                className=""
                 onClick={() => navigator.clipboard.writeText(heartbeatDownUrl)}
               >
                 <Copy className="mr-2 h-4 w-4" />
                 Copy
               </Button>
             </div>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray-500">
               Use this URL to report a failure (500 status)
             </p>
           </div>
@@ -350,21 +350,20 @@ const HeartbeatDetailPage = () => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="text-gray-400 hover:text-gray-200"
                 onClick={() => navigator.clipboard.writeText(heartbeatUpUrl)}
               >
                 <Copy className="mr-2 h-4 w-4" />
                 Copy
               </Button>
             </div>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray-500">
               Use this URL to report a successful heartbeat
             </p>
           </div>
 
-          <p className="text-sm text-gray-400">
-            You can also append <code className="text-gray-300">/fail</code> or{" "}
-            <code className="text-gray-300">/&lt;exit-code&gt;</code> to the
+          <p className="text-sm text-gray-500">
+            You can also append <code className="text-gray-400">/fail</code> or{" "}
+            <code className="text-gray-400">/&lt;exit-code&gt;</code> to the
             URL. Read our{" "}
             <a href="#" className="text-blue-400 hover:underline">
               documentation
@@ -377,7 +376,7 @@ const HeartbeatDetailPage = () => {
         <div className="mb-8 grid grid-cols-1 gap-4 md:grid-cols-3">
           <div className="bg-dark-lighter border-dark-border rounded-lg border p-6">
             <p className="mb-1 text-sm text-gray-400">Currently pending for</p>
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-xl font-semibold">
               {mockStats.currentPending.days} days{" "}
               {mockStats.currentPending.hours} hours{" "}
               {mockStats.currentPending.mins} mins
@@ -388,14 +387,14 @@ const HeartbeatDetailPage = () => {
             <p className="mb-1 text-sm text-gray-400">
               Last heartbeat recorded
             </p>
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-xl font-semibold ">
               {mockStats.lastRecorded}
             </h2>
           </div>
 
           <div className="bg-dark-lighter border-dark-border rounded-lg border p-6">
             <p className="mb-1 text-sm text-gray-400">Incidents</p>
-            <h2 className="text-xl font-semibold text-white">
+            <h2 className="text-xl font-semibold ">
               {mockStats.incidentCount}
             </h2>
           </div>
@@ -406,14 +405,14 @@ const HeartbeatDetailPage = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-dark border-dark-border hover:bg-dark">
-                <TableHead className="text-gray-300">Time period</TableHead>
-                <TableHead className="text-gray-300">Availability</TableHead>
-                <TableHead className="text-gray-300">Downtime</TableHead>
-                <TableHead className="text-gray-300">Incidents</TableHead>
-                <TableHead className="text-gray-300">
+                <TableHead >Time period</TableHead>
+                <TableHead >Availability</TableHead>
+                <TableHead >Downtime</TableHead>
+                <TableHead >Incidents</TableHead>
+                <TableHead >
                   Longest incident
                 </TableHead>
-                <TableHead className="text-gray-300">Avg. incident</TableHead>
+                <TableHead >Avg. incident</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -422,20 +421,20 @@ const HeartbeatDetailPage = () => {
                   key={index}
                   className="border-dark-border hover:bg-dark/40"
                 >
-                  <TableCell className="text-gray-200">{row.period}</TableCell>
+                  <TableCell >{row.period}</TableCell>
                   <TableCell className="text-green-500">
                     {row.availability}
                   </TableCell>
-                  <TableCell className="text-gray-300">
+                  <TableCell >
                     {row.downtime}
                   </TableCell>
-                  <TableCell className="text-gray-300">
+                  <TableCell >
                     {row.incidents}
                   </TableCell>
-                  <TableCell className="text-gray-300">
+                  <TableCell >
                     {row.longestIncident}
                   </TableCell>
-                  <TableCell className="text-gray-300">
+                  <TableCell >
                     {row.avgIncident}
                   </TableCell>
                 </TableRow>
@@ -457,7 +456,7 @@ const HeartbeatDetailPage = () => {
                   onChange={(e) =>
                     setDateRange({ ...dateRange, from: e.target.value })
                   }
-                  className="bg-dark border-dark-border pl-10 text-gray-200 hover:border-gray-600 focus:border-gray-500"
+                  className="bg-dark border-dark-border pl-10 hover:border-gray-600 focus:border-gray-500"
                 />
               </div>
             </div>
@@ -471,7 +470,7 @@ const HeartbeatDetailPage = () => {
                   onChange={(e) =>
                     setDateRange({ ...dateRange, to: e.target.value })
                   }
-                  className="bg-dark border-dark-border pl-10 text-gray-200 hover:border-gray-600 focus:border-gray-500"
+                  className="bg-dark border-dark-border pl-10 hover:border-gray-600 focus:border-gray-500"
                 />
               </div>
             </div>
@@ -486,45 +485,31 @@ const HeartbeatDetailPage = () => {
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mb-4 flex justify-center">
-          <div className="bg-dark-lighter border-dark-border inline-flex items-center rounded-full border px-6 py-3 text-gray-400">
-            <span className="mr-2 h-2 w-2 rounded-full bg-blue-400"></span>
-            Need help? Let us know at{" "}
-            <a
-              href="mailto:hello@betterstack.com"
-              className="ml-1 text-blue-400 hover:underline"
-            >
-              hello@betterstack.com
-            </a>
-          </div>
-        </div>
-
         {/* Configure Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="bg-dark-lighter border-dark-border text-white">
+          <DialogContent className="bg-dark-lighter border-dark-border">
             <DialogHeader>
               <DialogTitle>Configure Heartbeat</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-2">
               <div>
-                <label className="mb-2 block text-sm text-gray-400">Name</label>
+                <label className="mb-2 block text-sm text-gray-500">Name</label>
                 <Input
                   defaultValue="dskndnjrd"
-                  className="bg-dark border-dark-border text-gray-200"
+                  className="bg-dark border-dark-border"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm text-gray-400">
+                <label className="mb-2 block text-sm text-gray-500">
                   Expected every
                 </label>
                 <div className="flex gap-2">
                   <Input
                     type="number"
                     defaultValue="1"
-                    className="bg-dark border-dark-border text-gray-200"
+                    className="bg-dark border-dark-border "
                   />
-                  <select className="bg-dark border-dark-border rounded-md border px-3 py-2 text-gray-200">
+                  <select className="bg-dark border-dark-border rounded-md border px-3 py-2 ">
                     <option>minute</option>
                     <option>hour</option>
                     <option selected>day</option>
@@ -537,7 +522,7 @@ const HeartbeatDetailPage = () => {
               <Button
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
-                className="border-dark-border hover:bg-dark text-gray-300"
+                className="border-dark-border hover:bg-dark"
               >
                 Cancel
               </Button>

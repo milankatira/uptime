@@ -111,9 +111,24 @@ model Incident {
   heartbeatId String?        @map("heartbeat_id")
   website     Website?       @relation(fields: [websiteId], references: [id])
   heartbeat   Heartbeat?     @relation(fields: [heartbeatId], references: [id])
+  cause       String?
+  escalation  String?
+  Timeline Timeline[]
+}
+
+
+model Timeline {
+  id        Int     @id @default(autoincrement())
+  type      String
+  message   String
+  recipient String?
+  time      String
+  incident  Incident @relation(fields: [incidentId], references: [id])
+  incidentId String
 }
 
 enum IncidentStatus {
   Ongoing
   Resolved
+  Acknowledged
 }
