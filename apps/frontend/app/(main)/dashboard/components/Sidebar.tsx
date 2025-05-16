@@ -87,21 +87,19 @@ export function SidebarDemo({ children }: { children: React.ReactNode }) {
               <Logo />
             </>
             <div className="mt-8 flex flex-col gap-2">
-            <OrganizationSwitcher
-              appearance={{
-                baseTheme: theme === 'dark' ? dark : undefined,
-                elements: {
-                  rootBox: "w-full",
-                  organizationSwitcherTrigger: "w-full justify-between",
-                },
-              }}
-            />
+              <OrganizationSwitcher
+                appearance={{
+                  baseTheme: theme === "dark" ? dark : undefined,
+                  elements: {
+                    rootBox: "w-full",
+                    organizationSwitcherTrigger: "w-full justify-between",
+                  },
+                }}
+              />
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
               ))}
             </div>
-
-
           </div>
           <div className="text-white">
             <UserButton />

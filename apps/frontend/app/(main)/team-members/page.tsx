@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { OrganizationProfile } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
@@ -12,7 +12,7 @@ export default function OrganizationProfilePage() {
         <OrganizationProfile
           routing="hash"
           appearance={{
-            baseTheme: theme === 'dark' ? dark : undefined,
+            baseTheme: theme === "dark" ? dark : undefined,
           }}
         />
       </div>

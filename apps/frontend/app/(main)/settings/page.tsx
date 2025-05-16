@@ -94,9 +94,7 @@ const SettingsPage = () => {
           <CardContent>
             <div className="space-y-6">
               <div>
-                <h3 className="mb-3 text-sm font-medium">
-                  Select Theme
-                </h3>
+                <h3 className="mb-3 text-sm font-medium">Select Theme</h3>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="default" className="w-full">
@@ -143,7 +141,7 @@ const SettingsPage = () => {
                   render={({ field }) => (
                     <FormItem className="border-dark-border flex flex-row items-center justify-between rounded-lg border p-4">
                       <div className="space-y-0.5">
-                        <FormLabel >
+                        <FormLabel>
                           <div className="flex items-center">
                             <Bell className="mr-2 h-4 w-4" />
                             Email Notifications
