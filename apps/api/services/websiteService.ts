@@ -2,7 +2,6 @@ import { IncidentNotification } from "@dub/email/emails/IncidentNotification";
 
 import { sendEmail } from "@dub/email/send-via-nodemailer";
 import { prismaClient } from "db/client";
-import type { IncidentStatus } from "../types/index";
 
 export class WebsiteService {
   /**
@@ -31,7 +30,7 @@ export class WebsiteService {
       data: {
         userId: user.id,
         url,
-        orgId, // Add this line to include orgId in the creation
+        orgId,
       },
     });
   }
@@ -115,6 +114,7 @@ export class WebsiteService {
     escalation?: any,
     maintenance?: any,
     metadata?: any,
+    orgId?: string,
   ) {
     // Check if user exists
     const user = await prismaClient.user.findUnique({
@@ -132,6 +132,7 @@ export class WebsiteService {
         escalation,
         maintenance,
         metadata,
+        orgId,
       },
     });
     return { id: data.id };
@@ -145,6 +146,7 @@ export class WebsiteService {
     date: Date,
     timeSlot: string,
     repeat: string | null,
+    orgId?: string,
   ) {
     // Check if user exists
     const user = await prismaClient.user.findUnique({
@@ -159,6 +161,7 @@ export class WebsiteService {
         date,
         timeSlot,
         repeat,
+        orgId,
       },
     });
     return { id: data.id };
@@ -167,15 +170,23 @@ export class WebsiteService {
   /**
    * Get all maintenance windows for a user
    */
-  async getAllMaintenanceWindows(userId: string) {
+  async getAllMaintenanceWindows(userId: string, orgId?: string) {
     const user = await prismaClient.user.findUnique({
       where: { externalId: userId },
     });
     if (!user) {
       throw new Error("User does not exist");
     }
+
+    const whereClause: any = {
+      userId: user.id,
+    };
+
+    if (orgId) {
+      whereClause.orgId = orgId;
+    }
     const windows = await prismaClient.maintenanceWindow.findMany({
-      where: { userId: user.id },
+      where: whereClause,
       orderBy: { date: "asc" },
     });
     return { windows };
@@ -184,17 +195,23 @@ export class WebsiteService {
   /**
    * Get heartbeat by ID
    */
-  async getHeartbeat(userId: string) {
+  async getHeartbeat(userId: string, orgId?: string) {
     const user = await prismaClient.user.findUnique({
       where: { externalId: userId },
     });
     if (!user) {
       throw new Error("User does not exist");
     }
+
+    const whereClause: any = {
+      userId: user.id,
+    };
+
+    if (orgId) {
+      whereClause.orgId = orgId;
+    }
     return prismaClient.heartbeat.findMany({
-      where: {
-        userId: user.id,
-      },
+      where: whereClause,
     });
   }
 

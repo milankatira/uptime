@@ -89,6 +89,8 @@ export async function createHeartbeat(req: Request, res: Response) {
     const userId = req.userId!;
     const { name, interval, gracePeriod, escalation, maintenance, metadata } =
       req.body;
+    const orgId = req.headers["orgid"] as string | undefined;
+
     if (!name || !interval || !gracePeriod) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -101,6 +103,7 @@ export async function createHeartbeat(req: Request, res: Response) {
       escalation,
       maintenance,
       metadata,
+      orgId,
     );
     return res.json(result);
   } catch (error) {
@@ -116,6 +119,8 @@ export async function createMaintenanceWindow(req: Request, res: Response) {
   try {
     const userId = req.userId!;
     const { date, timeSlot, repeat } = req.body;
+    const orgId = req.headers["orgid"] as string | undefined;
+
     if (!date || !timeSlot) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -124,6 +129,7 @@ export async function createMaintenanceWindow(req: Request, res: Response) {
       new Date(date),
       timeSlot,
       repeat ?? null,
+      orgId,
     );
     return res.json(result);
   } catch (error) {
@@ -140,7 +146,8 @@ export async function createMaintenanceWindow(req: Request, res: Response) {
 export async function getAllMaintenanceWindows(req: Request, res: Response) {
   try {
     const userId = req.userId!;
-    const result = await websiteService.getAllMaintenanceWindows(userId);
+    const orgId = req.headers["orgid"] as string | undefined;
+    const result = await websiteService.getAllMaintenanceWindows(userId, orgId);
     return res.json(result);
   } catch (error) {
     console.error("Error getting maintenance windows:", error);
@@ -154,8 +161,8 @@ export async function getAllMaintenanceWindows(req: Request, res: Response) {
 export async function getHeartbeat(req: Request, res: Response) {
   try {
     const userId = req.userId!;
-    const data = await websiteService.getHeartbeat(userId);
-
+    const orgId = req.headers["orgid"] as string | undefined;
+    const data = await websiteService.getHeartbeat(userId, orgId);
     if (!data) {
       return res.status(404).json({ error: "Heartbeat not found" });
     }
