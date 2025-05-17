@@ -1,3 +1,4 @@
+import React from 'react'
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -12,7 +13,11 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-muted/50 border-border border-t px-4 py-12">
+    <footer className="px-4 py-12">
+      {/* Subtle glowing line at the top */}
+      <div className="w-full h-px bg-transparent relative mb-8  mx-auto">
+        <div className="absolute left-1/2 top-0 h-px -translate-x-1/2 bg-gradient-to-r from-transparent via-white/70 to-transparent blur-[2px] w-[224px]" />
+      </div>
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="col-span-1 md:col-span-1">

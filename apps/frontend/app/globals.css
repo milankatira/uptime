@@ -153,3 +153,17 @@
     transform: translate(-50%, -40%) scale(1);
   }
 }
+
+.text-gradient {
+  @apply bg-gradient-to-r from-gray-400 via-black to-gray-500;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dark .text-gradient {
+  @apply bg-gradient-to-r from-gray-700 via-white to-gray-600;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

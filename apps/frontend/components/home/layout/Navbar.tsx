@@ -6,10 +6,13 @@ import React, { useEffect, useState } from "react";
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { theme, resolvedTheme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,14 +26,63 @@ const Navbar = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
+  // Determine background color based on theme
+  const isDark = (theme === "dark" || resolvedTheme === "dark");
+  const navBg = scrolled
+    ? isDark
+      ? "rgba(16,16,20,0.85)"
+      : "rgba(255,255,255,0.85)"
+    : "rgba(0,0,0,0)";
+
   return (
-    <header
+    <motion.header
+      initial={{ y: -24, opacity: 0, maxWidth: 1280 }}
+      animate={{
+        y: scrolled ? 8 : 0,
+        opacity: 1,
+        maxWidth: scrolled ? 720 : 1280,
+        boxShadow: scrolled
+          ? "0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 0 0 rgba(0,0,0,0.08)"
+          : "none",
+        backgroundColor: navBg,
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+        border: scrolled
+          ? isDark
+            ? "1.5px solid rgba(255,255,255,0.08)"
+            : "1.5px solid rgba(0,0,0,0.08)"
+          : "1.5px solid transparent"
+      }}
+      transition={{
+        type: "spring",
+        stiffness: 600,
+        damping: 200,
+        maxWidth: { stiffness: 600, damping: 200 }
+      }}
       className={cn(
-        "fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-all duration-300 md:px-8",
+        "fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all rounded-full",
         scrolled
-          ? "bg-background/80 shadow-sm backdrop-blur-md"
-          : "bg-transparent",
+          ? "py-2 px-4 md:px-8"
+          : "py-4 px-4 md:px-8"
       )}
+      style={{
+        maxWidth: scrolled ? 720 : 1280,
+        width: "100%",
+        borderRadius: "9999px",
+        border: scrolled
+          ? isDark
+            ? "1.5px solid rgba(255,255,255,0.08)"
+            : "1.5px solid rgba(0,0,0,0.08)"
+          : "1.5px solid transparent",
+        background: scrolled
+          ? isDark
+            ? "linear-gradient(90deg,rgba(24,24,28,0.85) 0%,rgba(32,32,36,0.85) 100%)"
+            : "linear-gradient(90deg,rgba(255,255,255,0.85) 0%,rgba(245,245,245,0.85) 100%)"
+          : "transparent",
+        boxShadow: scrolled
+          ? "0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 0 0 rgba(0,0,0,0.08)"
+          : "none",
+        backdropFilter: scrolled ? "blur(16px)" : "none"
+      }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center gap-2">
@@ -52,18 +104,6 @@ const Navbar = () => {
             className="hover:text-primary text-sm font-medium transition-colors"
           >
             How It Works
-          </a>
-          <a
-            href="#pricing"
-            className="hover:text-primary text-sm font-medium transition-colors"
-          >
-            Pricing
-          </a>
-          <a
-            href="#testimonials"
-            className="hover:text-primary text-sm font-medium transition-colors"
-          >
-            Testimonials
           </a>
         </nav>
 
@@ -149,7 +189,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
-    </header>
+    </motion.header>
   );
 };
 

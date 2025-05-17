@@ -2,6 +2,7 @@ import React from "react";
 import { AnimatedNumbers } from "@/components/ui/AnimatedNumbers";
 import { motion } from "framer-motion";
 import { BellRing, CheckCircle, Clock, Globe } from "lucide-react";
+import { MagicCard } from "@/components/magicui/magic-card";
 
 const StatsSection = () => {
   return (
@@ -44,35 +45,37 @@ const StatsSection = () => {
           ].map((stat, index) => (
             <motion.div
               key={index}
-              className="bg-background border-border group hover:border-foreground/20 relative flex flex-col items-center overflow-hidden rounded-xl border p-6 text-center transition-colors duration-300"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <motion.div
-                className="from-primary/5 absolute inset-0 bg-gradient-to-t to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                initial={false}
-              />
-              <div className="bg-primary/10 relative mb-4 rounded-full p-3">
-                {stat.icon}
-              </div>
-              <div className="relative mb-2 flex items-center justify-center text-4xl font-bold">
-                <AnimatedNumbers
-                  value={stat.value}
-                  duration={1.5}
-                  formatValue={(value) =>
-                    value.toFixed(stat.suffix === "%" ? 2 : 0)
-                  }
-                />
-                <span>{stat.suffix}</span>
-              </div>
-              <div className="relative mb-2 text-lg font-medium">
-                {stat.label}
-              </div>
-              <p className="text-muted-foreground relative text-sm">
-                {stat.description}
-              </p>
+              <MagicCard
+                className="h-full group hover:border-primary/20 border border-border p-6 text-center flex flex-col items-center overflow-hidden rounded-xl transition-colors duration-300"
+                gradientOpacity={0.8}
+                gradientFrom="#6EE7B7"
+                gradientTo="#059669"
+              >
+                <div className="mx-auto w-full mb-4 rounded-full p-3 flex justify-center">
+                  {stat.icon}
+                </div>
+                <div className="relative mb-2 flex items-center justify-center text-4xl font-bold">
+                  <AnimatedNumbers
+                    value={stat.value}
+                    duration={1.5}
+                    formatValue={(value) =>
+                      value.toFixed(stat.suffix === "%" ? 2 : 0)
+                    }
+                  />
+                  <span>{stat.suffix}</span>
+                </div>
+                <div className="relative mb-2 text-lg font-medium">
+                  {stat.label}
+                </div>
+                <p className="text-muted-foreground relative text-sm">
+                  {stat.description}
+                </p>
+              </MagicCard>
             </motion.div>
           ))}
         </div>

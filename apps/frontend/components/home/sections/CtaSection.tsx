@@ -1,9 +1,10 @@
+import GradientText from "@/components/ui/GradientText";
 import { motion } from "framer-motion";
 
 const CtaSection = () => {
   return (
-    <section className="bg-black min-h-[70vh] flex items-center justify-center">
-      <div className="relative overflow-hidden py-24 bg-black min-h-[70vh] flex items-center justify-center max-w-7xl w-full">
+    <section className="min-h-[70vh] flex items-center justify-center">
+      <div className="relative overflow-hidden py-24 min-h-[70vh] flex items-center justify-center max-w-7xl w-full">
 
 
         {/* Centered Faded Grid Background */}
@@ -127,7 +128,13 @@ const CtaSection = () => {
             transition={{ duration: 0.5 }}
             className="text-white text-center text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg"
           >
-          Start Monitoring Your Website Today
+            <GradientText
+              className='mt-4 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl'
+              element='H1'
+            >
+
+              Start Monitoring Your Website Today
+            </GradientText>
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -136,17 +143,17 @@ const CtaSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
             className="text-gray-300 text-center max-w-2xl mx-auto mb-10 text-lg md:text-xl"
           >
-        Join thousands of businesses that rely on Uptime.com for
-        comprehensive website monitoring and performance tracking.
+            Join thousands of businesses that rely on Uptime.com for
+            comprehensive website monitoring and performance tracking.
           </motion.p>
 
 
           <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-00 focus:ring-offset-2 focus:ring-offset-slate-50">
-  <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#CFFFD2_0%,#1E7F37_50%,#CFFFD2_100%)]" />
-  <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
-    Get Started Now
-  </span>
-</button>
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#CFFFD2_0%,#1E7F37_50%,#CFFFD2_100%)]" />
+            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
+              Get Started Now
+            </span>
+          </button>
 
         </div>
       </div>

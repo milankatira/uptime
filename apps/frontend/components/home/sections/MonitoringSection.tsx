@@ -9,10 +9,11 @@ import {
   Shield,
   Terminal,
 } from "lucide-react";
+import GradientText from "@/components/ui/GradientText";
 
 const MonitoringSection = () => {
   return (
-    <section className="bg-black py-24 text-white">
+    <section className=" py-24">
       <div className="container mx-auto px-4">
         {/* Best-in-class monitoring */}
         <div className="mx-auto mb-32 max-w-4xl">
@@ -22,17 +23,18 @@ const MonitoringSection = () => {
             viewport={{ once: true }}
             className="mb-16 text-center"
           >
-            <h2 className="mb-4 text-4xl font-bold">
+            <GradientText
+              className='mt-4 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl'
+              element='H1'
+            >
               Best-in-class uptime monitoring.
-              <br />
-              No false positives.
-            </h2>
+            </GradientText>
             <p className="mb-8 text-lg text-gray-400">
               {`We've perfected HTTP monitoring over the years to ensure you never
               get a false alert. Our advanced checks ensure accuracy.`}
             </p>
             <Button>
-            Start Monitoring Now
+              Start Monitoring Now
             </Button>
           </motion.div>
 
