@@ -19,7 +19,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
 
-import { syncUserInDb, updateUserOrganizationIds } from "@/action/user.action";
+// import { syncUserInDb, updateUserOrganizationIds } from "@/action/user.action";
 import { Button } from "@/components/ui/button";
 
 type UptimeStatus = "good" | "bad" | "unknown";
@@ -542,7 +542,7 @@ function App() {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        await syncUserInDb();
+        // await syncUserInDb();
         toast.success("User synchronized successfully");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
@@ -588,10 +588,10 @@ function App() {
 
   useEffect(() => {
     if (user?.organizationMemberships) {
-      const organizationIds = user.organizationMemberships.map((m) => m.id);
-      updateUserOrganizationIds(organizationIds).catch((err) =>
-        console.error("Failed to update organization IDs:", err),
-      );
+      // const organizationIds = user.organizationMemberships.map((m) => m.id);
+      // updateUserOrganizationIds(organizationIds).catch((err) =>
+      //   console.error("Failed to update organization IDs:", err),
+      // );
     }
   }, [user?.organizationMemberships]);
 

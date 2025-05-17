@@ -5,18 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-// import {
-//   findConnectionByUserId,
-//   addEmailConnection,
-//   removeEmailConnection,
-// } from '@/actions/connection.action';
+import { useAxiosInstance } from "@/lib/axiosInstance";
+// Remove the import for @/action/connection.action
 import { Loader2, Mail, X } from "lucide-react";
 // import { useToast } from '@/hooks/use-toast';
-import {
-  addEmailConnection,
-  findConnectionByUserId,
-  removeEmailConnection,
-} from "@/action/connection.action";
 import {
   Dialog,
   DialogContent,
@@ -37,6 +29,7 @@ export default function ConnectionsPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [newEmail, setNewEmail] = useState("");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const instance = useAxiosInstance();
 
   useEffect(() => {
     fetchConnections();
@@ -45,7 +38,8 @@ export default function ConnectionsPage() {
   async function fetchConnections() {
     try {
       setLoading(true);
-      const data = await findConnectionByUserId();
+      const res = await instance.get("/api/v1/user/connections");
+      const data = res.data;
 
       if (Array.isArray(data)) {
         const emailConnections = data
@@ -58,7 +52,6 @@ export default function ConnectionsPage() {
           emails: emailConnections,
         });
       }
-
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
       toast("Failed to load connections");
@@ -74,7 +67,8 @@ export default function ConnectionsPage() {
     }
 
     try {
-      const result = await addEmailConnection(newEmail);
+      const res = await instance.post("/api/v1/user/connections", { email: newEmail });
+      const result = res.data;
       setConnections((prev) => ({
         ...prev,
         emails: [
@@ -93,7 +87,7 @@ export default function ConnectionsPage() {
 
   const handleRemoveEmail = async (id: string) => {
     try {
-      await removeEmailConnection(id);
+      await instance.delete("/api/v1/user/connections", { data: { id } });
       setConnections((prev) => ({
         ...prev,
         emails: prev.emails.filter((email) => email.id !== id),

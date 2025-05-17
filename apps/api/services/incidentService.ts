@@ -1,4 +1,4 @@
-import { prismaClient } from "db/client";
+import { prismaClient } from "@repo/db/client";
 import type { IncidentStatus } from "../types/index";
 
 export class IncidentService {

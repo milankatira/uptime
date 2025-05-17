@@ -19,8 +19,6 @@ import {
 } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Bell, Moon, Sun } from "lucide-react";
-
-import { getUserFromDb } from "@/action/user.action";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,10 +42,11 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        const response = await getUserFromDb();
+        // Call backend API to get user preferences
+        const response = await instance.get("/api/v1/user/preferences");
         settingsForm.setValue(
           "emailNotifications",
-          response?.emailNotifications,
+          response.data?.emailNotifications,
         );
       } catch (error) {
         console.error("Failed to fetch preferences:", error);

@@ -1,4 +1,4 @@
-import { prismaClient } from "db/client";
+import { prismaClient } from "@repo/db/client";
 
 export class UserService {
   async updateUserPreferences(
@@ -8,7 +8,6 @@ export class UserService {
     const user = await prismaClient.user.findUnique({
       where: { externalId: userId },
     });
-
     if (!user) throw new Error("User not found");
 
     return prismaClient.user.update({
@@ -23,7 +22,6 @@ export class UserService {
     const user = await prismaClient.user.findUnique({
       where: { externalId: userId },
     });
-
     if (!user) throw new Error("User not found");
 
     return prismaClient.user.update({
@@ -33,6 +31,47 @@ export class UserService {
       },
     });
   }
+
+  async addEmailConnection(userId: string, email: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) throw new Error("User not found");
+
+    return prismaClient.connections.create({
+      data: {
+        type: "Email",
+        email,
+        userId: user.id,
+      },
+    });
+  }
+
+  async removeEmailConnection(userId: string, connectionId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) throw new Error("User not found");
+
+    return prismaClient.connections.delete({
+      where: {
+        id: connectionId,
+        userId: user.id,
+      },
+    });
+  }
+
+  async findConnectionByUserId(userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) throw new Error("User not found");
+
+    return prismaClient.connections.findMany({
+      where: { userId: user.id },
+    });
+  }
+
 }
 
 export const userService = new UserService();

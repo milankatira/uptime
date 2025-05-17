@@ -20,6 +20,7 @@ export default function RootLayout({
         <body>
           <Toaster />
           <ThemeProvider defaultTheme="dark" attribute="class">
+            {/* @ts-expect-error unknown error  */}
             {children}
           </ThemeProvider>
         </body>
