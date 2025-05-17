@@ -1,16 +1,16 @@
-'use server';
+"use server";
 
 import { prismaClient } from "db/client";
-import { getUserFromDb } from './user.action';
+import { getUserFromDb } from "./user.action";
 
 export async function addEmailConnection(email: string) {
   const auth = await getUserFromDb();
   if (!auth?.id) return;
-  if (!auth?.id) throw new Error('Unauthorized');
+  if (!auth?.id) throw new Error("Unauthorized");
 
   return await prismaClient.connections.create({
     data: {
-      type: 'Email',
+      type: "Email",
       email,
       userId: auth?.id,
     },
@@ -19,7 +19,7 @@ export async function addEmailConnection(email: string) {
 
 export async function removeEmailConnection(id: string) {
   const auth = await getUserFromDb();
-  if (!auth?.id) throw new Error('Unauthorized');
+  if (!auth?.id) throw new Error("Unauthorized");
 
   return await prismaClient.connections.delete({
     where: {
@@ -38,7 +38,7 @@ export async function findConnectionByUserId() {
 
     return connection;
   } catch (error) {
-    console.error('Error finding connection by userId:', error);
-    throw new Error('Unable to find connection');
+    console.error("Error finding connection by userId:", error);
+    throw new Error("Unable to find connection");
   }
 }

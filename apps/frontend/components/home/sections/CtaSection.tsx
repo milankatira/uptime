@@ -3,13 +3,11 @@ import { motion } from "framer-motion";
 
 const CtaSection = () => {
   return (
-    <section className="min-h-[70vh] flex items-center justify-center">
-      <div className="relative overflow-hidden py-24 min-h-[70vh] flex items-center justify-center max-w-7xl w-full">
-
-
+    <section className="flex min-h-[70vh] items-center justify-center">
+      <div className="relative flex min-h-[70vh] w-full max-w-7xl items-center justify-center overflow-hidden py-24">
         {/* Centered Faded Grid Background */}
         <div
-          className="absolute left-1/2 top-0 -translate-x-1/2 w-full max-w-3xl h-2/3 pointer-events-none"
+          className="pointer-events-none absolute top-0 left-1/2 h-2/3 w-full max-w-3xl -translate-x-1/2"
           style={{
             backgroundImage:
               "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
@@ -23,7 +21,7 @@ const CtaSection = () => {
         />
         {/* Right Side SVG */}
         <svg
-          className="absolute hidden lg:block right-0 h-full"
+          className="absolute right-0 hidden h-full lg:block"
           xmlns="http://www.w3.org/2000/svg"
           width="89"
           height="568"
@@ -72,7 +70,7 @@ const CtaSection = () => {
         </svg>
         {/* Left Side SVG */}
         <svg
-          className="absolute hidden lg:block left-0 h-full rotate-x-180"
+          className="absolute left-0 hidden h-full rotate-x-180 lg:block"
           xmlns="http://www.w3.org/2000/svg"
           width="89"
           height="568"
@@ -120,41 +118,32 @@ const CtaSection = () => {
           </defs>
         </svg>
 
-        <div className="relative z-10 flex flex-col items-center w-full">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-white text-center text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg"
-          >
-            <GradientText
-              className='mt-4 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl'
-              element='H1'
-            >
+        <div className="relative z-10 flex w-full flex-col items-center">
 
-              Start Monitoring Your Website Today
-            </GradientText>
-          </motion.h1>
+          <GradientText
+            className="from-foreground to-foreground/70 mt-4 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl"
+            element="H1"
+          >
+            Start Monitoring Your Website Today
+          </GradientText>
+
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-gray-300 text-center max-w-2xl mx-auto mb-10 text-lg md:text-xl"
+            className="mx-auto mb-10 max-w-2xl text-center text-lg text-gray-300 md:text-xl"
           >
             Join thousands of businesses that rely on Uptime.com for
             comprehensive website monitoring and performance tracking.
           </motion.p>
 
-
-          <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-00 focus:ring-offset-2 focus:ring-offset-slate-50">
+          <button className="focus:ring-slate-00 relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-50 focus:outline-none">
             <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#CFFFD2_0%,#1E7F37_50%,#CFFFD2_100%)]" />
             <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl">
               Get Started Now
             </span>
           </button>
-
         </div>
       </div>
     </section>

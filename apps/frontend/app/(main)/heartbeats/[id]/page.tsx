@@ -31,7 +31,8 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const HeartbeatDetailPage = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string;
   const instance = useAxiosInstance();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dateRange, setDateRange] = useState<{ from: string; to: string }>({

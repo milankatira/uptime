@@ -1,4 +1,3 @@
-import React from 'react'
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import {
@@ -8,6 +7,7 @@ import {
   TwitterIcon,
   YoutubeIcon,
 } from "lucide-react";
+import React from "react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -15,8 +15,8 @@ const Footer = () => {
   return (
     <footer className="px-4 py-12">
       {/* Subtle glowing line at the top */}
-      <div className="w-full h-px bg-transparent relative mb-8  mx-auto">
-        <div className="absolute left-1/2 top-0 h-px -translate-x-1/2 bg-gradient-to-r from-transparent via-white/70 to-transparent blur-[2px] w-[224px]" />
+      <div className="relative mx-auto mb-8 h-px w-full bg-transparent">
+        <div className="absolute top-0 left-1/2 h-px w-[224px] -translate-x-1/2 bg-gradient-to-r from-transparent via-white/70 to-transparent blur-[2px]" />
       </div>
       <div className="mx-auto max-w-7xl">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">

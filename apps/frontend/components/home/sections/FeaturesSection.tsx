@@ -1,5 +1,4 @@
-import React from "react";
-import { SpotlightCard } from "@/components/ui/SpotlightCard";
+import { MagicCard } from "@/components/magicui/magic-card";
 import { TracingBeam } from "@/components/ui/TracingBeam";
 import { motion } from "framer-motion";
 import {
@@ -16,6 +15,7 @@ import {
   Webhook,
   Zap,
 } from "lucide-react";
+import React from "react";
 
 const features = [
   {
@@ -141,7 +141,12 @@ const FeaturesSection = () => {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                <SpotlightCard className="h-full">
+                <MagicCard
+                  className="group hover:border-primary/20 border-border flex h-full flex-col items-center overflow-hidden rounded-xl border p-6 text-center transition-colors duration-300"
+                  gradientOpacity={0.8}
+                  gradientFrom="#6EE7B7"
+                  gradientTo="#059669"
+                >
                   <div className="flex h-full flex-col p-6">
                     <div className="bg-primary/10 mb-4 w-fit rounded-full p-3">
                       {feature.icon}
@@ -153,7 +158,7 @@ const FeaturesSection = () => {
                       {feature.description}
                     </p>
                   </div>
-                </SpotlightCard>
+                </MagicCard>
               </motion.div>
             ))}
           </div>

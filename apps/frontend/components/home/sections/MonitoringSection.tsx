@@ -1,5 +1,5 @@
-import React from "react";
 import { Button } from "@/components/ui/button";
+import GradientText from "@/components/ui/GradientText";
 import { motion } from "framer-motion";
 import {
   Activity,
@@ -9,11 +9,11 @@ import {
   Shield,
   Terminal,
 } from "lucide-react";
-import GradientText from "@/components/ui/GradientText";
+import React from "react";
 
 const MonitoringSection = () => {
   return (
-    <section className=" py-24">
+    <section className="py-24">
       <div className="container mx-auto px-4">
         {/* Best-in-class monitoring */}
         <div className="mx-auto mb-32 max-w-4xl">
@@ -24,8 +24,8 @@ const MonitoringSection = () => {
             className="mb-16 text-center"
           >
             <GradientText
-              className='mt-4 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl'
-              element='H1'
+              className="from-foreground to-foreground/70 mt-4 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl"
+              element="H1"
             >
               Best-in-class uptime monitoring.
             </GradientText>
@@ -33,9 +33,7 @@ const MonitoringSection = () => {
               {`We've perfected HTTP monitoring over the years to ensure you never
               get a false alert. Our advanced checks ensure accuracy.`}
             </p>
-            <Button>
-              Start Monitoring Now
-            </Button>
+            <Button>Start Monitoring Now</Button>
           </motion.div>
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2">

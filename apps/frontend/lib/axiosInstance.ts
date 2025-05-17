@@ -1,3 +1,4 @@
+"use client";
 import { API_BACKEND_URL } from "@/config";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";

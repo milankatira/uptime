@@ -1,12 +1,12 @@
-import React from "react";
+import { MagicCard } from "@/components/magicui/magic-card";
 import { AnimatedNumbers } from "@/components/ui/AnimatedNumbers";
 import { motion } from "framer-motion";
 import { BellRing, CheckCircle, Clock, Globe } from "lucide-react";
-import { MagicCard } from "@/components/magicui/magic-card";
+import React from "react";
 
 const StatsSection = () => {
   return (
-    <section className=" relative overflow-hidden py-16">
+    <section className="relative overflow-hidden py-16">
       <div className="from-background via-background/50 to-background absolute inset-0 -z-10 bg-gradient-to-b opacity-50" />
       <div className="bg-primary/5 absolute top-1/2 left-1/4 -z-10 h-[300px] w-[300px] rounded-full blur-[100px]" />
       <div className="bg-primary/5 absolute top-1/2 right-1/4 -z-10 h-[300px] w-[300px] rounded-full blur-[100px]" />
@@ -51,12 +51,12 @@ const StatsSection = () => {
               viewport={{ once: true }}
             >
               <MagicCard
-                className="h-full group hover:border-primary/20 border border-border p-6 text-center flex flex-col items-center overflow-hidden rounded-xl transition-colors duration-300"
+                className="group hover:border-primary/20 border-border flex h-full flex-col items-center overflow-hidden rounded-xl border p-6 text-center transition-colors duration-300"
                 gradientOpacity={0.8}
                 gradientFrom="#6EE7B7"
                 gradientTo="#059669"
               >
-                <div className="mx-auto w-full mb-4 rounded-full p-3 flex justify-center">
+                <div className="mx-auto mb-4 flex w-full justify-center rounded-full p-3">
                   {stat.icon}
                 </div>
                 <div className="relative mb-2 flex items-center justify-center text-4xl font-bold">

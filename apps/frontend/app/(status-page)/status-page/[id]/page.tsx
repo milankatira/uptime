@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 import { BellOff, Maximize, Minimize } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // TypeScript interfaces for Website and Tick
 type Tick = {
@@ -26,7 +26,8 @@ type Website = {
 };
 
 function StatusPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string;
   const instance = useAxiosInstance();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [countdown, setCountdown] = useState(50);

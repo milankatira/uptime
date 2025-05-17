@@ -595,7 +595,6 @@ function App() {
     }
   }, [user?.organizationMemberships]);
 
-  console.log(user?.organizationMemberships, "user?.organizationMemberships");
 
   if (user?.organizationMemberships?.length === 0) {
     return (

@@ -1,8 +1,9 @@
+'use client'
 import { AnimatedCard } from "@/components/ui/AnimatedCard";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { AlertTriangle, CheckCircle, Clock, XCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const UptimeDemoPanel = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -84,7 +85,7 @@ const UptimeDemoPanel = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const getStatusIcon = (status) => {
+  const getStatusIcon = (status: string) => {
     switch (status) {
       case "up":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
@@ -97,7 +98,7 @@ const UptimeDemoPanel = () => {
     }
   };
 
-  const getStatusClass = (status) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case "up":
         return "text-green-500 bg-green-500/10";

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import React from "react";
 
 const tiers = [
   {
@@ -150,7 +151,7 @@ const PricingSection = () => {
 
         <div className="mt-16 text-center">
           <p className="text-muted-foreground mb-4">
-            Need a custom plan? We've got you covered.
+            {` Need a custom plan? We've got you covered.`}
           </p>
           <Button variant="outline">Contact Sales</Button>
         </div>

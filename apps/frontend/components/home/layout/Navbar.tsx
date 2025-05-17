@@ -5,9 +5,9 @@ import { Menu, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { useTheme } from "next-themes";
+import Link from "next/link";
 
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -27,7 +27,7 @@ const Navbar = () => {
   };
 
   // Determine background color based on theme
-  const isDark = (theme === "dark" || resolvedTheme === "dark");
+  const isDark = theme === "dark" || resolvedTheme === "dark";
   const navBg = scrolled
     ? isDark
       ? "rgba(16,16,20,0.85)"
@@ -50,19 +50,17 @@ const Navbar = () => {
           ? isDark
             ? "1.5px solid rgba(255,255,255,0.08)"
             : "1.5px solid rgba(0,0,0,0.08)"
-          : "1.5px solid transparent"
+          : "1.5px solid transparent",
       }}
       transition={{
         type: "spring",
         stiffness: 600,
         damping: 200,
-        maxWidth: { stiffness: 600, damping: 200 }
+        maxWidth: { stiffness: 600, damping: 200 },
       }}
       className={cn(
-        "fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all rounded-full",
-        scrolled
-          ? "py-2 px-4 md:px-8"
-          : "py-4 px-4 md:px-8"
+        "fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-full transition-all",
+        scrolled ? "px-4 py-2 md:px-8" : "px-4 py-4 md:px-8",
       )}
       style={{
         maxWidth: scrolled ? 720 : 1280,
@@ -81,7 +79,7 @@ const Navbar = () => {
         boxShadow: scrolled
           ? "0 8px 32px 0 rgba(0,0,0,0.10), 0 1.5px 0 0 rgba(0,0,0,0.08)"
           : "none",
-        backdropFilter: scrolled ? "blur(16px)" : "none"
+        backdropFilter: scrolled ? "blur(16px)" : "none",
       }}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between">
