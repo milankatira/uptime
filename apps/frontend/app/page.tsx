@@ -9,6 +9,7 @@ import PricingSection from "@/components/home/sections/PricingSection";
 import StatsSection from "@/components/home/sections/StatsSection";
 import TestimonialsSection from "@/components/home/sections/TestimonialsSection";
 import UptimeDemo from "@/components/home/sections/UptimeDemo";
+import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
 import { useEffect } from "react";
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <UptimeDemo />
         <PricingSection />
         <TestimonialsSection />
+        <ConnectAppsSection /> {/* Add the new component here */}
         <CtaSection />
       </main>
       <Footer />

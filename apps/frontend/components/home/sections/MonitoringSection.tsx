@@ -112,7 +112,6 @@ Content-Type: application/json
             <h2 className="mb-4 text-4xl font-bold">
               A lot more than uptime monitoring.
               <br />
-              Batteries included.
             </h2>
             <p className="text-lg text-gray-400">
               Complete incident management platform with alerting, on-call
