@@ -21,6 +21,7 @@ import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
 
 // import { syncUserInDb, updateUserOrganizationIds } from "@/action/user.action";
 import { Button } from "@/components/ui/button";
+import { useAxiosInstance } from "@/lib/axiosInstance";
 
 type UptimeStatus = "good" | "bad" | "unknown";
 
@@ -46,13 +47,12 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
   return (
     <div className="relative flex items-center justify-center">
       <div
-        className={`h-3.5 w-3.5 rounded-full ${
-          status === "good"
-            ? "bg-emerald-500 dark:bg-emerald-400"
-            : status === "bad"
-              ? "bg-rose-500 dark:bg-rose-400"
-              : "bg-gray-400 dark:bg-gray-500"
-        }`}
+        className={`h-3.5 w-3.5 rounded-full ${status === "good"
+          ? "bg-emerald-500 dark:bg-emerald-400"
+          : status === "bad"
+            ? "bg-rose-500 dark:bg-rose-400"
+            : "bg-gray-400 dark:bg-gray-500"
+          }`}
       />
       {status === "good" && (
         <div
@@ -94,13 +94,12 @@ function UptimeTicks({
             content={`${index * 3}-${(index + 1) * 3} min ago: ${tick.charAt(0).toUpperCase() + tick.slice(1)}`}
           >
             <div
-              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${
-                tick === "good"
-                  ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
-                  : tick === "bad"
-                    ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
-                    : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
-              }`}
+              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
+                ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
+                : tick === "bad"
+                  ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
+                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
+                }`}
               style={{ alignSelf: "flex-end" }}
             />
           </Tooltip>
@@ -349,7 +348,7 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     const averageUptime =
       websites.length > 0
         ? websites.reduce((sum, site) => sum + site.uptimePercentage, 0) /
-          websites.length
+        websites.length
         : 0;
 
     return { totalSites, sitesByStatus, averageUptime };
@@ -451,6 +450,11 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const { websites, refreshWebsites } = useWebsites();
   const { getToken } = useAuth();
+  const { user } = useUser(); // Removed the 'as userData' alias
+  const instance = useAxiosInstance(); // Get the authenticated axios instance
+
+
+
 
   const processedWebsites = useMemo(() => {
     return websites.map((website) => {
@@ -542,15 +546,19 @@ function App() {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        // await syncUserInDb();
+        console.log("user", user?.imageUrl, user?.primaryEmailAddress?.emailAddress)
+        // await syncUserInDb(); // Commented out the old call
+        await instance.post("/api/v1/user", { email: user?.primaryEmailAddress?.emailAddress, imageUrl: user?.imageUrl });
         toast.success("User synchronized successfully");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Failed to synchronize user");
       }
     };
-
-    syncUser();
+    if (user?.primaryEmailAddress?.emailAddress) {
+      syncUser();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddWebsite = async (url: string | null, interval?: number) => {
@@ -561,18 +569,12 @@ function App() {
 
     setIsModalOpen(false);
     try {
-      const token = await getToken();
-      await axios.post(
-        `${API_BACKEND_URL}/api/v1/website`,
+      await instance.post(
+        `/api/v1/website`,
         {
           url,
           interval,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        }
       );
       await refreshWebsites();
       toast.success(`${url} is now being monitored`);
@@ -584,7 +586,7 @@ function App() {
     }
   };
 
-  const { user } = useUser();
+  // const { user } = useUser(); // This line is now redundant and can be removed
 
   useEffect(() => {
     if (user?.organizationMemberships) {

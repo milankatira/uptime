@@ -120,16 +120,21 @@ model Incident {
   cause       String?
   escalation  String?
   Timeline    Timeline[]
+
+  @@index([websiteId])
+  @@index([heartbeatId])
 }
 
 model Timeline {
-  id         Int      @id @default(autoincrement())
+  id         String   @id @default(uuid())
   type       String
   message    String
   recipient  String?
-  time       String
+  time       DateTime @default(now())
+  createdAt  DateTime @default(now())
   incident   Incident @relation(fields: [incidentId], references: [id])
   incidentId String
+  @@index([incidentId])
 }
 
 enum IncidentStatus {
@@ -137,7 +142,6 @@ enum IncidentStatus {
   Resolved
   Acknowledged
 }
-
 
 model DiscordWebhook {
   id          String        @id @default(uuid())

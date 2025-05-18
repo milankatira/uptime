@@ -10,6 +10,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import Link from "next/link"; // Import Link
 
 interface Incident {
   id: string;
@@ -183,9 +184,10 @@ function IncidentsSection() {
           ))
         ) : filteredIncidents.length > 0 ? (
           filteredIncidents.map((incident) => (
-            <div
+            <Link // Wrap the incident item with Link
               key={incident.id}
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50 md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto]"
+              href={`/incidents/${incident.id}`} // Set the href to the detail page
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50 md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] cursor-pointer" // Add cursor-pointer for better UX
             >
               <div className="col-span-3 flex items-center gap-3 md:col-span-1">
                 <ShieldAlert
@@ -223,15 +225,13 @@ function IncidentsSection() {
               </div>
 
               <div className="flex justify-end">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-8 w-8 text-gray-500 hover:text-white"
-                >
-                  <MoreHorizontal className="h-5 w-5" />
-                </Button>
+                {/* Keep the MoreHorizontal button outside the Link if it has a separate action */}
+                {/* If clicking the row should navigate, and the button has a different action,
+                    you might need to stop propagation on the button click.
+                    For simplicity, I'm assuming clicking the row navigates. */}
+                 <MoreHorizontal className="h-5 w-5 text-gray-500 group-hover:text-white" />
               </div>
-            </div>
+            </Link> // Close Link
           ))
         ) : (
           <div className="py-10 text-center text-gray-500">

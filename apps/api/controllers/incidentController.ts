@@ -62,3 +62,26 @@ export async function deleteIncident(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to delete incident" });
   }
 }
+
+export async function addIncidentComment(req: Request, res: Response) {
+  try {
+    const userId = req.userId!;
+    const { incidentId } = req.params;
+    const { comment } = req.body;
+
+    if (!incidentId || !comment) {
+      return res.status(400).json({ error: "Incident ID and comment are required" });
+    }
+
+    const newComment = await incidentService.addCommentToIncident(
+      incidentId,
+      userId,
+      comment,
+    );
+
+    return res.status(201).json(newComment);
+  } catch (error) {
+    console.error("Error adding incident comment:", error);
+    return res.status(500).json({ error: "Failed to add incident comment" });
+  }
+}

@@ -72,3 +72,24 @@ export async function findConnectionByUserId(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to find connections" });
   }
 }
+
+export async function findOrCreateUser(req: Request, res: Response) {
+  try {
+    const externalId = req?.userId!;
+    const { email, imageUrl } = req?.body;
+
+    if (!email) {
+        return res.status(400).json({ error: "Email is required in the request body" });
+    }
+
+    const user = await userService.findOrCreateUserByExternalId(
+      externalId,
+      email, // Pass email
+      imageUrl, // Pass imageUrl
+    );
+    return res.json(user);
+  } catch (error) {
+    console.error("Error finding or creating user:", error);
+    return res.status(500).json({ error: "Failed to find or create user" });
+  }
+}

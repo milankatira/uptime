@@ -72,6 +72,28 @@ export class UserService {
     });
   }
 
+  async findOrCreateUserByExternalId(
+    externalId: string,
+    email: string, // Add email parameter
+    imageUrl?: string, // Add optional imageUrl parameter
+  ) {
+    let user = await prismaClient.user.findUnique({
+      where: { externalId },
+    });
+
+    if (!user) {
+      // User not found, create a new one
+      user = await prismaClient.user.create({
+        data: {
+          externalId,
+          email: email, // Use the provided email
+          imageUrl: imageUrl, // Use the provided imageUrl
+        },
+      });
+    }
+
+    return user;
+  }
 }
 
 export const userService = new UserService();
