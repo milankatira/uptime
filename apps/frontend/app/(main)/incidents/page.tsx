@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 import {
-  FileText,
-  MessageSquare,
   MoreHorizontal,
   Search,
   ShieldAlert,
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import Link from "next/link"; // Import Link
+import Link from "next/link";
+import { ReportIncidentModal } from "@/components/incidents/ReportIncidentModal";
+
 
 interface Incident {
   id: string;
@@ -44,25 +44,27 @@ function IncidentsSection() {
   const [incidentsData, setIncidentsData] = useState<Incident[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const instance = useAxiosInstance();
 
-  useEffect(() => {
-    const fetchIncidents = async () => {
-      setLoading(true);
-      try {
-        const response = await instance.get<{ incidents: Incident[] }>(
-          "/api/v1/incidents",
-        );
-        setIncidentsData(response.data.incidents || []);
-      } catch (error) {
-        console.error("Failed to fetch incidents:", error);
-        setIncidentsData([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchIncidents = async () => {
+    setLoading(true);
+    try {
+      const response = await instance.get<{ incidents: Incident[] }>(
+        "/api/v1/incidents",
+      );
+      setIncidentsData(response.data.incidents || []);
+    } catch (error) {
+      console.error("Failed to fetch incidents:", error);
+      setIncidentsData([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchIncidents();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance]);
 
   const formatDate = (dateString: string | number | Date) => {
@@ -151,23 +153,10 @@ function IncidentsSection() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button>Report a new incident</Button>
+          <Button onClick={() => setIsReportModalOpen(true)}>
+            Report a new incident
+          </Button>
         </div>
-      </div>
-
-      <div className="mb-6 flex items-center gap-4">
-        <Button
-          variant="ghost"
-          className="px-3 py-2 text-gray-400 hover:bg-[#2a2a36] hover:text-white"
-        >
-          <MessageSquare className="mr-2 h-4 w-4" /> Comments
-        </Button>
-        <Button
-          variant="ghost"
-          className="px-3 py-2 text-gray-400 hover:bg-[#2a2a36] hover:text-white"
-        >
-          <FileText className="mr-2 h-4 w-4" /> Post-mortems
-        </Button>
       </div>
 
       <div className="mb-3 hidden grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] items-center gap-4 px-4 py-2 text-xs font-medium text-gray-500 md:grid">
@@ -184,10 +173,10 @@ function IncidentsSection() {
           ))
         ) : filteredIncidents.length > 0 ? (
           filteredIncidents.map((incident) => (
-            <Link // Wrap the incident item with Link
+            <Link
               key={incident.id}
-              href={`/incidents/${incident.id}`} // Set the href to the detail page
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50 md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] cursor-pointer" // Add cursor-pointer for better UX
+              href={`/incidents/${incident.id}`}
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-lg border border-gray-700/50 bg-gray-900/70 p-4 hover:bg-gray-800/50 md:grid-cols-[minmax(0,_3fr)_1fr_1fr_auto] cursor-pointer"
             >
               <div className="col-span-3 flex items-center gap-3 md:col-span-1">
                 <ShieldAlert
@@ -225,13 +214,9 @@ function IncidentsSection() {
               </div>
 
               <div className="flex justify-end">
-                {/* Keep the MoreHorizontal button outside the Link if it has a separate action */}
-                {/* If clicking the row should navigate, and the button has a different action,
-                    you might need to stop propagation on the button click.
-                    For simplicity, I'm assuming clicking the row navigates. */}
                  <MoreHorizontal className="h-5 w-5 text-gray-500 group-hover:text-white" />
               </div>
-            </Link> // Close Link
+            </Link>
           ))
         ) : (
           <div className="py-10 text-center text-gray-500">
@@ -241,6 +226,12 @@ function IncidentsSection() {
           </div>
         )}
       </div>
+
+      <ReportIncidentModal
+        isOpen={isReportModalOpen}
+        onOpenChange={setIsReportModalOpen}
+        onIncidentReported={fetchIncidents}
+      />
     </div>
   );
 }

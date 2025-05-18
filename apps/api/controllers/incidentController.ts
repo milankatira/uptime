@@ -85,3 +85,26 @@ export async function addIncidentComment(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to add incident comment" });
   }
 }
+
+export async function createIncident(req: Request, res: Response) {
+  try {
+    const userId = req.userId!;
+    const { title, errorText, websiteId } = req.body;
+
+    if (!title || !errorText) {
+      return res.status(400).json({ error: "Title and errorText are required" });
+    }
+
+    const newIncident = await incidentService.createIncident(
+      userId,
+      title,
+      errorText,
+      websiteId,
+    );
+
+    return res.status(201).json(newIncident);
+  } catch (error) {
+    console.error("Error creating incident:", error);
+    return res.status(500).json({ error: "Failed to create incident" });
+  }
+}

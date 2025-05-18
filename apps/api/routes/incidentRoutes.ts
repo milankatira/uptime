@@ -5,6 +5,7 @@ import {
   getIncidentDetails,
   updateIncident,
   addIncidentComment,
+  createIncident, // Import the new controller function
 } from "../controllers/incidentController";
 import { authMiddleware } from "../middleware";
 
@@ -24,4 +25,8 @@ router.delete("/incident/:incidentId", authMiddleware, deleteIncident);
 
 // @ts-expect-error - TODO: fix this type error
 router.post("/incident/:incidentId/comment", authMiddleware, addIncidentComment);
+
+// @ts-expect-error - TODO: fix this type error
+router.post("/incident", authMiddleware, createIncident);
+
 export default router;

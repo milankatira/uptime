@@ -1,5 +1,5 @@
 import { prismaClient } from "@repo/db/client";
-import type { IncidentStatus } from "../types/index";
+import { IncidentStatus } from "../types/index";
 
 export class IncidentService {
   async getAllIncidents(userId: string) {
@@ -60,6 +60,46 @@ export class IncidentService {
 
       },
     });
+  }
+
+  async createIncident(
+    userId: string,
+    title: string,
+    errorText: string,
+    websiteId?: string
+  ) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    const newIncident = await prismaClient.incident.create({
+      data: {
+        userId: user.id,
+        errorText: errorText,
+        status: IncidentStatus.Ongoing,
+        date: new Date(),
+        cause: "Manual",
+        websiteId: websiteId || null,
+        errorCode: "MANUAL",
+        duration: 0,
+      },
+    });
+
+
+    await prismaClient.timeline.create({
+      data: {
+        time: new Date(),
+        incidentId: newIncident.id,
+        type: "start",
+        message: `Incident created manually: ${title}`,
+      },
+    });
+
+    return newIncident;
   }
 }
 
