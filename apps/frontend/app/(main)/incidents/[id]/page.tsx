@@ -213,9 +213,7 @@ const IncidentDetailPage = () => {
                   {incidents?.errorText} {/* Use incidents state */}
                 </h1>
                 <div className="flex items-center text-sm">
-                  <span className="mr-2 text-red-500 dark:text-red-400">
-                    {incidents?.status} {/* Use incidents state */}
-                  </span>
+
                   <span className="text-gray-500 dark:text-gray-400">
                     • {incidents?.date} {/* Use incidents state */}
                   </span>
