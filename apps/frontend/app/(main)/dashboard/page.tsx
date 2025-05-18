@@ -19,7 +19,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
 
-// import { syncUserInDb, updateUserOrganizationIds } from "@/action/user.action";
 import { Button } from "@/components/ui/button";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 
@@ -64,51 +63,6 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
   );
 }
 
-function UptimeTicks({
-  ticks,
-  expanded,
-}: {
-  ticks: UptimeStatus[];
-  expanded: boolean;
-}) {
-  return (
-    <div
-      className={`mt-3 flex gap-1 transition-all duration-300 ${expanded ? "h-10" : "h-4"}`}
-    >
-      {ticks.map((tick, index) => {
-        const height = expanded
-          ? tick === "good"
-            ? "h-10"
-            : tick === "bad"
-              ? "h-4"
-              : "h-2"
-          : tick === "good"
-            ? "h-4"
-            : tick === "bad"
-              ? "h-2"
-              : "h-1";
-
-        return (
-          <Tooltip
-            key={index}
-            content={`${index * 3}-${(index + 1) * 3} min ago: ${tick.charAt(0).toUpperCase() + tick.slice(1)}`}
-          >
-            <div
-              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
-                ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
-                : tick === "bad"
-                  ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
-                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
-                }`}
-              style={{ alignSelf: "flex-end" }}
-            />
-          </Tooltip>
-        );
-      })}
-    </div>
-  );
-}
-
 interface ProcessedWebsite {
   id: string;
   url: string;
@@ -116,6 +70,7 @@ interface ProcessedWebsite {
   uptimePercentage: number;
   lastChecked: string;
   uptimeTicks: UptimeStatus[];
+  interval: number;
 }
 
 function WebsiteCard({
@@ -245,7 +200,7 @@ function WebsiteCard({
             </div>
           </div>
           <div className="dark:bg-gray-750 rounded-lg p-3 pt-1">
-            <UptimeTicks ticks={website.uptimeTicks} expanded={isExpanded} />
+            <UptimeTicks ticks={website.uptimeTicks} expanded={isExpanded} interval={website.interval} />
             <div className="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
               <span>30 min ago</span>
               <span>Now</span>
@@ -260,6 +215,7 @@ function WebsiteCard({
               </h4>
               <div className="mt-1 flex items-end">
                 <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {/* Replace with actual response time data if available */}
                   {Math.floor(Math.random() * 500) + 100}
                 </span>
                 <span className="mb-0.5 ml-1 text-xs text-gray-500 dark:text-gray-400">
@@ -273,6 +229,7 @@ function WebsiteCard({
               </h4>
               <div className="mt-1 flex items-end">
                 <span className="text-lg font-semibold text-gray-900 dark:text-white">
+                  {/* Replace with actual outages data if available */}
                   {website.status === "bad"
                     ? Math.floor(Math.random() * 3) + 1
                     : 0}
@@ -289,26 +246,75 @@ function WebsiteCard({
   );
 }
 
+function UptimeTicks({
+  ticks,
+  expanded,
+  interval,
+}: {
+  ticks: UptimeStatus[];
+  expanded: boolean;
+  interval: number;
+}) {
+  return (
+    <div
+      className={`mt-3 flex gap-1 transition-all duration-300 ${expanded ? "h-10" : "h-4"}`}
+    >
+      {ticks.map((tick, index) => {
+        const height = expanded
+          ? tick === "good"
+            ? "h-10"
+            : tick === "bad"
+              ? "h-4"
+              : "h-2"
+          : tick === "good"
+            ? "h-4"
+            : tick === "bad"
+              ? "h-2"
+              : "h-1";
+
+        // Calculate the time window for the tooltip based on 10 bars over 30 minutes
+        const startMinAgo = (10 - index) * 3;
+        const endMinAgo = (9 - index) * 3;
+        const tooltipContent = `${endMinAgo}-${startMinAgo} min ago (Interval: ${interval}s): ${tick.charAt(0).toUpperCase() + tick.slice(1)}`;
+
+        return (
+          <Tooltip
+            key={index}
+            content={tooltipContent}
+          >
+            <div
+              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
+                ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
+                : tick === "bad"
+                  ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
+                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
+                }`}
+              style={{ alignSelf: "flex-end" }}
+            />
+          </Tooltip>
+        );
+      })}
+    </div>
+  );
+}
+
 function LoadingSpinner() {
   return (
-    <div className="w-full space-y-4">
-      {/* Shimmer effect for summary cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+    <div className="w-full space-y-6">
+      <div className="flex w-full flex-row gap-4">
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="h-32 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-700"
-          />
-        ))}
-      </div>
-
-      {/* Shimmer effect for website cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {[...Array(6)].map((_, i) => (
-          <div
-            key={i}
-            className="h-40 animate-pulse rounded-xl bg-gray-200 dark:bg-gray-700"
-          />
+            className="animate-pulse rounded-xl border border-gray-200 bg-white p-4 shadow-md dark:border-gray-700 dark:bg-gray-800"
+          >
+            <div className="flex items-center">
+              <div className="mr-4 h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700"></div>
+              <div>
+                <div className="h-4 w-24 rounded bg-gray-200 dark:bg-gray-700 mb-2"></div>
+                <div className="h-6 w-16 rounded bg-gray-200 dark:bg-gray-700"></div>
+              </div>
+            </div>
+          </div>
         ))}
       </div>
     </div>
@@ -450,11 +456,8 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const { websites, refreshWebsites } = useWebsites();
   const { getToken } = useAuth();
-  const { user } = useUser(); // Removed the 'as userData' alias
-  const instance = useAxiosInstance(); // Get the authenticated axios instance
-
-
-
+  const { user } = useUser();
+  const instance = useAxiosInstance();
 
   const processedWebsites = useMemo(() => {
     return websites.map((website) => {
@@ -527,6 +530,7 @@ function App() {
         uptimePercentage,
         lastChecked,
         uptimeTicks: windows,
+        interval: website.interval,
       };
     });
   }, [websites]);

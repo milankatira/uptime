@@ -3,6 +3,7 @@ import { useAxiosInstance } from "@/lib/axiosInstance";
 import { useEffect, useState } from "react";
 
 interface Website {
+  interval: number;
   id: string;
   url: string;
   ticks: {
