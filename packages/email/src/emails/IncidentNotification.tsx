@@ -187,6 +187,8 @@ const buttonContainer = {
   textAlign: "left" as const,
   marginTop: "24px",
   marginBottom: "24px",
+  display: "flex",
+  gap: "10px",
 };
 
 const buttonShared = {
