@@ -94,6 +94,17 @@ export class UserService {
 
     return user;
   }
+
+  async getUserPreferences(userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+      select: {
+        emailNotifications: true,
+      },
+    });
+    if (!user) throw new Error("User not found");
+    return user;
+  }
 }
 
 export const userService = new UserService();

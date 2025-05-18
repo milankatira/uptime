@@ -93,3 +93,14 @@ export async function findOrCreateUser(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to find or create user" });
   }
 }
+
+export async function getUserPreferences(req: Request, res: Response) {
+  try {
+    const userId = req.userId!;
+    const preferences = await userService.getUserPreferences(userId);
+    return res.json(preferences);
+  } catch (error) {
+    console.error("Error fetching preferences:", error);
+    return res.status(500).json({ error: "Failed to fetch preferences" });
+  }
+}

@@ -42,8 +42,7 @@ const SettingsPage = () => {
   useEffect(() => {
     const fetchPreferences = async () => {
       try {
-        // Call backend API to get user preferences
-        const response = await instance.get("/api/v1/user/preferences");
+        const response = await instance.get("/api/v1/preferences");
         settingsForm.setValue(
           "emailNotifications",
           response.data?.emailNotifications,
@@ -61,7 +60,7 @@ const SettingsPage = () => {
     emailNotifications: boolean;
   }) => {
     try {
-      await instance.put(`${API_BACKEND_URL}/api/v1/user/preferences`, {
+      await instance.put(`${API_BACKEND_URL}/api/v1/preferences`, {
         emailNotifications: data.emailNotifications,
       });
       toast.success("Notification settings updated successfully");

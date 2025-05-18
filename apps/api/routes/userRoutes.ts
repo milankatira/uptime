@@ -5,7 +5,8 @@ import {
   removeEmailConnection,
   updateFcmToken,
   updateUserPreferences,
-  findOrCreateUser, // Import the new controller function
+  findOrCreateUser,
+  getUserPreferences,
 } from "../controllers/userController";
 import { authMiddleware } from "../middleware";
 
@@ -13,6 +14,8 @@ const router = Router();
 
 // @ts-expect-error - TODO: fix this type error
 router.put("/preferences", authMiddleware, updateUserPreferences);
+// @ts-expect-error - TODO: fix this type error
+router.get("/preferences", authMiddleware, getUserPreferences);
 // @ts-expect-error - TODO: fix this type error
 router.put("/user/fcm-token", authMiddleware, updateFcmToken);
 // @ts-expect-error - TODO: fix this type error
