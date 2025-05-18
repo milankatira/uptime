@@ -1,53 +1,53 @@
 {
-  "name": "@dub/email",
-  "version": "0.0.0",
-  "private": true,
-  "main": "./src/index.ts",
-  "scripts": {
-    "clean": "rm -rf .turbo node_modules"
-  },
-  "dependencies": {
-    "@react-email/components": "^0.0.22",
-    "@react-email/render": "^1.1.2",
-    "lucide-react": "^0.462.0",
-    "nodemailer": "^6.9.3",
-    "react-email": "^2.1.6",
-    "resend": "^4.5.1"
-  },
-  "devDependencies": {
-    "@types/nodemailer": "~6.4.17",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.14",
-    "typescript": "^5.4.4"
-  },
-  "peerDependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "exports": {
-    ".": {
-      "import": "./src/index.ts",
-      "require": "./src/index.ts"
+    "name": "@repo/email",
+    "version": "0.0.0",
+    "private": true,
+    "main": "./src/index.ts",
+    "scripts": {
+        "clean": "rm -rf .turbo node_modules"
     },
-    "./templates/*": {
-      "import": "./src/templates/*.tsx",
-      "require": "./src/templates/*.tsx"
+    "dependencies": {
+        "@react-email/components": "^0.0.22",
+        "@react-email/render": "^1.1.2",
+        "lucide-react": "^0.462.0",
+        "nodemailer": "^6.9.3",
+        "react-email": "^2.1.6",
+        "resend": "^4.5.1"
     },
-    "./emails/*": {
-      "import": "./src/emails/*.tsx",
-      "require": "./src/emails/*.tsx"
+    "devDependencies": {
+        "@types/nodemailer": "~6.4.17",
+        "@types/react": "^18.2.48",
+        "@types/react-dom": "^18.2.14",
+        "typescript": "^5.4.4"
     },
-    "./resend": {
-      "import": "./src/resend/index.ts",
-      "require": "./src/resend/index.ts"
+    "peerDependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     },
-    "./resend/*": {
-      "import": "./src/resend/*.ts",
-      "require": "./src/resend/*.ts"
-    },
-    "./send-via-nodemailer": {
-      "import": "./src/send-via-nodemailer.ts",
-      "require": "./src/send-via-nodemailer.ts"
+    "exports": {
+        ".": {
+            "import": "./src/index.ts",
+            "require": "./src/index.ts"
+        },
+        "./templates/*": {
+            "import": "./src/templates/*.tsx",
+            "require": "./src/templates/*.tsx"
+        },
+        "./emails/*": {
+            "import": "./src/emails/*.tsx",
+            "require": "./src/emails/*.tsx"
+        },
+        "./resend": {
+            "import": "./src/resend/index.ts",
+            "require": "./src/resend/index.ts"
+        },
+        "./resend/*": {
+            "import": "./src/resend/*.ts",
+            "require": "./src/resend/*.ts"
+        },
+        "./send-via-nodemailer": {
+            "import": "./src/send-via-nodemailer.ts",
+            "require": "./src/send-via-nodemailer.ts"
+        }
     }
-  }
 }

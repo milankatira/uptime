@@ -2,6 +2,8 @@ import { prismaClient } from '@repo/db/client';
 import { IncidentStatus } from '../types/index';
 import { listBotChannels, postMessageToSlack } from '../lib/slack';
 import { postMessageToDiscord } from '../lib/discord';
+import { sendEmail } from '@dub/email/send-via-nodemailer';
+import { IncidentNotification } from '@dub/email/emails/IncidentNotification'; // Import the email template
 
 export class IncidentService {
     async getAllIncidents(userId: string) {
@@ -146,6 +148,67 @@ export class IncidentService {
                 await postMessageToDiscord(
                     discordConnection.url,
                     messageContent
+                );
+            }
+        }
+
+        // Assuming 'email' is a field directly on the Connection model or a nested relation
+        // Adjust the find logic based on your actual schema
+        const emailConnection = user.Connections.find(
+            (data) => data.email
+        )?.email;
+
+        if (emailConnection) {
+            // Assuming the Email model has an 'address' field
+            const recipientEmail = (emailConnection as any)
+
+            if (recipientEmail) {
+                // Prepare data for the email template
+                const emailProps = {
+                    userName: user.email || 'User', // Use user's name if available
+                    acknowledgeLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}/acknowledge`, // Example link
+                    viewIncidentLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}`, // Example link
+                    unavailableLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}/unavailable`, // Example link
+                    heartbeatName: websiteId
+                        ? (
+                              await prismaClient.website.findUnique({
+                                  where: { id: websiteId },
+                                  select: { url: true },
+                              })
+                          )?.url || `Website ID: ${websiteId}`
+                        : 'Manual Incident', // Use website name or ID
+                    incidentCause: errorText,
+                    startedAt: newIncident.date.toLocaleString(), // Format date
+                    companyName: process.env.COMPANY_NAME || 'Your Company', // Get from env or config
+                    logoUrl:
+                        process.env.COMPANY_LOGO_URL ||
+                        'https://your-logo-url.com/default-logo.png', // Get from env or config
+                    supportUrl: process.env.SUPPORT_URL || '#', // Get from env or config
+                    signInUrl: process.env.SIGN_IN_URL || '#', // Get from env or config
+                };
+
+                let emailSubject = `🚨 Incident Alert: ${emailProps.heartbeatName}`;
+
+                // Call the sendEmail function
+                try {
+                    await sendEmail(
+                        recipientEmail,
+                        emailSubject,
+                        IncidentNotification, // Pass the React email component
+                        emailProps // Pass the props for the component
+                    );
+                    console.log(
+                        `Incident notification email sent to ${recipientEmail}`
+                    );
+                } catch (emailError) {
+                    console.error(
+                        `Failed to send incident notification email to ${recipientEmail}:`,
+                        emailError
+                    );
+                }
+            } else {
+                console.warn(
+                    'Email connection found, but no recipient email address available.'
                 );
             }
         }
