@@ -1,0 +1,385 @@
+"use client";
+
+import { useAxiosInstance } from "@/lib/axiosInstance";
+import { useParams } from "next/navigation";
+import React, { useEffect, useState, useMemo } from "react";
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  XCircle,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+// Import the new ResponseTimeChart component
+import { ResponseTimeChart } from "./components/ResponseTimeChart";
+
+// Remove shadcn chart component imports from here
+// import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+// import {
+//   ChartConfig,
+//   ChartContainer,
+//   ChartTooltip,
+//   ChartTooltipContent,
+// } from "@/components/ui/chart"
+
+type UptimeStatus = "good" | "bad" | "unknown";
+
+interface WebsiteTick {
+  id: string;
+  createdAt: string;
+  status: string;
+  latency: number;
+}
+
+interface WebsiteDetails {
+  id: string;
+  url: string;
+  interval: number;
+  ticks: WebsiteTick[];
+}
+
+function StatusCircle({ status }: { status: UptimeStatus }) {
+  return (
+    <div className="relative flex items-center justify-center">
+      <div
+        className={`h-3.5 w-3.5 rounded-full ${
+          status === "good"
+            ? "bg-emerald-500 dark:bg-emerald-400"
+            : status === "bad"
+            ? "bg-rose-500 dark:bg-rose-400"
+            : "bg-gray-400 dark:bg-gray-500"
+        }`}
+      />
+      {status === "good" && (
+        <div
+          className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75 dark:bg-emerald-300"
+          style={{ animationDuration: "3s" }}
+        ></div>
+      )}
+    </div>
+  );
+}
+
+function UptimeTicks({ ticks }: { ticks: WebsiteTick[] }) {
+  // Process ticks to get the last 30 minutes status windows, similar to dashboard
+  const processedTicks: UptimeStatus[] = useMemo(() => {
+    const sortedTicks = [...ticks].sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+
+    const thirtyMinutesAgo = new Date(Date.now() - 30 * 60 * 1000);
+    const recentTicks = sortedTicks.filter(
+      (tick) => new Date(tick.createdAt) > thirtyMinutesAgo
+    );
+
+    const windows: UptimeStatus[] = [];
+
+    for (let i = 0; i < 10; i++) {
+      const windowStart = new Date(Date.now() - (i + 1) * 3 * 60 * 1000);
+      const windowEnd = new Date(Date.now() - i * 3 * 60 * 1000);
+
+      const windowTicks = recentTicks.filter((tick) => {
+        const tickTime = new Date(tick.createdAt);
+        return tickTime >= windowStart && tickTime < windowEnd;
+      });
+
+      const upTicks = windowTicks.filter((tick) => tick.status === "Good").length;
+      windows[9 - i] =
+        windowTicks.length === 0
+          ? "unknown"
+          : upTicks / windowTicks.length >= 0.5
+          ? "good"
+          : "bad";
+    }
+    return windows;
+  }, [ticks]);
+
+  return (
+    <div className="mt-3 flex gap-1 h-10">
+      {processedTicks.map((tick, index) => {
+        const height =
+          tick === "good" ? "h-10" : tick === "bad" ? "h-4" : "h-2";
+
+        // Calculate the time window for the tooltip based on 10 bars over 30 minutes
+        const startMinAgo = (10 - index) * 3;
+        const endMinAgo = (9 - index) * 3;
+        const tooltipContent = `${endMinAgo}-${startMinAgo} min ago: ${
+          tick.charAt(0).toUpperCase() + tick.slice(1)
+        }`;
+
+        return (
+          <TooltipProvider key={index}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${
+                    tick === "good"
+                      ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
+                      : tick === "bad"
+                      ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
+                      : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
+                  }`}
+                  style={{ alignSelf: "flex-end" }}
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{tooltipContent}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      })}
+    </div>
+  );
+}
+
+
+// Function to determine overall status based on recent ticks (similar to dashboard)
+function getOverallStatus(ticks: WebsiteTick[]): UptimeStatus {
+    const sortedTicks = [...ticks].sort(
+        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+    const lastThreeTicks = sortedTicks.slice(0, 3);
+
+    if (lastThreeTicks.length === 0) {
+        return "unknown";
+    }
+
+    const goodCount = lastThreeTicks.filter(
+        (tick) => tick.status === "Good"
+    ).length;
+    const badCount = lastThreeTicks.filter(
+        (tick) => tick.status === "Bad"
+    ).length;
+
+    if (goodCount === lastThreeTicks.length) {
+        return "good";
+    } else if (badCount === lastThreeTicks.length) {
+        return "bad";
+    } else {
+        return "unknown";
+    }
+}
+
+
+export default function WebsiteDetailsPage() {
+  const { websiteId } = useParams();
+  const instance = useAxiosInstance();
+  const [website, setWebsite] = useState<WebsiteDetails | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchWebsiteDetails() {
+      if (!websiteId) return;
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await instance.get(`/api/v1/website/status`, {
+          params: { websiteId },
+        });
+        setWebsite(response.data);
+      } catch (err) {
+        console.error("Failed to fetch website details:", err);
+        setError("Failed to load website details.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchWebsiteDetails();
+  }, [websiteId, instance]);
+
+  const displayUrl = useMemo(() => {
+    if (!website) return "Loading...";
+    try {
+      const urlObj = new URL(website.url);
+      return urlObj.hostname;
+    } catch {
+      return website.url;
+    }
+  }, [website]);
+
+  const overallStatus = useMemo(() => {
+      if (!website) return "unknown";
+      return getOverallStatus(website.ticks);
+  }, [website]);
+
+  const statusLabel = useMemo(() => {
+    if (overallStatus === "good") {
+      return (
+        <div className="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
+          <CheckCircle className="mr-1 h-4 w-4" />
+          Online
+        </div>
+      );
+    } else if (overallStatus === "bad") {
+      return (
+        <div className="flex items-center text-sm font-medium text-rose-600 dark:text-rose-400">
+          <XCircle className="mr-1 h-4 w-4" />
+          Down
+        </div>
+      );
+    } else {
+      return (
+        <div className="flex items-center text-sm font-medium text-amber-600 dark:text-amber-400">
+          <AlertTriangle className="mr-1 h-4 w-4" />
+          Unknown
+        </div>
+      );
+    }
+  }, [overallStatus]);
+
+  const uptimePercentage = useMemo(() => {
+      if (!website || website.ticks.length === 0) return 0;
+      const upTicks = website.ticks.filter(tick => tick.status === "Good").length;
+      return (upTicks / website.ticks.length) * 100;
+  }, [website]);
+
+  const lastChecked = useMemo(() => {
+      if (!website || website.ticks.length === 0) return "Never";
+      const sortedTicks = [...website.ticks].sort(
+          (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      return new Date(sortedTicks[0].createdAt).toLocaleString();
+  }, [website]);
+
+
+  if (loading) {
+    return <div className="container mx-auto py-8">Loading website details...</div>;
+  }
+
+  if (error) {
+    return <div className="container mx-auto py-8 text-rose-500">Error: {error}</div>;
+  }
+
+  if (!website) {
+      return <div className="container mx-auto py-8">Website not found.</div>;
+  }
+
+  // Remove chart data preparation and config from here
+  // const chartData = website.ticks
+  //   .map(tick => ({
+  //     time: new Date(tick.createdAt).toLocaleTimeString(),
+  //     latency: tick.latency,
+  //     status: tick.status,
+  //   }))
+  //   .sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime());
+
+  // const chartConfig = {
+  //     latency: {
+  //         label: "Latency (ms)",
+  //         color: "hsl(var(--chart-1))",
+  //     },
+  // } satisfies ChartConfig;
+
+
+  return (
+    <div className="container mx-auto py-8">
+      <div className="flex items-center space-x-4 mb-6">
+        <StatusCircle status={overallStatus} />
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            {displayUrl}
+          </h1>
+          <div className="mt-1 flex items-center space-x-3">
+            {statusLabel}
+            <div className="h-4 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+              <Clock className="mr-1 h-4 w-4" />
+              Last check: {lastChecked}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <Card>
+          <CardHeader>
+            <CardDescription>Uptime (All Time)</CardDescription>
+            <CardTitle className="text-2xl font-bold">
+              {uptimePercentage.toFixed(1)}%
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Progress value={uptimePercentage} className="w-full" />
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardDescription>Check Interval</CardDescription>
+            <CardTitle className="text-2xl font-bold">
+              {website.interval}s
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                <Clock className="mr-1 h-4 w-4" />
+                Checked every {website.interval} seconds
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+            <CardHeader>
+                <CardDescription>Total Checks</CardDescription>
+                <CardTitle className="text-2xl font-bold">
+                    {website.ticks.length}
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <Activity className="mr-1 h-4 w-4" />
+                    Total checks recorded
+                </div>
+            </CardContent>
+        </Card>
+      </div>
+
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Last 30 Minutes Status</CardTitle>
+          <CardDescription>Visual representation of recent checks.</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <UptimeTicks ticks={website.ticks} />
+            <div className="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
+              <span>30 min ago</span>
+              <span>Now</span>
+            </div>
+             <div className="mt-4 flex space-x-3 text-xs text-gray-500 dark:text-gray-400 justify-center">
+              <div className="flex items-center">
+                <div className="mr-1 h-2 w-2 rounded-full bg-emerald-500"></div>
+                Good
+              </div>
+              <div className="flex items-center">
+                <div className="mr-1 h-2 w-2 rounded-full bg-rose-500"></div>
+                Down
+              </div>
+              <div className="flex items-center">
+                <div className="mr-1 h-2 w-2 rounded-full bg-gray-400"></div>
+                Unknown
+              </div>
+            </div>
+        </CardContent>
+      </Card>
+
+      {/* Use the new ResponseTimeChart component */}
+      <ResponseTimeChart ticks={website.ticks} />
+    </div>
+  );
+}

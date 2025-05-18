@@ -1,16 +1,9 @@
 "use client";
-import { API_BACKEND_URL } from "@/config";
 import { useWebsites } from "@/hooks/useWebsites";
 import { CreateOrganization, useAuth, useUser } from "@clerk/nextjs";
-import axios from "axios";
 import {
   Activity,
   AlertTriangle,
-  BarChart4,
-  CheckCircle,
-  ChevronDown,
-  ChevronUp,
-  Clock,
   Globe,
   Plus,
   XCircle,
@@ -18,50 +11,17 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
+import { WebsiteCard } from "./components/WebsiteCard"; // Import WebsiteCard from the new file
 
 import { Button } from "@/components/ui/button";
 import { useAxiosInstance } from "@/lib/axiosInstance";
 
+import axios from "axios";
+import { API_BACKEND_URL } from "@/config";
+
+
 type UptimeStatus = "good" | "bad" | "unknown";
 
-function Tooltip({
-  content,
-  children,
-}: {
-  content: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="group relative inline-block">
-      {children}
-      <div className="pointer-events-none absolute bottom-full left-1/2 mb-2 -translate-x-1/2 rounded-md bg-gray-900 px-3 py-2 text-xs whitespace-nowrap text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100 dark:bg-gray-700">
-        {content}
-        <div className="absolute top-full left-1/2 -mt-1 -translate-x-1/2 border-x-4 border-t-4 border-x-transparent border-t-gray-900 dark:border-t-gray-700"></div>
-      </div>
-    </div>
-  );
-}
-
-function StatusCircle({ status }: { status: UptimeStatus }) {
-  return (
-    <div className="relative flex items-center justify-center">
-      <div
-        className={`h-3.5 w-3.5 rounded-full ${status === "good"
-          ? "bg-emerald-500 dark:bg-emerald-400"
-          : status === "bad"
-            ? "bg-rose-500 dark:bg-rose-400"
-            : "bg-gray-400 dark:bg-gray-500"
-          }`}
-      />
-      {status === "good" && (
-        <div
-          className="absolute inset-0 animate-ping rounded-full bg-emerald-400 opacity-75 dark:bg-emerald-300"
-          style={{ animationDuration: "3s" }}
-        ></div>
-      )}
-    </div>
-  );
-}
 
 interface ProcessedWebsite {
   id: string;
@@ -73,230 +33,7 @@ interface ProcessedWebsite {
   interval: number;
 }
 
-function WebsiteCard({
-  website,
-  onDelete,
-}: {
-  website: ProcessedWebsite;
-  onDelete: (id: string) => void;
-}) {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-
-  const displayUrl = useMemo(() => {
-    try {
-      const urlObj = new URL(website.url);
-      return urlObj.hostname;
-    } catch {
-      return website.url;
-    }
-  }, [website.url]);
-
-  const statusLabel = useMemo(() => {
-    if (website.status === "good") {
-      return (
-        <div className="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
-          <CheckCircle className="mr-1 h-4 w-4" />
-          Online
-        </div>
-      );
-    } else if (website.status === "bad") {
-      return (
-        <div className="flex items-center text-sm font-medium text-rose-600 dark:text-rose-400">
-          <XCircle className="mr-1 h-4 w-4" />
-          Down
-        </div>
-      );
-    } else {
-      return (
-        <div className="flex items-center text-sm font-medium text-amber-600 dark:text-amber-400">
-          <AlertTriangle className="mr-1 h-4 w-4" />
-          Unknown
-        </div>
-      );
-    }
-  }, [website]);
-
-  return (
-    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-shadow duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800">
-      <div
-        className="dark:hover:bg-gray-750 flex cursor-pointer items-center justify-between p-4 transition-colors duration-200"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <div className="flex items-center space-x-3">
-          <StatusCircle status={website.status} />
-          <div>
-            <h3 className="font-semibold text-gray-900 dark:text-white">
-              {displayUrl}
-            </h3>
-            <div className="mt-0.5 flex items-center space-x-3">
-              {statusLabel}
-              <div className="h-3 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
-              <div className="flex items-center text-xs text-gray-600 dark:text-gray-400">
-               Last check <Clock className="mx-2 h-3 w-3" />
-                {website.lastChecked}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex items-center space-x-3">
-          <div className="text-right">
-            <div className="flex items-center justify-end">
-              <BarChart4 className="mr-1 h-4 w-4 text-green-600 dark:text-green-400" />
-              <span className="text-sm font-semibold text-gray-900 dark:text-white">
-                {website.uptimePercentage.toFixed(1)}%
-              </span>
-            </div>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              uptime
-            </span>
-          </div>
-          <div className="flex h-8 items-center justify-center space-x-2">
-            <button
-              onClick={async (e) => {
-                e.stopPropagation();
-                setIsDeleting(true);
-                await onDelete(website.id);
-                setIsDeleting(false);
-              }}
-              disabled={isDeleting}
-              className="p-1 text-rose-500 transition-colors duration-200 hover:text-rose-700 dark:hover:text-rose-400"
-              aria-label="Delete website"
-            >
-              {isDeleting ? (
-                <div className="h-4 w-4 animate-spin rounded-full border-2 border-rose-500 border-t-transparent"></div>
-              ) : (
-                <XCircle className="h-5 w-5" />
-              )}
-            </button>
-            {isExpanded ? (
-              <ChevronUp className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            ) : (
-              <ChevronDown className="h-5 w-5 text-gray-500 dark:text-gray-400" />
-            )}
-          </div>
-        </div>
-      </div>
-
-      {isExpanded && (
-        <div className="animate-expandDown border-t border-gray-100 px-4 pt-1 pb-4 dark:border-gray-700">
-          <div className="mb-1 flex items-center justify-between">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Last 30 minutes status:
-            </p>
-            <div className="flex space-x-3 text-xs text-gray-500 dark:text-gray-400">
-              <div className="flex items-center">
-                <div className="mr-1 h-2 w-2 rounded-full bg-emerald-500"></div>
-                Good
-              </div>
-              <div className="flex items-center">
-                <div className="mr-1 h-2 w-2 rounded-full bg-rose-500"></div>
-                Down
-              </div>
-              <div className="flex items-center">
-                <div className="mr-1 h-2 w-2 rounded-full bg-gray-400"></div>
-                Unknown
-              </div>
-            </div>
-          </div>
-          <div className="dark:bg-gray-750 rounded-lg p-3 pt-1">
-            <UptimeTicks ticks={website.uptimeTicks} expanded={isExpanded} interval={website.interval} />
-            <div className="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
-              <span>30 min ago</span>
-              <span>Now</span>
-            </div>
-          </div>
-
-          {/* Uptime statistics */}
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <div className="dark:bg-gray-750 rounded-lg p-3">
-              <h4 className="text-xs text-gray-500 dark:text-gray-400">
-                Response Time
-              </h4>
-              <div className="mt-1 flex items-end">
-                <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {/* Replace with actual response time data if available */}
-                  {Math.floor(Math.random() * 500) + 100}
-                </span>
-                <span className="mb-0.5 ml-1 text-xs text-gray-500 dark:text-gray-400">
-                  ms
-                </span>
-              </div>
-            </div>
-            <div className="dark:bg-gray-750 rounded-lg p-3">
-              <h4 className="text-xs text-gray-500 dark:text-gray-400">
-                Outages (24h)
-              </h4>
-              <div className="mt-1 flex items-end">
-                <span className="text-lg font-semibold text-gray-900 dark:text-white">
-                  {/* Replace with actual outages data if available */}
-                  {website.status === "bad"
-                    ? Math.floor(Math.random() * 3) + 1
-                    : 0}
-                </span>
-                <span className="mb-0.5 ml-1 text-xs text-gray-500 dark:text-gray-400">
-                  incidents
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function UptimeTicks({
-  ticks,
-  expanded,
-  interval,
-}: {
-  ticks: UptimeStatus[];
-  expanded: boolean;
-  interval: number;
-}) {
-  return (
-    <div
-      className={`mt-3 flex gap-1 transition-all duration-300 ${expanded ? "h-10" : "h-4"}`}
-    >
-      {ticks.map((tick, index) => {
-        const height = expanded
-          ? tick === "good"
-            ? "h-10"
-            : tick === "bad"
-              ? "h-4"
-              : "h-2"
-          : tick === "good"
-            ? "h-4"
-            : tick === "bad"
-              ? "h-2"
-              : "h-1";
-
-        // Calculate the time window for the tooltip based on 10 bars over 30 minutes
-        const startMinAgo = (10 - index) * 3;
-        const endMinAgo = (9 - index) * 3;
-        const tooltipContent = `${endMinAgo}-${startMinAgo} min ago (Interval: ${interval}s): ${tick.charAt(0).toUpperCase() + tick.slice(1)}`;
-
-        return (
-          <Tooltip
-            key={index}
-            content={tooltipContent}
-          >
-            <div
-              className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${tick === "good"
-                ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
-                : tick === "bad"
-                  ? "bg-gradient-to-b from-rose-400 to-rose-500 dark:from-rose-300 dark:to-rose-500"
-                  : "bg-gradient-to-b from-gray-300 to-gray-400 dark:from-gray-500 dark:to-gray-600"
-                }`}
-              style={{ alignSelf: "flex-end" }}
-            />
-          </Tooltip>
-        );
-      })}
-    </div>
-  );
-}
+// Remove WebsiteCard component definition from here
 
 function LoadingSpinner() {
   return (
@@ -561,7 +298,7 @@ function App() {
     if (user?.primaryEmailAddress?.emailAddress) {
       syncUser();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleAddWebsite = async (url: string | null, interval?: number) => {
