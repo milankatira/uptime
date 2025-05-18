@@ -3,7 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "bunx prisma generate"
+    "build": "pnpm prisma generate"
   },
   "exports": {
     "./client":  "./src/index.ts"
