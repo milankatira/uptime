@@ -552,8 +552,6 @@ function App() {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        console.log("user", user?.imageUrl, user?.primaryEmailAddress?.emailAddress)
-        // await syncUserInDb(); // Commented out the old call
         await instance.post("/api/v1/user", { email: user?.primaryEmailAddress?.emailAddress, imageUrl: user?.imageUrl });
         toast.success("User synchronized successfully");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

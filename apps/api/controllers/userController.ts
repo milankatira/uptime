@@ -104,3 +104,26 @@ export async function getUserPreferences(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to fetch preferences" });
   }
 }
+
+
+export async function storeSlackConnection(req: Request, res: Response) {
+  try {
+    const userId = req.userId!
+    const data = await userService.createSlackConnection(req.body, userId);
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("Slack Connection Error:", err);
+    res.status(500).json({ message: "Failed to store Slack connection" });
+  }
+}
+
+export async function storeDiscordConnection(req: Request, res: Response) {
+  try {
+    const userId = req.userId!;
+    const data = await userService.createDiscordConnection(req.body, userId);
+    res.status(200).json(data);
+  } catch (err) {
+    console.error("Discord Connection Error:", err);
+    res.status(500).json({ message: "Failed to store Discord connection" });
+  }
+}

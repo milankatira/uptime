@@ -7,6 +7,8 @@ import {
   updateUserPreferences,
   findOrCreateUser,
   getUserPreferences,
+  storeSlackConnection,
+  storeDiscordConnection,
 } from "../controllers/userController";
 import { authMiddleware } from "../middleware";
 
@@ -26,5 +28,9 @@ router.delete("/connections", authMiddleware, removeEmailConnection);
 router.get("/connections", authMiddleware, findConnectionByUserId);
 // @ts-expect-error - TODO: fix this type error
 router.post("/user", authMiddleware, findOrCreateUser);
+// @ts-expect-error - TODO: fix this type error
+router.post("/connections/slack", authMiddleware, storeSlackConnection);
+// @ts-expect-error - TODO: fix this type error
+router.post("/connections/discord", authMiddleware, storeDiscordConnection);
 
 export default router;
