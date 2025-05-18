@@ -2,8 +2,8 @@ import { prismaClient } from '@repo/db/client';
 import { IncidentStatus } from '../types/index';
 import { listBotChannels, postMessageToSlack } from '../lib/slack';
 import { postMessageToDiscord } from '../lib/discord';
-import { sendEmail } from '@dub/email/send-via-nodemailer';
-import { IncidentNotification } from '@dub/email/emails/IncidentNotification'; // Import the email template
+import { sendEmail } from '@repo/email/send-via-nodemailer';
+import { IncidentNotification } from '@repo/email/emails/IncidentNotification'; // Import the email template
 
 export class IncidentService {
     async getAllIncidents(userId: string) {

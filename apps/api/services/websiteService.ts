@@ -1,6 +1,6 @@
-import { IncidentNotification } from "@dub/email/emails/IncidentNotification";
+import { IncidentNotification } from "@repo/email/emails/IncidentNotification";
 
-import { sendEmail } from "@dub/email/send-via-nodemailer";
+import { sendEmail } from "@repo/email/send-via-nodemailer";
 import { prismaClient } from "@repo/db/client";
 
 export class WebsiteService {

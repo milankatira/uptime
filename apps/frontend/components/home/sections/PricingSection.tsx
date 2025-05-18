@@ -71,15 +71,15 @@ function PricingSection() {
             <div className='grid gap-8 md:grid-cols-2 mb-8'>
               <div>
                 <h3 className='font-semibold text-xl mb-4 '>
-                  Everything Included
+                  Key Features
                 </h3>
                 <ul className='space-y-3'>
                   {[
-                    'Unlimited Projects',
-                    'Unlimited Feature Requests',
-                    'Realtime Feedback',
-                    'Advanced Analytics',
-                    'Priority Support',
+                    'Real-time Monitoring',
+                    'Dedicated Status Page',
+                    'Full Control',
+                    'Multiple Third-Party Integrations',
+                    'Generate Custom Errors',
                   ].map((feature, index) => (
                     <motion.li
                       key={index}
@@ -98,7 +98,7 @@ function PricingSection() {
                 </ul>
               </div>
               <div>
-                <h3 className='font-semibold text-xl mb-4 '>No Catches</h3>
+                <h3 className='font-semibold text-xl mb-4 '>Advanced Capabilities</h3>
                 <ul className='space-y-3'>
                   {[
                     'No Credit Card Required',
