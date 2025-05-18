@@ -2,7 +2,7 @@ import GradientText from "@/components/ui/GradientText";
 import { Spotlight } from "@/components/ui/Spotlight";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { ChevronRight, ShieldCheck } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import React from "react";
 
 const HeroSection = () => {
@@ -18,7 +18,7 @@ const HeroSection = () => {
       {/* Optional: Subtle overlays */}
 
       <div className="container mx-auto flex flex-col items-center justify-center px-4">
-        <div className="group relative mx-auto flex items-center justify-center space-x-3 rounded-full px-6 py-2 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f]">
+        <div className="group relative mx-auto flex items-center justify-center space-x-3 rounded-full px-6 py-2 shadow-[inset_0_-8px_10px_#8fdfff1f] transition-shadow duration-500 ease-out hover:shadow-[inset_0_-5px_10px_#8fdfff3f] mt-20 my-5">
           <span
             className={cn(
               "animate-gradient absolute inset-0 block h-full w-full rounded-[inherit] bg-gradient-to-r from-[#ffaa40]/50 via-[#9c40ff]/50 to-[#ffaa40]/50 bg-[length:300%_100%] p-[1px]",
@@ -36,38 +36,30 @@ const HeroSection = () => {
             <span role="img" aria-label="celebration" className="text-lg">
               🎉
             </span>
-            <span className="text-sm font-medium text-white">
+            <span className="text-xs font-medium text-white">
               <span className="text-[#ffaa40]">
-                Get instant alerts, advanced analytics, and more.
+                Get instant alerts and advanced monitoring.
               </span>
             </span>
             <ChevronRight className="ml-1 size-4 stroke-neutral-500 transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
           </span>
         </div>
 
-        {/* Logo or Brand */}
-        <div className="my-8 flex items-center justify-center gap-2 text-4xl font-extrabold">
-          <ShieldCheck className="text-primary" /> Uptime
-        </div>
-        {/* Main Heading */}
-
-
         <GradientText
-          className="from-foreground to-foreground/70 mt-4 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl"
+          className="from-foreground to-foreground/70 mt-4 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-7xl text-center"
           element="H1"
         >
-          Radically better <br />
+          Elevate Your <br />
+        <span className="text-primary">Digital Reliability</span>
         </GradientText>
-        <span className="text-primary">uptime monitoring</span>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="mb-8 max-w-2xl text-center text-lg text-gray-300"
+          className="mb-8 max-w-2xl text-center text-lg text-gray-500 mt-4"
         >
-          Ship higher-quality software faster. Be the hero of your engineering
-          teams with instant downtime alerts and actionable insights.
+          Experience unparalleled uptime monitoring with instant alerts, deep insights, and seamless integrations. Keep your services running flawlessly.
         </motion.p>
 
         <a
