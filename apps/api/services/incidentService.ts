@@ -99,12 +99,10 @@ export class IncidentService {
             (data) => data.Slack
         )?.Slack;
 
-        console.log(slackConnection,"slackConnection")
         if (slackConnection) {
             const slackAccessToken = slackConnection.slackAccessToken;
             const slackChannels = await listBotChannels(slackAccessToken);
 
-            console.log(slackChannels,"slackChannels")
             if (slackConnection?.slackAccessToken) {
                 let messageContent = `🚨 Incident Alert: ${errorText}`;
                 if (websiteId) {

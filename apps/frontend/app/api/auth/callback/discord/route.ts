@@ -16,18 +16,6 @@ export async function GET(req: NextRequest) {
         );
         data.append('code', code);
 
-        // Add logging here to check values
-        console.log('Discord OAuth Token Request Data:', {
-            client_id: process.env.DISCORD_CLIENT_ID,
-            client_secret: process.env.DISCORD_CLIENT_SECRET
-                ? '********'
-                : 'Not Set', // Mask secret for security
-            grant_type: 'authorization_code',
-            redirect_uri: 'http://localhost:3000/api/auth/callback/discord',
-            code: code.toString(),
-        });
-
-        console.log('data+++E$+DE+S++++DE+S', data);
         const output = await axios.post(
             'https://discord.com/api/oauth2/token',
             data,
@@ -37,8 +25,6 @@ export async function GET(req: NextRequest) {
                 },
             }
         );
-
-        console.log('Discord OAuth Token Response Data:', output.data); // Log the response data
 
         if (output.data) {
             const access = output.data.access_token;

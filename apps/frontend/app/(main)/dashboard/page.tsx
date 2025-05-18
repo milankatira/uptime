@@ -93,7 +93,6 @@ function WebsiteCard({
   }, [website.url]);
 
   const statusLabel = useMemo(() => {
-    console.log(website,"website")
     if (website.status === "good") {
       return (
         <div className="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">

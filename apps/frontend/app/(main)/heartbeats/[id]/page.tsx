@@ -46,7 +46,6 @@ const HeartbeatDetailPage = () => {
     HeartbeatRecord: [],
   });
 
-  console.log(heartbeatDetails, "heartbeatDetails");
   const [loading, setLoading] = useState(true);
   const heartbeatDownUrl = `${API_BACKEND_URL}/api/v1/heartbeat/down/${id}`;
   const heartbeatUpUrl = `${API_BACKEND_URL}/api/v1/heartbeat/up/${id}`;
