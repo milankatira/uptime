@@ -1,163 +1,151 @@
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { Check } from "lucide-react";
-import React from "react";
-
-const tiers = [
-  {
-    name: "Basic",
-    price: 29,
-    description: "Essential monitoring for small websites and businesses.",
-    features: [
-      "5 Monitors",
-      "60-second check frequency",
-      "Email notifications",
-      "1 team member",
-      "7-day data retention",
-      "Basic reporting",
-    ],
-    cta: "Get Started",
-    popular: false,
-  },
-  {
-    name: "Professional",
-    price: 79,
-    description: "Advanced monitoring for growing businesses and websites.",
-    features: [
-      "20 Monitors",
-      "30-second check frequency",
-      "SMS + Email notifications",
-      "5 team members",
-      "30-day data retention",
-      "Advanced reporting",
-      "API access",
-      "Custom status pages",
-    ],
-    cta: "Get Started",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    price: 199,
-    description:
-      "Comprehensive solution for large organizations with complex needs.",
-    features: [
-      "Unlimited Monitors",
-      "15-second check frequency",
-      "SMS + Email + Webhook notifications",
-      "Unlimited team members",
-      "90-day data retention",
-      "Custom reporting",
-      "Priority support",
-      "SLA guarantees",
-      "Dedicated account manager",
-    ],
-    cta: "Contact Sales",
-    popular: false,
-  },
-];
-
-const PricingSection = () => {
+'use client';
+import { motion } from 'framer-motion';
+import { ArrowRight, Check, Star } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { MagicCard } from '@/components/magicui/magic-card';
+function PricingSection() {
   return (
-    <section id="pricing" className="bg-muted/30 py-24">
-      <div className="container mx-auto px-4">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <motion.span
-            className="text-primary bg-primary/10 mb-3 inline-block rounded-full px-3 py-1 text-sm font-medium"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            Pricing
-          </motion.span>
-          <motion.h2
-            className="mb-4 text-3xl font-bold md:text-4xl"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            Plans for Every Monitoring Need
-          </motion.h2>
-          <motion.p
-            className="text-muted-foreground text-lg"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            Choose the perfect plan for your business. All plans include a
-            14-day free trial.
-          </motion.p>
-        </div>
 
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-10">
-          {tiers.map((tier, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="relative"
-            >
-              <div
-                className={cn(
-                  "bg-background flex h-full flex-col rounded-xl border p-6",
-                  tier.popular && "ring-primary shadow-lg ring-2",
-                )}
+    <section id='pricing' className='py-32 relative overflow-hidden'>
+      <div className='container px-4 mx-auto max-w-screen-xl relative'>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className='text-center mb-16'
+        >
+          <motion.div
+            className='inline-block'
+            animate={{ rotate: [0, -5, 5, -5, 5, 0] }}
+            transition={{ duration: 0.5, delay: 1 }}
+          >
+            <span className='inline-flex items-center rounded-full px-4 py-1 text-sm font-medium mb-8'>
+              <Star className='mr-1 h-4 w-4' />
+              Beta Launch Offer
+            </span>
+          </motion.div>
+          <h2 className='text-4xl md:text-6xl mb-6 font-light'>
+            {`Get Started`}{` `}
+            <span className='relative inline-block'>
+              <span className='font-bold relative z-10 bg-clip-text'>
+                For Free
+              </span>
+              <motion.svg
+                className='absolute -bottom-4 left-0 w-full'
+                viewBox='0 0 100 20'
+                height='20'
+                preserveAspectRatio='none'
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true }}
               >
-                {tier.popular && (
-                  <div className="bg-primary text-primary-foreground absolute -top-4 right-0 left-0 mx-auto w-fit rounded-full px-3 py-1 text-xs font-semibold">
-                    Most Popular
-                  </div>
-                )}
+                <motion.path
+                  d='M0 10 Q50 0 100 10'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='4'
+                  className='dark:stroke-white stroke-black'
+                />
+              </motion.svg>
+            </span>
+          </h2>
 
-                <div className="mb-6">
-                  <h3 className="mb-2 text-xl font-semibold">{tier.name}</h3>
-                  <p className="text-muted-foreground text-sm">
-                    {tier.description}
-                  </p>
-                </div>
-
-                <div className="mb-6">
-                  <div className="flex items-baseline">
-                    <span className="text-3xl font-bold">${tier.price}</span>
-                    <span className="text-muted-foreground ml-2">/month</span>
-                  </div>
-                </div>
-
-                <ul className="mb-8 flex-grow space-y-3">
-                  {tier.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-2">
-                      <Check className="text-primary mt-0.5 h-5 w-5 flex-shrink-0" />
-                      <span className="text-sm">{feature}</span>
-                    </li>
+          <p className='text-xl mb-12 max-w-2xl mx-auto'>
+            {`Join our beta launch and get early access to all features. Early adopters will receive special benefits and discounted rates when we introduce our premium plans.`}
+          </p>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <MagicCard
+            gradientFrom='#38bdf8'
+            gradientTo='#3b82f6'
+            className='rounded-2xl shadow-2xl p-8 md:p-12 max-w-3xl mx-auto border'
+            gradientColor='rgba(59,130,246,0.1)'
+          >
+            <div className='grid gap-8 md:grid-cols-2 mb-8'>
+              <div>
+                <h3 className='font-semibold text-xl mb-4 '>
+                  Everything Included
+                </h3>
+                <ul className='space-y-3'>
+                  {[
+                    'Unlimited Projects',
+                    'Unlimited Feature Requests',
+                    'Realtime Feedback',
+                    'Advanced Analytics',
+                    'Priority Support',
+                  ].map((feature, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className='flex items-center gap-2'
+                    >
+                      <div className='size-5 rounded-full  flex items-center justify-center'>
+                        <Check className='size-3 ' />
+                      </div>
+                      <span>{feature}</span>
+                    </motion.li>
                   ))}
                 </ul>
-
-                <Button
-                  className="w-full"
-                  variant={tier.popular ? "default" : "outline"}
-                >
-                  {tier.cta}
-                </Button>
               </div>
-            </motion.div>
-          ))}
-        </div>
+              <div>
+                <h3 className='font-semibold text-xl mb-4 '>No Catches</h3>
+                <ul className='space-y-3'>
+                  {[
+                    'No Credit Card Required',
+                    'No Hidden Fees',
+                    'No Usage Limits',
+                    'No Locked Features',
+                    'Cancel Anytime',
+                  ].map((feature, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 + 0.3 }}
+                      className='flex items-center gap-2'
+                    >
+                      <div className='size-5 rounded-full  flex items-center justify-center'>
+                        <Check className='size-3 ' />
+                      </div>
+                      <span>{feature}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </div>
 
-        <div className="mt-16 text-center">
-          <p className="text-muted-foreground mb-4">
-            {` Need a custom plan? We've got you covered.`}
-          </p>
-          <Button variant="outline">Contact Sales</Button>
-        </div>
+            <motion.div
+              className='text-center'
+              whileHover={{ scale: 1.02 }}
+              transition={{ type: 'spring', stiffness: 400, damping: 17 }}
+            >
+              <Link href={'/sign-in'}>
+                <Button
+                  size='lg'
+                >
+                  Get Started Now
+                  <ArrowRight className='ml-2 h-5 w-5' />
+                </Button>
+              </Link>
+              <p className='mt-4 text-sm '>Join thousands of happy users today</p>
+            </motion.div>
+          </MagicCard>
+        </motion.div>
       </div>
     </section>
+
   );
-};
+}
 
 export default PricingSection;
