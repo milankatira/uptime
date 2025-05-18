@@ -117,7 +117,7 @@ export function WebsiteCard({
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition-shadow duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 flex flex-row w-full pr-5">
             <Link href={`/dashboard/${website.id}`} passHref className="w-full">
-                <div className="dark:hover:bg-gray-750 flex cursor-pointer items-center p-4 transition-colors duration-200 w-full border flex-1">
+                <div className="dark:hover:bg-gray-750 flex cursor-pointer items-center p-4 transition-colors duration-200 w-full flex-1">
                     <div className="flex items-center space-x-3">
                         <StatusCircle status={website.status} />
                         <div>
