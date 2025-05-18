@@ -82,6 +82,36 @@ export async function deleteWebsite(req: Request, res: Response) {
 }
 
 /**
+ * Update an existing website
+ */
+export async function updateWebsite(req: Request, res: Response) {
+  try {
+    const userId = req.userId!;
+    const { websiteId } = req.params;
+    const { url, interval } = req.body;
+
+    if (!websiteId) {
+      return res.status(400).json({ error: "Website ID is required" });
+    }
+    if (!url || !interval) {
+      return res.status(400).json({ error: "URL and Interval are required" });
+    }
+
+    const result = await websiteService.updateWebsite(
+      userId,
+      websiteId,
+      url,
+      interval,
+    );
+    return res.json(result);
+  } catch (error) {
+    console.error("Error updating website:", error);
+    return res.status(500).json({ error: "Failed to update website" });
+  }
+}
+
+
+/**
  * Create a new heartbeat
  */
 export async function createHeartbeat(req: Request, res: Response) {

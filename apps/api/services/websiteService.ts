@@ -104,6 +104,48 @@ export class WebsiteService {
   }
 
   /**
+   * Update an existing website
+   */
+  async updateWebsite(
+    userId: string,
+    websiteId: string,
+    url: string,
+    interval: number,
+  ) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    // Find the website and ensure it belongs to the user
+    const website = await prismaClient.website.findFirst({
+      where: {
+        id: websiteId,
+        userId: user.id,
+        disabled: false, // Ensure it's not already soft-deleted
+      },
+    });
+
+    if (!website) {
+      throw new Error("Website not found or does not belong to user");
+    }
+
+    // Update the website
+    return prismaClient.website.update({
+      where: {
+        id: websiteId,
+      },
+      data: {
+        url,
+        interval,
+      },
+    });
+  }
+
+
+  /**
    * Create a new heartbeat
    */
   async createHeartbeat(

@@ -8,6 +8,7 @@ import {
     CheckCircle,
     Clock,
     XCircle,
+    Edit,
 } from "lucide-react";
 import {
     Card,
@@ -23,6 +24,17 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 import { ResponseTimeChart } from "./components/ResponseTimeChart";
 
@@ -64,7 +76,7 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
 }
 
 function UptimeTicks({ ticks }: { ticks: WebsiteTick[] }) {
-    // Process ticks to get the last 30 minutes status windows, similar to dashboard
+
     const processedTicks: UptimeStatus[] = useMemo(() => {
         const sortedTicks = [...ticks].sort(
             (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -103,7 +115,7 @@ function UptimeTicks({ ticks }: { ticks: WebsiteTick[] }) {
                 const height =
                     tick === "good" ? "h-10" : tick === "bad" ? "h-4" : "h-2";
 
-                // Calculate the time window for the tooltip based on 10 bars over 30 minutes
+
                 const startMinAgo = (10 - index) * 3;
                 const endMinAgo = (9 - index) * 3;
                 const tooltipContent = `${endMinAgo}-${startMinAgo} min ago: ${tick.charAt(0).toUpperCase() + tick.slice(1)
@@ -135,7 +147,7 @@ function UptimeTicks({ ticks }: { ticks: WebsiteTick[] }) {
 }
 
 
-// Function to determine overall status based on recent ticks (similar to dashboard)
+
 function getOverallStatus(ticks: WebsiteTick[]): UptimeStatus {
     const sortedTicks = [...ticks].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -162,12 +174,11 @@ function getOverallStatus(ticks: WebsiteTick[]): UptimeStatus {
     }
 }
 
-// New Shimmer Loading Component
+
 function WebsiteDetailsLoadingShimmer() {
     return (
-        <div className="bg-white dark:bg-gray-900 w-full h-full overflow-scroll animate-pulse">
+        <div className="bg-white dark:bg-gray-900 w-full h-full overflow-scroll animate-pulse p-10">
             <div className="container mx-auto py-8 h-full">
-                {/* Header Shimmer */}
                 <div className="flex items-center space-x-4 mb-6">
                     <div className="h-8 w-8 rounded-full bg-gray-300 dark:bg-gray-700"></div>
                     <div>
@@ -207,15 +218,15 @@ function WebsiteDetailsLoadingShimmer() {
                                 <div
                                     key={i}
                                     className="w-8 h-full bg-gray-300 dark:bg-gray-700 rounded-t-sm"
-                                    style={{ height: `${Math.random() * 60 + 40}%`, alignSelf: "flex-end" }} // Random height for visual variety
+                                    style={{ height: `${Math.random() * 60 + 40}%`, alignSelf: "flex-end" }}
                                 ></div>
                             ))}
                         </div>
-                         <div className="mt-1 flex justify-between text-xs text-gray-400 dark:text-gray-600">
+                        <div className="mt-1 flex justify-between text-xs text-gray-400 dark:text-gray-600">
                             <span>30 min ago</span>
                             <span>Now</span>
                         </div>
-                         <div className="mt-4 flex space-x-3 text-xs text-gray-400 dark:text-gray-600 justify-center">
+                        <div className="mt-4 flex space-x-3 text-xs text-gray-400 dark:text-gray-600 justify-center">
                             <div className="flex items-center">
                                 <div className="mr-1 h-2 w-2 rounded-full bg-gray-400"></div>
                                 Good
@@ -233,7 +244,7 @@ function WebsiteDetailsLoadingShimmer() {
                 </Card>
 
                 {/* Chart Shimmer */}
-                 <Card className="bg-gray-200 dark:bg-gray-800">
+                <Card className="bg-gray-200 dark:bg-gray-800">
                     <CardHeader>
                         <div className="h-4 w-48 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
                         <div className="h-4 w-64 bg-gray-300 dark:bg-gray-700 rounded"></div>
@@ -254,6 +265,9 @@ export default function WebsiteDetailsPage() {
     const [website, setWebsite] = useState<WebsiteDetails | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editUrl, setEditUrl] = useState("");
+    const [editInterval, setEditInterval] = useState(60);
 
     useEffect(() => {
         async function fetchWebsiteDetails() {
@@ -265,6 +279,9 @@ export default function WebsiteDetailsPage() {
                     params: { websiteId },
                 });
                 setWebsite(response.data);
+
+                setEditUrl(response.data.url);
+                setEditInterval(response.data.interval);
             } catch (err) {
                 console.error("Failed to fetch website details:", err);
                 setError("Failed to load website details.");
@@ -330,9 +347,50 @@ export default function WebsiteDetailsPage() {
         return new Date(sortedTicks[0].createdAt).toLocaleString();
     }, [website]);
 
+    const handleEditClick = () => {
+        if (website) {
+            setEditUrl(website.url);
+            setEditInterval(website.interval);
+            setIsEditModalOpen(true);
+        }
+    };
+
+    const handleSaveEdit = async () => {
+        if (!websiteId || !website) return;
+
+        try {
+
+            await instance.put(`/api/v1/website/${websiteId}`, {
+                url: editUrl,
+                interval: parseInt(editInterval.toString(), 10),
+            });
+            toast.success("Website updated successfully!");
+            setIsEditModalOpen(false);
+
+
+
+            async function refetchWebsiteDetails() {
+                if (!websiteId) return;
+                try {
+                    const response = await instance.get(`/api/v1/website/status`, {
+                        params: { websiteId },
+                    });
+                    setWebsite(response.data);
+                } catch (err) {
+                    console.error("Failed to re-fetch website details after update:", err);
+                }
+            }
+            refetchWebsiteDetails();
+
+        } catch (err) {
+            console.error("Failed to update website:", err);
+            toast.error("Failed to update website.");
+        }
+    };
+
 
     if (loading) {
-        return <WebsiteDetailsLoadingShimmer />; // Use the shimmer component here
+        return <WebsiteDetailsLoadingShimmer />;
     }
 
     if (error) {
@@ -344,7 +402,7 @@ export default function WebsiteDetailsPage() {
     }
 
     return (
-        <div className="bg-white dark:bg-gray-900 w-full h-full overflow-scroll">
+        <div className="bg-white dark:bg-gray-900 w-full h-full overflow-scroll p-10">
             <div className="container mx-auto py-8  h-full">
                 <div className="flex items-center space-x-4 mb-6">
                     <StatusCircle status={overallStatus} />
@@ -359,6 +417,16 @@ export default function WebsiteDetailsPage() {
                                 <Clock className="mr-1 h-4 w-4" />
                                 Last check: {lastChecked}
                             </div>
+                            {/* Add Edit button here */}
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-6 w-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                onClick={handleEditClick}
+                                aria-label="Edit website"
+                            >
+                                <Edit className="h-4 w-4" />
+                            </Button>
                         </div>
                     </div>
                 </div>
@@ -436,6 +504,46 @@ export default function WebsiteDetailsPage() {
                 <ResponseTimeChart ticks={website.ticks} />
                 <br />
             </div>
+
+            {/* Edit Website Modal */}
+            <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+                <DialogContent className="sm:max-w-[425px] bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+                    <DialogHeader>
+                        <DialogTitle>Edit Website</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="url" className="text-right">
+                                URL
+                            </Label>
+                            <Input
+                                id="url"
+                                value={editUrl}
+                                onChange={(e) => setEditUrl(e.target.value)}
+                                className="col-span-3"
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="interval" className="text-right">
+                                Check Interval (s)
+                            </Label>
+                            <Input
+                                id="interval"
+                                type="number"
+                                value={editInterval}
+                                onChange={(e) => setEditInterval(parseInt(e.target.value, 10) || 0)}
+                                className="col-span-3"
+                            />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button onClick={handleSaveEdit}>Save changes</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }

@@ -10,6 +10,7 @@ import {
   getHeartbeatDetails,
   getWebsiteStatus,
   updateHeartbeatStatus,
+  updateWebsite, // Import the new controller function
 } from "../controllers/websiteController";
 import { authMiddleware } from "../middleware";
 
@@ -29,6 +30,14 @@ router.get("/websites", authMiddleware, getAllWebsites);
 
 // @ts-expect-error - TODO: fix this type error
 router.delete("/website", authMiddleware, deleteWebsite);
+
+// Add the new PUT route for updating a website
+router.put(
+  "/website/:websiteId",
+  // @ts-expect-error - TODO: fix this type error
+  authMiddleware,
+  updateWebsite,
+);
 
 // @ts-expect-error - TODO: fix this type error
 router.post("/heartbeat", authMiddleware, createHeartbeat);
