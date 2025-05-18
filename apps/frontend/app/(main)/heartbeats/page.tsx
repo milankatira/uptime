@@ -150,10 +150,6 @@ const HeartbeatsPage = () => {
                         <div className="text-sm text-gray-900 dark:text-white">
                           {heartbeat.name}
                         </div>
-                        <div className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                          {heartbeat.status} ·{" "}
-                          {new Date(heartbeat.createdAt).toLocaleDateString()}
-                        </div>
                       </div>
                     </div>
                     <div className="flex items-center">

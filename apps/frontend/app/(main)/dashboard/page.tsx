@@ -93,6 +93,7 @@ function WebsiteCard({
   }, [website.url]);
 
   const statusLabel = useMemo(() => {
+    console.log(website,"website")
     if (website.status === "good") {
       return (
         <div className="flex items-center text-sm font-medium text-emerald-600 dark:text-emerald-400">
@@ -133,7 +134,7 @@ function WebsiteCard({
               {statusLabel}
               <div className="h-3 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
               <div className="flex items-center text-xs text-gray-600 dark:text-gray-400">
-                <Clock className="mr-1 h-3 w-3" />
+               Last check <Clock className="mx-2 h-3 w-3" />
                 {website.lastChecked}
               </div>
             </div>
@@ -301,7 +302,7 @@ function UptimeTicks({
 function LoadingSpinner() {
   return (
     <div className="w-full space-y-6">
-      <div className="flex w-full flex-row gap-4">
+      <div className="flex w-full flex-col gap-4">
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
@@ -498,7 +499,8 @@ function App() {
         (tick) => tick.status === "Good",
       ).length;
       const uptimePercentage =
-        totalTicks === 0 ? 100 : (upTicks / totalTicks) * 100;
+        totalTicks === 0 ? 0 : (upTicks / totalTicks) * 100;
+
 
       const lastChecked = sortedTicks[0]
         ? new Date(sortedTicks[0].createdAt).toLocaleTimeString()
