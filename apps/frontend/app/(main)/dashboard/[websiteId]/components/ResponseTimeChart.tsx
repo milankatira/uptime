@@ -51,7 +51,7 @@ export function ResponseTimeChart({ ticks }: ResponseTimeChartProps) {
 
 
     return (
-        <Card>
+        <Card className="bg-white dark:bg-gray-900 mb-5">
             <CardHeader>
                 <CardTitle>Response Time Chart</CardTitle>
                 <CardDescription>Latency over time.</CardDescription>
