@@ -52,7 +52,7 @@ export function ReportIncidentModal({
       const fetchWebsites = async () => {
         setLoadingWebsites(true);
         try {
-          const response = await instance.get<{ websites: Website[] }>("/api/v1/website");
+          const response = await instance.get<{ websites: Website[] }>("/api/v1/websites");
           setWebsites(response.data.websites || []);
         } catch (error) {
           console.error("Failed to fetch websites:", error);

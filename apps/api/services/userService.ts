@@ -117,23 +117,29 @@ export class UserService {
         if (!user) throw new Error('User not found');
         if (!auth.slackAccessToken)
             throw new Error('No Slack access token provided');
-
-        return await prismaClient.slack.create({
-            data: {
-                ...auth,
-                userId: user?.id,
-                connections: {
-                    create: {
-                        userId: user?.id,
-                        type: 'Slack',
-                    },
-                },
+        const existingWebhook = await prismaClient.slack.findUnique({
+            where: {
+                slackAccessToken: auth.slackAccessToken,
             },
         });
+
+        if (!existingWebhook) {
+            return await prismaClient.slack.create({
+                data: {
+                    ...auth,
+                    userId: user?.id,
+                    connections: {
+                        create: {
+                            userId: user?.id,
+                            type: 'Slack',
+                        },
+                    },
+                },
+            });
+        }
     }
 
     async createDiscordConnection(auth: DiscordAuthInfo, userId: string) {
-        console.log(auth, 'auth________mjnjnj__', userId);
         const user = await prismaClient.user.findUnique({
             where: { externalId: userId },
             select: {
