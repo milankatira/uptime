@@ -33,6 +33,7 @@ export default function ConnectionsPage() {
 
   useEffect(() => {
     fetchConnections();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchConnections() {
@@ -121,7 +122,7 @@ export default function ConnectionsPage() {
   ];
 
   return (
-    <div className="dakr:bg-gray-800 mx-auto w-full bg-white px-4 py-10">
+    <div className="dark:bg-gray-900 mx-auto w-full bg-white px-4 py-10">
       {/* Header Section */}
       <div className="mb-8 space-y-2">
         <h1 className="text-4xl font-bold tracking-tight">Integrations</h1>
@@ -135,7 +136,7 @@ export default function ConnectionsPage() {
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         {/* Main Integrations */}
         <div className="space-y-6 lg:col-span-2">
-          <div className="bg-card rounded-xl border shadow-sm">
+          <div className="rounded-xl border shadow-sm dark:bg-gray-900 bg-white">
             <div className="border-b p-6">
               <h2 className="text-xl font-semibold">Available Integrations</h2>
               <p className="text-muted-foreground mt-1 text-sm">
@@ -152,7 +153,7 @@ export default function ConnectionsPage() {
                 integrations.map((integration, index) => (
                   <Card
                     key={index}
-                    className="flex items-center justify-between p-4 transition-all hover:shadow-md"
+                    className="flex items-center justify-between p-4 transition-all hover:shadow-md dark:bg-gray-900 bg-white flex-row"
                   >
                     <div className="flex items-center space-x-4">
                       <div className="bg-background relative flex h-12 w-12 items-center justify-center rounded-lg border">
@@ -243,7 +244,7 @@ export default function ConnectionsPage() {
 
         {/* Connected Emails Sidebar */}
         <div className="space-y-6">
-          <div className="bg-card rounded-xl border shadow-sm">
+          <div className="dark:bg-gray-900 bg-white rounded-xl border shadow-sm">
             <div className="border-b p-6">
               <h2 className="text-xl font-semibold">Connected Emails</h2>
               <p className="text-muted-foreground mt-1 text-sm">
@@ -256,7 +257,7 @@ export default function ConnectionsPage() {
                   {connections.emails.map((email) => (
                     <div
                       key={email.id}
-                      className="bg-background/50 hover:bg-background flex items-center justify-between rounded-lg border p-3 transition-colors"
+                      className="dark:bg-gray-900 bg-white flex items-center justify-between rounded-lg border p-3 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <div className="bg-primary/10 rounded-md p-2">
