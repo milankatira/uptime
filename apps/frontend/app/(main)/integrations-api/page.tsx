@@ -39,7 +39,7 @@ export default function ConnectionsPage() {
   async function fetchConnections() {
     try {
       setLoading(true);
-      const res = await instance.get("/api/v1/user/connections");
+      const res = await instance.get("/api/v1/connections");
       const data = res.data;
 
       if (Array.isArray(data)) {
@@ -68,7 +68,7 @@ export default function ConnectionsPage() {
     }
 
     try {
-      const res = await instance.post("/api/v1/user/connections", { email: newEmail });
+      const res = await instance.post("/api/v1/connections", { email: newEmail });
       const result = res.data;
       setConnections((prev) => ({
         ...prev,
@@ -88,7 +88,7 @@ export default function ConnectionsPage() {
 
   const handleRemoveEmail = async (id: string) => {
     try {
-      await instance.delete("/api/v1/user/connections", { data: { id } });
+      await instance.delete("/api/v1/connections", { data: { id } });
       setConnections((prev) => ({
         ...prev,
         emails: prev.emails.filter((email) => email.id !== id),
