@@ -17,16 +17,19 @@
   },
   "dependencies": {
     "@clerk/backend": "^1.31.2",
+    "@dub/email": "workspace:*",
+    "@prisma/client": "^6.7.0",
+    "@repo/db": "workspace:*",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
+    "axios": "^1.9.0",
     "bullmq": "^5.52.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "firebase-admin": "^13.4.0",
     "ioredis": "^5.6.1",
-    "jsonwebtoken": "^9.0.2",
-    "@repo/db": "workspace:*",
-    "@dub/email": "workspace:*"
+    "jsonwebtoken": "^9.0.2"
   }
 }
