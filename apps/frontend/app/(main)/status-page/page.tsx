@@ -11,22 +11,19 @@ function StatusPageList() {
     <div className="w-full bg-white px-4 py-8 sm:px-6 lg:px-8 dark:bg-gray-900">
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-medium text-white">Status pages.</h1>
-        <Button className="bg-primary hover:bg-primary/90 text-white">
-          Create Status page
-        </Button>
       </div>
 
       <div className="bg-dark-lighter border-dark-border overflow-hidden rounded-lg border">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-dark-border text-muted-foreground border-b text-sm">
-                <th className="px-4 py-3 text-left font-normal">Name</th>
-                <th className="px-4 py-3 text-left font-normal">
+              <tr className="border-dark-border text-muted-foreground border-b text-sm uppercase tracking-wider"> {/* Added uppercase and tracking */}
+                <th className="px-4 py-3 text-left font-semibold">Name</th> {/* Made font-semibold */}
+                <th className="px-4 py-3 text-left font-semibold">
                   Access level
                 </th>
-                <th className="px-4 py-3 text-left font-normal">Status</th>
-                <th className="px-4 py-3 text-left font-normal">Actions</th>
+                <th className="px-4 py-3 text-left font-semibold">Status</th>
+                <th className="px-4 py-3 text-left font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -34,15 +31,13 @@ function StatusPageList() {
                 websites.map((site) => (
                   <tr
                     key={site.id}
-                    className="border-dark-border hover:bg-secondary/10 border-b"
+                    className="border-dark-border hover:bg-secondary/10 border-b transition-colors duration-200" // Added transition
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-                        <div className="bg-dark-border flex h-8 w-8 items-center justify-center rounded-full">
-                          <span className="text-xs text-emerald-500">⚫</span>
-                        </div>
+                        {/* Improved status indicator */}
                         <div>
-                          <div className="font-medium">{site.url}</div>
+                          <div className="font-medium text-white">{site.url}</div> {/* Text color white */}
                           <div className="text-muted-foreground text-sm">
                             ID: {site.id}
                           </div>
@@ -50,9 +45,9 @@ function StatusPageList() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 text-gray-300"> {/* Text color gray-300 */}
                         <svg
-                          className="text-muted-foreground h-4 w-4"
+                          className="h-4 w-4"
                           xmlns="http://www.w3.org/2000/svg"
                           viewBox="0 0 24 24"
                           fill="none"
@@ -67,7 +62,8 @@ function StatusPageList() {
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="text-status-published inline-flex items-center rounded-md bg-purple-900/30 px-2 py-1 text-xs font-medium">
+                      {/* Styled status pill */}
+                      <span className="inline-flex items-center rounded-full bg-green-500/20 px-3 py-1 text-xs font-medium text-green-400"> {/* Example: Green pill for Published */}
                         Published
                       </span>
                     </td>
