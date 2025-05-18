@@ -132,7 +132,7 @@ model Timeline {
   recipient  String?
   time       DateTime @default(now())
   createdAt  DateTime @default(now())
-  incident   Incident @relation(fields: [incidentId], references: [id])
+  incident   Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
   incidentId String
   @@index([incidentId])
 }
