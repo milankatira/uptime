@@ -1,6 +1,15 @@
 {
   "version": 2,
+
+  // force pnpm
   "installCommand": "pnpm install",
+
+  // production build step for your API
+  "buildCommand": "pnpm --filter apps/api run build",
+
+  // for `vercel dev` locally
+  "devCommand": "pnpm --filter apps/api run dev",
+
   "builds": [
     {
       "src": "apps/api/package.json",
@@ -8,6 +17,7 @@
       "config": { "zeroConfig": true }
     }
   ],
+
   "routes": [
     { "src": "/api/(.*)", "dest": "apps/api/$1" }
   ]
