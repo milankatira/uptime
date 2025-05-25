@@ -7,7 +7,7 @@
     },
     "scripts": {
         "start": "bun --watch run index.ts",
-        "dev": "npx prisma generate && bun --watch run index.ts",
+        "dev": "bun --watch run index.ts",
         "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
         "format": "prettier --write .",
         "prettier-check": "prettier --check ."
@@ -17,9 +17,9 @@
     },
     "dependencies": {
         "@clerk/backend": "^1.31.2",
-        "@repo/email": "workspace:*",
         "@prisma/client": "^6.7.0",
         "@repo/db": "workspace:*",
+        "@repo/email": "workspace:*",
         "@types/cors": "^2.8.17",
         "@types/express": "^5.0.1",
         "@types/jsonwebtoken": "^9.0.9",
@@ -30,6 +30,7 @@
         "express": "^5.1.0",
         "firebase-admin": "^13.4.0",
         "ioredis": "^5.6.1",
-        "jsonwebtoken": "^9.0.2"
+        "jsonwebtoken": "^9.0.2",
+        "prisma": "^6.7.0"
     }
 }
