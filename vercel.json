@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "installCommand": "pnpm install",
+  "builds": [
+    {
+      "src": "apps/api/package.json",
+      "use": "@vercel/node",
+      "config": { "zeroConfig": true }
+    }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "apps/api/$1" }
+  ]
+}
