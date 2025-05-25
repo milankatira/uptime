@@ -7,7 +7,7 @@
     },
     "scripts": {
         "start": "bun --watch run index.ts",
-        "dev": "bun --watch run index.ts",
+        "dev": "npx prisma generate && bun --watch run index.ts",
         "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
         "format": "prettier --write .",
         "prettier-check": "prettier --check ."
