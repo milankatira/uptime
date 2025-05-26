@@ -22,7 +22,7 @@ RUN pnpm install
 COPY . .
 
 # Generate Prisma client
-RUN pnpm --filter=@repo/db exec prisma generate
+RUN cd packages/db && pnpm install && pnpm prisma generate
 
 # Build all apps
 RUN pnpm run build
