@@ -1,6 +1,12 @@
 import type { Request, Response } from "express";
 import { incidentService } from "../services/incidentService";
 
+/**
+ * Retrieves all incidents associated with the authenticated user, optionally filtered by organization.
+ *
+ * @remark
+ * If an `orgId` is provided in the request headers, only incidents for that organization are returned; otherwise, all incidents for the user are retrieved.
+ */
 export async function getAllIncidents(req: Request, res: Response) {
   try {
     const userId = req.userId!;
@@ -87,6 +93,11 @@ export async function addIncidentComment(req: Request, res: Response) {
   }
 }
 
+/**
+ * Creates a new incident with the provided details and associates it with the requesting user.
+ *
+ * Responds with HTTP 201 and the created incident on success. Returns HTTP 400 if required fields are missing.
+ */
 export async function createIncident(req: Request, res: Response) {
   try {
     const userId = req.userId!;
