@@ -4,7 +4,8 @@ import { incidentService } from "../services/incidentService";
 export async function getAllIncidents(req: Request, res: Response) {
   try {
     const userId = req.userId!;
-    const incidents = await incidentService.getAllIncidents(userId);
+    const orgId = req.headers["orgid"] as string | undefined;
+    const incidents = await incidentService.getAllIncidents(userId,orgId);
     return res.json({ incidents });
   } catch (error) {
     console.error("Error getting incidents:", error);
@@ -91,6 +92,8 @@ export async function createIncident(req: Request, res: Response) {
     const userId = req.userId!;
     const { title, errorText, websiteId } = req.body;
 
+    const orgId = req.headers["orgid"] as string | undefined;
+
     if (!title || !errorText) {
       return res.status(400).json({ error: "Title and errorText are required" });
     }
@@ -100,6 +103,7 @@ export async function createIncident(req: Request, res: Response) {
       title,
       errorText,
       websiteId,
+      orgId
     );
 
     return res.status(201).json(newIncident);

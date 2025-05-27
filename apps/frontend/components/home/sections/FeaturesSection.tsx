@@ -147,7 +147,7 @@ const FeaturesSection = () => {
                   gradientFrom="#6EE7B7"
                   gradientTo="#059669"
                 >
-                  <div className="flex h-full flex-col p-6">
+                  <div className="flex h-full flex-col p-6 items-center">
                     <div className="bg-primary/10 mb-4 w-fit rounded-full p-3">
                       {feature.icon}
                     </div>

@@ -192,7 +192,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { websites, refreshWebsites } = useWebsites();
-  const { getToken } = useAuth();
+  const { getToken, orgId } = useAuth();
   const { user } = useUser();
   const instance = useAxiosInstance();
 
@@ -281,9 +281,9 @@ function App() {
         setError("Failed to fetch websites");
         setLoading(false);
       });
-
+    // add orgid here
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [orgId]);
 
   useEffect(() => {
     const syncUser = async () => {

@@ -6,15 +6,25 @@ import { sendEmail } from '@repo/email/send-via-nodemailer';
 import { IncidentNotification } from '@repo/email/emails/IncidentNotification'; // Import the email template
 
 export class IncidentService {
-    async getAllIncidents(userId: string) {
+    async getAllIncidents(userId: string,orgId?: string) {
         const user = await prismaClient.user.findUnique({
             where: { externalId: userId },
         });
         if (!user) {
             throw new Error('User does not exist');
         }
+
+        const whereClause: any = {
+            userId: user.id,
+        };
+
+        if (orgId) {
+          whereClause.orgId = orgId;
+        } else {
+          whereClause.orgId = null;
+        }
         return prismaClient.incident.findMany({
-            where: { userId: user.id },
+            where: whereClause,
             orderBy: { date: 'desc' },
         });
     }
@@ -66,7 +76,8 @@ export class IncidentService {
         userId: string,
         title: string,
         errorText: string,
-        websiteId?: string
+        websiteId?: string,
+        orgId?: string
     ) {
         const user = await prismaClient.user.findUnique({
             where: { externalId: userId },
@@ -94,6 +105,7 @@ export class IncidentService {
                 websiteId: websiteId || null,
                 errorCode: 'MANUAL',
                 duration: 0,
+                orgId
             },
         });
 
