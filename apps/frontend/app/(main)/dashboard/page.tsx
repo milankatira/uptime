@@ -187,6 +187,11 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
   );
 }
 
+/**
+ * Renders the main dashboard application for monitoring website uptime, handling authentication, data fetching, and user interactions.
+ *
+ * Displays a summary of monitored websites, individual website cards, loading and error states, and modals for adding new websites. Synchronizes user data with the backend and updates the dashboard in response to organization changes.
+ */
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
