@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { AnimatedCard } from "@/components/ui/AnimatedCard";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";

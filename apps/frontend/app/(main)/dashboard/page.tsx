@@ -1,13 +1,7 @@
 "use client";
 import { useWebsites } from "@/hooks/useWebsites";
 import { CreateOrganization, useAuth, useUser } from "@clerk/nextjs";
-import {
-  Activity,
-  AlertTriangle,
-  Globe,
-  Plus,
-  XCircle,
-} from "lucide-react";
+import { Activity, AlertTriangle, Globe, Plus, XCircle } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { CreateWebsiteModal } from "./components/CreateWebsiteModal";
@@ -19,9 +13,7 @@ import { useAxiosInstance } from "@/lib/axiosInstance";
 import axios from "axios";
 import { API_BACKEND_URL } from "@/config";
 
-
 type UptimeStatus = "good" | "bad" | "unknown";
-
 
 interface ProcessedWebsite {
   id: string;
@@ -91,7 +83,7 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     const averageUptime =
       websites.length > 0
         ? websites.reduce((sum, site) => sum + site.uptimePercentage, 0) /
-        websites.length
+          websites.length
         : 0;
 
     return { totalSites, sitesByStatus, averageUptime };
@@ -237,7 +229,6 @@ function App() {
       const uptimePercentage =
         totalTicks === 0 ? 0 : (upTicks / totalTicks) * 100;
 
-
       const lastChecked = sortedTicks[0]
         ? new Date(sortedTicks[0].createdAt).toLocaleTimeString()
         : "Never";
@@ -288,7 +279,10 @@ function App() {
   useEffect(() => {
     const syncUser = async () => {
       try {
-        await instance.post("/api/v1/user", { email: user?.primaryEmailAddress?.emailAddress, imageUrl: user?.imageUrl });
+        await instance.post("/api/v1/user", {
+          email: user?.primaryEmailAddress?.emailAddress,
+          imageUrl: user?.imageUrl,
+        });
         toast.success("User synchronized successfully");
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
@@ -309,13 +303,10 @@ function App() {
 
     setIsModalOpen(false);
     try {
-      await instance.post(
-        `/api/v1/website`,
-        {
-          url,
-          interval,
-        }
-      );
+      await instance.post(`/api/v1/website`, {
+        url,
+        interval,
+      });
       await refreshWebsites();
       toast.success(`${url} is now being monitored`);
 
@@ -336,7 +327,6 @@ function App() {
       // );
     }
   }, [user?.organizationMemberships]);
-
 
   if (user?.organizationMemberships?.length === 0) {
     return (

@@ -99,7 +99,7 @@ const TestimonialsSection = () => {
           <InfiniteMovingCards
             items={testimonials}
             direction="left"
-            speed="slow"
+            speed="fast"
             pauseOnHover={true}
             className="py-4"
           />
@@ -115,7 +115,7 @@ const TestimonialsSection = () => {
           <InfiniteMovingCards
             items={[...testimonials].reverse()}
             direction="right"
-            speed="slow"
+            speed="fast"
             pauseOnHover={true}
             className="py-4"
           />

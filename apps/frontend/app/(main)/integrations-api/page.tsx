@@ -33,7 +33,7 @@ export default function ConnectionsPage() {
 
   useEffect(() => {
     fetchConnections();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function fetchConnections() {
@@ -68,7 +68,9 @@ export default function ConnectionsPage() {
     }
 
     try {
-      const res = await instance.post("/api/v1/connections", { email: newEmail });
+      const res = await instance.post("/api/v1/connections", {
+        email: newEmail,
+      });
       const result = res.data;
       setConnections((prev) => ({
         ...prev,

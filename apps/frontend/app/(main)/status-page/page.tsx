@@ -31,9 +31,10 @@ function StatusPageList() {
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-
                         <div>
-                          <div className="font-medium text-white">{site.url}</div>
+                          <div className="font-medium text-white">
+                            {site.url}
+                          </div>
                           <div className="text-muted-foreground text-sm">
                             ID: {site.id}
                           </div>

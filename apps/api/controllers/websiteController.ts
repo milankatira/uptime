@@ -110,7 +110,6 @@ export async function updateWebsite(req: Request, res: Response) {
   }
 }
 
-
 /**
  * Create a new heartbeat
  */

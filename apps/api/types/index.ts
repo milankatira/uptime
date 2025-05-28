@@ -3,8 +3,6 @@ export enum IncidentStatus {
   Resolved = "Resolved",
 }
 
-
-
 export interface SlackAuthInfo {
   appId: string;
   authedUserId: string;

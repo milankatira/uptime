@@ -5,7 +5,7 @@ export async function getAllIncidents(req: Request, res: Response) {
   try {
     const userId = req.userId!;
     const orgId = req.headers["orgid"] as string | undefined;
-    const incidents = await incidentService.getAllIncidents(userId,orgId);
+    const incidents = await incidentService.getAllIncidents(userId, orgId);
     return res.json({ incidents });
   } catch (error) {
     console.error("Error getting incidents:", error);
@@ -71,7 +71,9 @@ export async function addIncidentComment(req: Request, res: Response) {
     const { comment } = req.body;
 
     if (!incidentId || !comment) {
-      return res.status(400).json({ error: "Incident ID and comment are required" });
+      return res
+        .status(400)
+        .json({ error: "Incident ID and comment are required" });
     }
 
     const newComment = await incidentService.addCommentToIncident(
@@ -95,7 +97,9 @@ export async function createIncident(req: Request, res: Response) {
     const orgId = req.headers["orgid"] as string | undefined;
 
     if (!title || !errorText) {
-      return res.status(400).json({ error: "Title and errorText are required" });
+      return res
+        .status(400)
+        .json({ error: "Title and errorText are required" });
     }
 
     const newIncident = await incidentService.createIncident(
@@ -103,7 +107,7 @@ export async function createIncident(req: Request, res: Response) {
       title,
       errorText,
       websiteId,
-      orgId
+      orgId,
     );
 
     return res.status(201).json(newIncident);

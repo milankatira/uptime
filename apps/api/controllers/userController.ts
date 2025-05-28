@@ -3,13 +3,10 @@ import { userService } from "../services/userService";
 
 export async function updateUserPreferences(req: Request, res: Response) {
   try {
-    const userId = req.userId!;             // ← set by authMiddleware
+    const userId = req.userId!; // ← set by authMiddleware
     const preferences = req.body;
 
-    const result = await userService.updateUserPreferences(
-      userId,
-      preferences,
-    );
+    const result = await userService.updateUserPreferences(userId, preferences);
     return res.json(result);
   } catch (error) {
     console.error("Error updating preferences:", error);
@@ -79,7 +76,9 @@ export async function findOrCreateUser(req: Request, res: Response) {
     const { email, imageUrl } = req?.body;
 
     if (!email) {
-        return res.status(400).json({ error: "Email is required in the request body" });
+      return res
+        .status(400)
+        .json({ error: "Email is required in the request body" });
     }
 
     const user = await userService.findOrCreateUserByExternalId(
@@ -105,10 +104,9 @@ export async function getUserPreferences(req: Request, res: Response) {
   }
 }
 
-
 export async function storeSlackConnection(req: Request, res: Response) {
   try {
-    const userId = req.userId!
+    const userId = req.userId!;
     const data = await userService.createSlackConnection(req.body, userId);
     res.status(200).json(data);
   } catch (err) {

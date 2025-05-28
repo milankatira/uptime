@@ -52,7 +52,9 @@ export function ReportIncidentModal({
       const fetchWebsites = async () => {
         setLoadingWebsites(true);
         try {
-          const response = await instance.get<{ websites: Website[] }>("/api/v1/websites");
+          const response = await instance.get<{ websites: Website[] }>(
+            "/api/v1/websites",
+          );
           setWebsites(response.data.websites || []);
         } catch (error) {
           console.error("Failed to fetch websites:", error);
@@ -64,7 +66,6 @@ export function ReportIncidentModal({
       };
       fetchWebsites();
     } else {
-
       setTitle("");
       setErrorText("");
       setWebsiteId(undefined);
@@ -142,11 +143,17 @@ export function ReportIncidentModal({
               disabled={isSubmitting || loadingWebsites}
             >
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder={loadingWebsites ? "Loading websites..." : "Select a website"} />
+                <SelectValue
+                  placeholder={
+                    loadingWebsites ? "Loading websites..." : "Select a website"
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 {websites.length === 0 && !loadingWebsites ? (
-                  <SelectItem value="no-websites" disabled>No websites available</SelectItem>
+                  <SelectItem value="no-websites" disabled>
+                    No websites available
+                  </SelectItem>
                 ) : (
                   <>
                     <SelectItem value="none">None</SelectItem>

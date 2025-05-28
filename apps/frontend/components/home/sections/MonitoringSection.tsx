@@ -93,10 +93,14 @@ Content-Type: application/json
                     className="flex items-center justify-between rounded-lg bg-gray-800/50 p-3"
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`h-2 w-2 rounded-full bg-${item.color}-500`} />
+                      <div
+                        className={`h-2 w-2 rounded-full bg-${item.color}-500`}
+                      />
                       <span>{item.name}</span>
                     </div>
-                    <span className={`text-${item.color}-500`}>{item.latency}</span>
+                    <span className={`text-${item.color}-500`}>
+                      {item.latency}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -119,7 +123,8 @@ Content-Type: application/json
               A lot more than uptime monitoring.
             </GradientText>
             <p className="text-lg text-gray-400 mt-4">
-              Complete incident management platform with alerting, on-call schedules, and incident response.
+              Complete incident management platform with alerting, on-call
+              schedules, and incident response.
             </p>
           </motion.div>
 
@@ -139,9 +144,11 @@ Content-Type: application/json
                     <span className="font-medium">API Latency Alert</span>
                   </div>
                   <p className="text-sm text-gray-400">
-                   {`Response time exceeded threshold (>500ms)`}
+                    {`Response time exceeded threshold (>500ms)`}
                   </p>
-                  <div className="mt-2 text-xs text-gray-500">2 minutes ago</div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    2 minutes ago
+                  </div>
                 </div>
                 <div className="rounded-lg bg-gray-800/50 p-4">
                   <div className="mb-2 flex items-center gap-3">
@@ -151,7 +158,9 @@ Content-Type: application/json
                   <p className="text-sm text-gray-400">
                     Query execution time increased by 50%
                   </p>
-                  <div className="mt-2 text-xs text-gray-500">15 minutes ago</div>
+                  <div className="mt-2 text-xs text-gray-500">
+                    15 minutes ago
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -167,7 +176,8 @@ Content-Type: application/json
                 Smart incident merging
               </h3>
               <p className="mb-4 text-gray-400">
-                AI-powered system detects related issues and automatically merges them to reduce alert fatigue.
+                AI-powered system detects related issues and automatically
+                merges them to reduce alert fatigue.
               </p>
               <div className="relative flex h-40 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
                 <div className="absolute inset-0 flex items-center justify-center">

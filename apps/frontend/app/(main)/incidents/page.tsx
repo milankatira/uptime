@@ -2,15 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAxiosInstance } from "@/lib/axiosInstance";
-import {
-  MoreHorizontal,
-  Search,
-  ShieldAlert,
-} from "lucide-react";
+import { MoreHorizontal, Search, ShieldAlert } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ReportIncidentModal } from "@/components/incidents/ReportIncidentModal";
-
 
 interface Incident {
   id: string;
@@ -64,7 +59,7 @@ function IncidentsSection() {
 
   useEffect(() => {
     fetchIncidents();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instance]);
 
   const formatDate = (dateString: string | number | Date) => {
@@ -214,7 +209,7 @@ function IncidentsSection() {
               </div>
 
               <div className="flex justify-end">
-                 <MoreHorizontal className="h-5 w-5 text-gray-500 group-hover:text-white" />
+                <MoreHorizontal className="h-5 w-5 text-gray-500 group-hover:text-white" />
               </div>
             </Link>
           ))

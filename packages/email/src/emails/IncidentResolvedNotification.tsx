@@ -79,7 +79,6 @@ export const IncidentResolvedNotification = ({
             </Button>
           </Section>
         </Section>
-
         <Section style={detailsSection}>
           <Row style={detailRow}>
             <Column style={detailHeader}>Heartbeat:</Column>
@@ -93,12 +92,11 @@ export const IncidentResolvedNotification = ({
             <Column style={detailHeader}>Started at:</Column>
             <Column style={detailValue}>{startedAt}</Column>
           </Row>
-           <Row style={detailRow}>
+          <Row style={detailRow}>
             <Column style={detailHeader}>Resolved at:</Column>
             <Column style={detailValue}>{resolvedAt}</Column>
           </Row>
         </Section>
-
         <Section style={footer}>
           <Img src={logoUrl} width="120" alt={companyName} style={footerLogo} />
           <Text style={footerLinks}>
@@ -153,7 +151,6 @@ const statusDotResolved = {
   marginTop: "7px",
 };
 
-
 const h1 = {
   color: "#1a1a1a",
   fontSize: "20px",
@@ -188,7 +185,6 @@ const buttonPrimary = {
   backgroundColor: "#4A4AFF", // Blue button
   color: "#ffffff",
 };
-
 
 const detailsSection = {
   backgroundColor: "#f7f7f7",

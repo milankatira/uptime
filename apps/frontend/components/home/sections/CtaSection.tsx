@@ -119,7 +119,6 @@ const CtaSection = () => {
         </svg>
 
         <div className="relative z-10 flex w-full flex-col items-center">
-
           <GradientText
             className="from-foreground to-foreground/70 mt-4 bg-gradient-to-br bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl md:text-6xl"
             element="H1"
