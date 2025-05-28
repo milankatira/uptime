@@ -50,7 +50,7 @@ const HeroSection = () => {
           element="H1"
         >
           Elevate Your <br />
-        <span className="text-primary">Digital Reliability</span>
+          <span className="text-primary">Digital Reliability</span>
         </GradientText>
 
         <motion.p
@@ -59,7 +59,9 @@ const HeroSection = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="mb-8 max-w-2xl text-center text-lg text-gray-500 mt-4"
         >
-          Experience unparalleled uptime monitoring with instant alerts, deep insights, and seamless integrations. Keep your services running flawlessly.
+          Experience unparalleled uptime monitoring with instant alerts, deep
+          insights, and seamless integrations. Keep your services running
+          flawlessly.
         </motion.p>
 
         <a

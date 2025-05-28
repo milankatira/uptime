@@ -1,402 +1,400 @@
-import { IncidentNotification } from '@repo/email/emails/IncidentNotification';
+import { IncidentNotification } from "@repo/email/emails/IncidentNotification";
 
-import { sendEmail } from '@repo/email/send-via-nodemailer';
-import { prismaClient } from '@repo/db/client';
+import { sendEmail } from "@repo/email/send-via-nodemailer";
+import { prismaClient } from "@repo/db/client";
 
 export class WebsiteService {
-    /**
-     * Create a new website
-     */
-    async createWebsite(userId: string, url: string, orgId?: string) {
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-
-        if (orgId && !user.cleakOrganizationIds.includes(orgId)) {
-            await prismaClient.user.update({
-                where: { id: user.id },
-                data: {
-                    cleakOrganizationIds: {
-                        push: orgId,
-                    },
-                },
-            });
-        }
-
-        return await prismaClient.website.create({
-            data: {
-                userId: user.id,
-                url,
-                orgId,
-            },
-        });
+  /**
+   * Create a new website
+   */
+  async createWebsite(userId: string, url: string, orgId?: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
     }
 
-    /**
-     * Get website status by ID
-     */
-    async getWebsiteStatus(websiteId: string) {
-        return prismaClient.website.findFirst({
-            where: {
-                id: websiteId,
-                disabled: false,
-            },
-            include: {
-                ticks: true,
-            },
-        });
+    if (orgId && !user.cleakOrganizationIds.includes(orgId)) {
+      await prismaClient.user.update({
+        where: { id: user.id },
+        data: {
+          cleakOrganizationIds: {
+            push: orgId,
+          },
+        },
+      });
     }
 
-    /**
-     * Get all websites for a user
-     */
-    async getAllWebsites(userId: string, orgId?: string) {
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
+    return await prismaClient.website.create({
+      data: {
+        userId: user.id,
+        url,
+        orgId,
+      },
+    });
+  }
 
-        const whereClause: any = {
-            userId: user.id,
-            disabled: false,
+  /**
+   * Get website status by ID
+   */
+  async getWebsiteStatus(websiteId: string) {
+    return prismaClient.website.findFirst({
+      where: {
+        id: websiteId,
+        disabled: false,
+      },
+      include: {
+        ticks: true,
+      },
+    });
+  }
+
+  /**
+   * Get all websites for a user
+   */
+  async getAllWebsites(userId: string, orgId?: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    const whereClause: any = {
+      userId: user.id,
+      disabled: false,
+    };
+
+    if (orgId) {
+      whereClause.orgId = orgId;
+    } else {
+      whereClause.orgId = "";
+    }
+
+    const websites = await prismaClient.website.findMany({
+      where: whereClause,
+      include: {
+        ticks: true,
+      },
+    });
+
+    return { websites };
+  }
+
+  /**
+   * Soft delete a website
+   */
+  async deleteWebsite(websiteId: string, userId: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    await prismaClient.website.update({
+      where: {
+        id: websiteId,
+        userId: user.id,
+      },
+      data: {
+        disabled: true,
+      },
+    });
+
+    return { message: "Deleted website successfully" };
+  }
+
+  /**
+   * Update an existing website
+   */
+  async updateWebsite(
+    userId: string,
+    websiteId: string,
+    url: string,
+    interval: number,
+  ) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    // Find the website and ensure it belongs to the user
+    const website = await prismaClient.website.findFirst({
+      where: {
+        id: websiteId,
+        userId: user.id,
+        disabled: false, // Ensure it's not already soft-deleted
+      },
+    });
+
+    if (!website) {
+      throw new Error("Website not found or does not belong to user");
+    }
+
+    // Update the website
+    return prismaClient.website.update({
+      where: {
+        id: websiteId,
+      },
+      data: {
+        url,
+        interval,
+      },
+    });
+  }
+
+  /**
+   * Create a new heartbeat
+   */
+  async createHeartbeat(
+    userId: string,
+    name: string,
+    interval: number,
+    gracePeriod: number,
+    escalation?: any,
+    maintenance?: any,
+    metadata?: any,
+    orgId?: string,
+  ) {
+    // Check if user exists
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    const data = await prismaClient.heartbeat.create({
+      data: {
+        userId: user.id,
+        name,
+        interval,
+        gracePeriod,
+        escalation,
+        maintenance,
+        metadata,
+        orgId,
+      },
+    });
+    return { id: data.id };
+  }
+
+  /**
+   * Create a new maintenance window
+   */
+  async createMaintenanceWindow(
+    userId: string,
+    date: Date,
+    timeSlot: string,
+    repeat: string | null,
+    orgId?: string,
+  ) {
+    // Check if user exists
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+    const data = await prismaClient.maintenanceWindow.create({
+      data: {
+        userId: user.id,
+        date,
+        timeSlot,
+        repeat,
+        orgId,
+      },
+    });
+    return { id: data.id };
+  }
+
+  /**
+   * Get all maintenance windows for a user
+   */
+  async getAllMaintenanceWindows(userId: string, orgId?: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    const whereClause: any = {
+      userId: user.id,
+    };
+
+    if (orgId) {
+      whereClause.orgId = orgId;
+    } else {
+      whereClause.orgId = "";
+    }
+
+    const windows = await prismaClient.maintenanceWindow.findMany({
+      where: whereClause,
+      orderBy: { date: "asc" },
+    });
+    return { windows };
+  }
+
+  /**
+   * Get heartbeat by ID
+   */
+  async getHeartbeat(userId: string, orgId?: string) {
+    const user = await prismaClient.user.findUnique({
+      where: { externalId: userId },
+    });
+    if (!user) {
+      throw new Error("User does not exist");
+    }
+
+    const whereClause: any = {
+      userId: user.id,
+    };
+
+    if (orgId) {
+      whereClause.orgId = orgId;
+    } else {
+      whereClause.orgId = "";
+    }
+
+    return prismaClient.heartbeat.findMany({
+      where: whereClause,
+    });
+  }
+
+  async updateHeartbeatStatus(heartbeatId: string, status: string) {
+    const validStatuses = ["UP", "DOWN", "ACHNOWLEDGED"];
+
+    if (!validStatuses.includes(status.toUpperCase())) {
+      throw new Error("Invalid status: " + status);
+    }
+
+    const currentHeartbeat = await prismaClient.heartbeat.findUnique({
+      where: { id: heartbeatId },
+      include: { user: true }, // Ensure user is included to get email and notification preferences
+    });
+
+    if (!currentHeartbeat) {
+      throw new Error("Heartbeat not found");
+    }
+    if (!currentHeartbeat.user) {
+      console.warn(
+        `Heartbeat ${heartbeatId} does not have an associated user. Skipping email notification.`,
+      );
+    }
+
+    const updatedHeartbeat = await prismaClient.heartbeat.update({
+      where: { id: heartbeatId },
+      data: {
+        status: status.toUpperCase() as "UP" | "DOWN" | "ACHNOWLEDGED",
+      },
+      include: { user: true },
+    });
+
+    // Send email notification if status is DOWN and user has notifications enabled
+    if (
+      status.toUpperCase() === "DOWN" &&
+      updatedHeartbeat?.user &&
+      updatedHeartbeat?.user?.email
+    ) {
+      try {
+        const incidentProps = {
+          userName: updatedHeartbeat.user.email,
+          heartbeatName: updatedHeartbeat.name,
+          incidentCause: `Heartbeat "${updatedHeartbeat.name}" reported as DOWN.`,
+          startedAt: new Date().toLocaleString(),
         };
 
-        if (orgId) {
-            whereClause.orgId = orgId;
-        } else {
-            whereClause.orgId = '';
-        }
-
-        const websites = await prismaClient.website.findMany({
-            where: whereClause,
-            include: {
-                ticks: true,
-            },
-        });
-
-        return { websites };
-    }
-
-    /**
-     * Soft delete a website
-     */
-    async deleteWebsite(websiteId: string, userId: string) {
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        await prismaClient.website.update({
-            where: {
-                id: websiteId,
-                userId: user.id,
-            },
-            data: {
-                disabled: true,
-            },
-        });
-
-        return { message: 'Deleted website successfully' };
-    }
-
-    /**
-     * Update an existing website
-     */
-    async updateWebsite(
-        userId: string,
-        websiteId: string,
-        url: string,
-        interval: number
-    ) {
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-
-        // Find the website and ensure it belongs to the user
-        const website = await prismaClient.website.findFirst({
-            where: {
-                id: websiteId,
-                userId: user.id,
-                disabled: false, // Ensure it's not already soft-deleted
-            },
-        });
-
-        if (!website) {
-            throw new Error('Website not found or does not belong to user');
-        }
-
-        // Update the website
-        return prismaClient.website.update({
-            where: {
-                id: websiteId,
-            },
-            data: {
-                url,
-                interval,
-            },
-        });
-    }
-
-    /**
-     * Create a new heartbeat
-     */
-    async createHeartbeat(
-        userId: string,
-        name: string,
-        interval: number,
-        gracePeriod: number,
-        escalation?: any,
-        maintenance?: any,
-        metadata?: any,
-        orgId?: string
-    ) {
-        // Check if user exists
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const data = await prismaClient.heartbeat.create({
-            data: {
-                userId: user.id,
-                name,
-                interval,
-                gracePeriod,
-                escalation,
-                maintenance,
-                metadata,
-                orgId,
-            },
-        });
-        return { id: data.id };
-    }
-
-    /**
-     * Create a new maintenance window
-     */
-    async createMaintenanceWindow(
-        userId: string,
-        date: Date,
-        timeSlot: string,
-        repeat: string | null,
-        orgId?: string
-    ) {
-        // Check if user exists
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-        const data = await prismaClient.maintenanceWindow.create({
-            data: {
-                userId: user.id,
-                date,
-                timeSlot,
-                repeat,
-                orgId,
-            },
-        });
-        return { id: data.id };
-    }
-
-    /**
-     * Get all maintenance windows for a user
-     */
-    async getAllMaintenanceWindows(userId: string, orgId?: string) {
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
-        });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-
-        const whereClause: any = {
-            userId: user.id,
-        };
-
-        if (orgId) {
-          whereClause.orgId = orgId;
-      } else {
-          whereClause.orgId = '';
+        await sendEmail(
+          "milankatira07@gmail.com",
+          `🔴 Incident Alert: ${updatedHeartbeat.name} is DOWN`,
+          IncidentNotification,
+          incidentProps,
+        );
+        console.log(
+          `Incident notification email sent to ${updatedHeartbeat.user.email}`,
+        );
+      } catch (emailError) {
+        console.error(
+          `Failed to send incident notification email:`,
+          emailError,
+        );
       }
-
-        const windows = await prismaClient.maintenanceWindow.findMany({
-            where: whereClause,
-            orderBy: { date: 'asc' },
-        });
-        return { windows };
     }
 
-    /**
-     * Get heartbeat by ID
-     */
-    async getHeartbeat(userId: string, orgId?: string) {
-        const user = await prismaClient.user.findUnique({
-            where: { externalId: userId },
+    await prismaClient.heartbeatRecord.create({
+      data: {
+        heartbeatId: heartbeatId,
+        status: status.toUpperCase() as "UP" | "DOWN" | "ACHNOWLEDGED",
+        timestamp: new Date(),
+      },
+    });
+
+    if (status.toUpperCase() === "DOWN") {
+      // Ensure incident is created after status update and email attempt
+      await prismaClient.incident.create({
+        data: {
+          status: "Ongoing", // Or "Investigating"
+          errorCode: "HEARTBEAT_DOWN",
+          errorText: `Heartbeat ${updatedHeartbeat.name} is down`,
+          date: new Date(),
+          duration: 0, // Duration can be calculated later when resolved
+          userId: updatedHeartbeat.userId,
+        },
+      });
+    } else if (status.toUpperCase() === "UP") {
+      // Optionally, find and resolve open incidents for this heartbeat
+      const openIncident = await prismaClient.incident.findFirst({
+        where: {
+          status: "Ongoing", // Or other active statuses
+        },
+        orderBy: {
+          date: "desc",
+        },
+      });
+      if (openIncident) {
+        const duration = Math.round(
+          (new Date().getTime() - new Date(openIncident.date).getTime()) / 1000,
+        ); // Duration in seconds
+        await prismaClient.incident.update({
+          where: { id: openIncident.id },
+          data: {
+            status: "Resolved",
+            duration: duration,
+          },
         });
-        if (!user) {
-            throw new Error('User does not exist');
-        }
-
-        const whereClause: any = {
-            userId: user.id,
-        };
-
-        if (orgId) {
-          whereClause.orgId = orgId;
-      } else {
-          whereClause.orgId = '';
+        // Optionally send a "Resolved" notification email here
       }
-
-        return prismaClient.heartbeat.findMany({
-            where: whereClause,
-        });
     }
 
-    async updateHeartbeatStatus(heartbeatId: string, status: string) {
-        const validStatuses = ['UP', 'DOWN', 'ACHNOWLEDGED'];
+    return updatedHeartbeat;
+  }
 
-        if (!validStatuses.includes(status.toUpperCase())) {
-            throw new Error('Invalid status: ' + status);
-        }
+  async getHeartbeatRecords(heartbeatId: string) {
+    return prismaClient.heartbeatRecord.findMany({
+      where: { heartbeatId },
+      orderBy: { timestamp: "desc" },
+    });
+  }
 
-        const currentHeartbeat = await prismaClient.heartbeat.findUnique({
-            where: { id: heartbeatId },
-            include: { user: true }, // Ensure user is included to get email and notification preferences
-        });
+  async getHeartbeatDetails(heartbeatId: string) {
+    const heartbeat = await prismaClient.heartbeat.findUnique({
+      where: { id: heartbeatId },
+      include: {
+        HeartbeatRecord: {
+          orderBy: { timestamp: "desc" },
+        },
+      },
+    });
 
-        if (!currentHeartbeat) {
-            throw new Error('Heartbeat not found');
-        }
-        if (!currentHeartbeat.user) {
-            console.warn(
-                `Heartbeat ${heartbeatId} does not have an associated user. Skipping email notification.`
-            );
-        }
-
-        const updatedHeartbeat = await prismaClient.heartbeat.update({
-            where: { id: heartbeatId },
-            data: {
-                status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED',
-            },
-            include: { user: true },
-        });
-
-        // Send email notification if status is DOWN and user has notifications enabled
-        if (
-            status.toUpperCase() === 'DOWN' &&
-            updatedHeartbeat?.user &&
-            updatedHeartbeat?.user?.email
-        ) {
-            try {
-                const incidentProps = {
-                    userName: updatedHeartbeat.user.email,
-                    heartbeatName: updatedHeartbeat.name,
-                    incidentCause: `Heartbeat "${updatedHeartbeat.name}" reported as DOWN.`,
-                    startedAt: new Date().toLocaleString(),
-                };
-
-                await sendEmail(
-                    'milankatira07@gmail.com',
-                    `🔴 Incident Alert: ${updatedHeartbeat.name} is DOWN`,
-                    IncidentNotification,
-                    incidentProps
-                );
-                console.log(
-                    `Incident notification email sent to ${updatedHeartbeat.user.email}`
-                );
-            } catch (emailError) {
-                console.error(
-                    `Failed to send incident notification email:`,
-                    emailError
-                );
-            }
-        }
-
-        await prismaClient.heartbeatRecord.create({
-            data: {
-                heartbeatId: heartbeatId,
-                status: status.toUpperCase() as 'UP' | 'DOWN' | 'ACHNOWLEDGED',
-                timestamp: new Date(),
-            },
-        });
-
-        if (status.toUpperCase() === 'DOWN') {
-            // Ensure incident is created after status update and email attempt
-            await prismaClient.incident.create({
-                data: {
-                    status: 'Ongoing', // Or "Investigating"
-                    errorCode: 'HEARTBEAT_DOWN',
-                    errorText: `Heartbeat ${updatedHeartbeat.name} is down`,
-                    date: new Date(),
-                    duration: 0, // Duration can be calculated later when resolved
-                    userId: updatedHeartbeat.userId,
-                },
-            });
-        } else if (status.toUpperCase() === 'UP') {
-            // Optionally, find and resolve open incidents for this heartbeat
-            const openIncident = await prismaClient.incident.findFirst({
-                where: {
-                    status: 'Ongoing', // Or other active statuses
-                },
-                orderBy: {
-                    date: 'desc',
-                },
-            });
-            if (openIncident) {
-                const duration = Math.round(
-                    (new Date().getTime() -
-                        new Date(openIncident.date).getTime()) /
-                        1000
-                ); // Duration in seconds
-                await prismaClient.incident.update({
-                    where: { id: openIncident.id },
-                    data: {
-                        status: 'Resolved',
-                        duration: duration,
-                    },
-                });
-                // Optionally send a "Resolved" notification email here
-            }
-        }
-
-        return updatedHeartbeat;
+    if (!heartbeat) {
+      throw new Error("Heartbeat not found");
     }
 
-    async getHeartbeatRecords(heartbeatId: string) {
-        return prismaClient.heartbeatRecord.findMany({
-            where: { heartbeatId },
-            orderBy: { timestamp: 'desc' },
-        });
-    }
-
-    async getHeartbeatDetails(heartbeatId: string) {
-        const heartbeat = await prismaClient.heartbeat.findUnique({
-            where: { id: heartbeatId },
-            include: {
-                HeartbeatRecord: {
-                    orderBy: { timestamp: 'desc' },
-                },
-            },
-        });
-
-        if (!heartbeat) {
-            throw new Error('Heartbeat not found');
-        }
-
-        return heartbeat;
-    }
+    return heartbeat;
+  }
 }
 
 export const websiteService = new WebsiteService();

@@ -34,6 +34,15 @@ interface ReportIncidentModalProps {
   onIncidentReported: () => void;
 }
 
+/**
+ * Renders a modal dialog for manually reporting a new incident.
+ *
+ * The modal allows users to enter an incident title, error details, and optionally select a website. On submission, the incident is reported via an API call, and callbacks are triggered for modal state changes and successful reporting.
+ *
+ * @param isOpen - Whether the modal is visible.
+ * @param onOpenChange - Callback invoked when the modal open state changes.
+ * @param onIncidentReported - Callback invoked after a successful incident report.
+ */
 export function ReportIncidentModal({
   isOpen,
   onOpenChange,
@@ -52,7 +61,9 @@ export function ReportIncidentModal({
       const fetchWebsites = async () => {
         setLoadingWebsites(true);
         try {
-          const response = await instance.get<{ websites: Website[] }>("/api/v1/websites");
+          const response = await instance.get<{ websites: Website[] }>(
+            "/api/v1/websites",
+          );
           setWebsites(response.data.websites || []);
         } catch (error) {
           console.error("Failed to fetch websites:", error);
@@ -64,7 +75,6 @@ export function ReportIncidentModal({
       };
       fetchWebsites();
     } else {
-
       setTitle("");
       setErrorText("");
       setWebsiteId(undefined);
@@ -142,11 +152,17 @@ export function ReportIncidentModal({
               disabled={isSubmitting || loadingWebsites}
             >
               <SelectTrigger className="col-span-3">
-                <SelectValue placeholder={loadingWebsites ? "Loading websites..." : "Select a website"} />
+                <SelectValue
+                  placeholder={
+                    loadingWebsites ? "Loading websites..." : "Select a website"
+                  }
+                />
               </SelectTrigger>
               <SelectContent>
                 {websites.length === 0 && !loadingWebsites ? (
-                  <SelectItem value="no-websites" disabled>No websites available</SelectItem>
+                  <SelectItem value="no-websites" disabled>
+                    No websites available
+                  </SelectItem>
                 ) : (
                   <>
                     <SelectItem value="none">None</SelectItem>

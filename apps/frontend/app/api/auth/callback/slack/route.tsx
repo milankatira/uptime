@@ -1,20 +1,25 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * Handles Slack OAuth authentication by exchanging an authorization code for access tokens and redirecting with credentials.
+ *
+ * Extracts the "code" parameter from the request, exchanges it for Slack OAuth tokens, and redirects the user to a local URL with relevant credentials as query parameters. Returns a 400 response if the code is missing, or a 500 response if an error occurs during the process.
+ */
 export async function GET(req: NextRequest) {
   // Extract the code parameter from the query string
-  const code = req.nextUrl.searchParams.get('code');
+  const code = req.nextUrl.searchParams.get("code");
 
   // Check if the code parameter is missing
   if (!code) {
-    return new NextResponse('Code not provided', { status: 400 });
+    return new NextResponse("Code not provided", { status: 400 });
   }
 
   try {
     // Make a POST request to Slack's OAuth endpoint to exchange the code for an access token
-    const response = await fetch('https://slack.com/api/oauth.v2.access', {
-      method: 'POST',
+    const response = await fetch("https://slack.com/api/oauth.v2.access", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        "Content-Type": "application/x-www-form-urlencoded",
       },
       body: new URLSearchParams({
         code,
@@ -28,7 +33,7 @@ export async function GET(req: NextRequest) {
 
     // Check if the response indicates a failure
     if (!data.ok) {
-      throw new Error(data.error || 'Slack OAuth failed');
+      throw new Error(data.error || "Slack OAuth failed");
     }
 
     if (!!data?.ok) {
@@ -42,11 +47,11 @@ export async function GET(req: NextRequest) {
 
       // Handle the successful OAuth flow and redirect the user
       return NextResponse.redirect(
-        `http://localhost:3000/connections?app_id=${appId}&authed_user_id=${userId}&authed_user_token=${userToken}&slack_access_token=${accessToken}&bot_user_id=${botUserId}&team_id=${teamId}&team_name=${teamName}`
+        `http://localhost:3000/connections?app_id=${appId}&authed_user_id=${userId}&authed_user_token=${userToken}&slack_access_token=${accessToken}&bot_user_id=${botUserId}&team_id=${teamId}&team_name=${teamName}`,
       );
     }
   } catch (error) {
     console.error(error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

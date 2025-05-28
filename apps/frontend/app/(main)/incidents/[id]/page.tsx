@@ -46,14 +46,11 @@ const IncidentDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-
   const fetchIncidentDetails = async () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await instance.get(
-        `/api/v1/incident/${incidentId}`,
-      );
+      const response = await instance.get(`/api/v1/incident/${incidentId}`);
       setIncident(response.data);
     } catch (err) {
       console.error("Error fetching incident details:", err);
@@ -68,12 +65,14 @@ const IncidentDetailPage = () => {
     if (incidentId) {
       fetchIncidentDetails();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [incidentId, instance]);
 
   const handleAcknowledge = async () => {
     try {
-      await instance.put(`/api/v1/incident/${incidentId}`, { status: "Acknowledged" });
+      await instance.put(`/api/v1/incident/${incidentId}`, {
+        status: "Acknowledged",
+      });
       toast.success("Incident acknowledged", {
         description: "You have acknowledged this incident",
       });
@@ -87,7 +86,9 @@ const IncidentDetailPage = () => {
   const handlePostComment = async () => {
     if (comment.trim()) {
       try {
-        await instance.post(`/api/v1/incident/${incidentId}/comment`, { comment });
+        await instance.post(`/api/v1/incident/${incidentId}/comment`, {
+          comment,
+        });
         toast.success("Comment posted", {
           description: "Your comment has been added to the timeline",
         });
@@ -102,7 +103,11 @@ const IncidentDetailPage = () => {
   };
 
   const handleDeleteIncident = async () => {
-    if (window.confirm("Are you sure you want to delete this incident? This action cannot be undone.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this incident? This action cannot be undone.",
+      )
+    ) {
       setIsDeleting(true);
       try {
         await instance.delete(`/api/v1/incident/${incidentId}`);
@@ -213,7 +218,6 @@ const IncidentDetailPage = () => {
                   {incidents?.errorText} {/* Use incidents state */}
                 </h1>
                 <div className="flex items-center text-sm">
-
                   <span className="text-gray-500 dark:text-gray-400">
                     • {incidents?.date} {/* Use incidents state */}
                   </span>
@@ -222,8 +226,11 @@ const IncidentDetailPage = () => {
             </div>
             <div className="flex space-x-3">
               {/* Add Acknowledge button here if needed */}
-              {incidents?.status !== 'Acknowledged' && (
-                <Button onClick={handleAcknowledge} disabled={loading || isDeleting}>
+              {incidents?.status !== "Acknowledged" && (
+                <Button
+                  onClick={handleAcknowledge}
+                  disabled={loading || isDeleting}
+                >
                   Acknowledge
                 </Button>
               )}
@@ -245,7 +252,8 @@ const IncidentDetailPage = () => {
                   <path d="M3 6l3 1m0 0l-3 9a5 5 0 0 0 7.5 3h6A2 2 0 0 0 21 16v-5a2 2 0 0 0-2-2h-.5"></path>
                   <path d="M8.5 12H12a2 2 0 0 0 2-2V8"></path>
                 </svg>
-                {isDeleting ? "Removing..." : "Remove"} {/* Update button text */}
+                {isDeleting ? "Removing..." : "Remove"}{" "}
+                {/* Update button text */}
               </Button>
             </div>
           </div>
@@ -262,26 +270,35 @@ const IncidentDetailPage = () => {
           <Card className="bg-dark-lighter border-dark-border">
             <CardContent className="p-5">
               <p className="mb-1 text-sm text-gray-400">Cause</p>
-              <h3 className="font-semibold">{incidents?.errorText} {/* Use incidents state */}</h3>
+              <h3 className="font-semibold">
+                {incidents?.errorText} {/* Use incidents state */}
+              </h3>
             </CardContent>
           </Card>
 
-          {incidents?.status !== "Acknowledged" &&
+          {incidents?.status !== "Acknowledged" && (
             <Card className="bg-dark-lighter border-dark-border">
               <CardContent className="p-5">
                 <p className="mb-1 text-sm text-gray-400">Started at</p>
                 <h3 className="font-semibold">
-                  {incidents?.createdAt ? formatDistanceToNow(new Date(incidents.createdAt), { addSuffix: true }) : 'N/A'}
+                  {incidents?.createdAt
+                    ? formatDistanceToNow(new Date(incidents.createdAt), {
+                        addSuffix: true,
+                      })
+                    : "N/A"}
                 </h3>
               </CardContent>
-            </Card>}
+            </Card>
+          )}
         </div>
 
         {/* Escalation section */}
         <Card className="bg-dark-lighter border-dark-border mb-8">
           <CardContent className="p-5">
             <p className="mb-1 text-sm text-gray-400">Escalation</p>
-            <h3 className="font-semibold">{incidents?.escalation} {/* Use incidents state */}</h3>
+            <h3 className="font-semibold">
+              {incidents?.escalation} {/* Use incidents state */}
+            </h3>
           </CardContent>
         </Card>
 
@@ -310,7 +327,8 @@ const IncidentDetailPage = () => {
           <h2 className="mb-6 text-xl font-semibold">Timeline</h2>
 
           {/* Map over the incident timeline */}
-          {incidents?.Timeline?.map((item, index, arr) => { // Add index and array parameters
+          {incidents?.Timeline?.map((item, index, arr) => {
+            // Add index and array parameters
             const isLastItem = index === arr.length - 1; // Check if it's the last item
             return (
               <div key={item.id} className="mb-6">
@@ -349,7 +367,9 @@ const IncidentDetailPage = () => {
                       {/* Add more icon types as needed */}
                     </div>
                     {/* Conditionally render the vertical line */}
-                    {!isLastItem && <div className="h-full w-px bg-gray-700"></div>}
+                    {!isLastItem && (
+                      <div className="h-full w-px bg-gray-700"></div>
+                    )}
                   </div>
                   <div className="flex flex-grow flex-col pb-8">
                     <div className="flex items-center">
@@ -360,14 +380,14 @@ const IncidentDetailPage = () => {
                         )}
                       </p>
                     </div>
-                    <span className="mt-1 text-xs text-gray-500">{item.time}</span>
+                    <span className="mt-1 text-xs text-gray-500">
+                      {item.time}
+                    </span>
                   </div>
                 </div>
               </div>
             );
           })}
-
-
         </div>
 
         {/* Action buttons */}

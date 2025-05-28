@@ -82,7 +82,10 @@ export async function deleteWebsite(req: Request, res: Response) {
 }
 
 /**
- * Update an existing website
+ * Updates an existing website with a new URL and monitoring interval.
+ *
+ * Expects `websiteId` in the URL parameters and `url` and `interval` in the request body.
+ * Responds with the updated website data on success, or an error message with appropriate HTTP status on failure.
  */
 export async function updateWebsite(req: Request, res: Response) {
   try {
@@ -109,7 +112,6 @@ export async function updateWebsite(req: Request, res: Response) {
     return res.status(500).json({ error: "Failed to update website" });
   }
 }
-
 
 /**
  * Create a new heartbeat

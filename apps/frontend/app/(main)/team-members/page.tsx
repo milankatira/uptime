@@ -3,6 +3,11 @@ import { OrganizationProfile, useAuth } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 
+/**
+ * Displays the organization profile interface if the user belongs to an organization, or a prompt to create or join one otherwise.
+ *
+ * @returns The organization profile page UI, adapting its appearance to the current theme.
+ */
 export default function OrganizationProfilePage() {
   const { theme } = useTheme();
   const { orgId } = useAuth();
@@ -19,13 +24,13 @@ export default function OrganizationProfilePage() {
           />
         ) : (
           <div className="text-center text-gray-600 dark:text-gray-400">
-            <h2 className="text-xl font-semibold mb-4">No Organization Found</h2>
+            <h2 className="text-xl font-semibold mb-4">
+              No Organization Found
+            </h2>
             <p className="mb-4">
               To manage team members, you need to be part of an organization.
             </p>
-            <p>
-              Please create or join an organization
-            </p>
+            <p>Please create or join an organization</p>
           </div>
         )}
       </div>

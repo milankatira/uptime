@@ -4,6 +4,11 @@ import { useWebsites } from "@/hooks/useWebsites";
 import { Eye } from "lucide-react";
 import React from "react";
 
+/**
+ * Displays a table listing available status pages with actions to view each page.
+ *
+ * Renders a list of websites retrieved from the {@link useWebsites} hook. For each website, shows its URL and ID, and provides a button to open the corresponding status page in a new browser tab. If no websites are available, displays a message indicating that no status pages are found.
+ */
 function StatusPageList() {
   const { websites } = useWebsites();
 
@@ -31,9 +36,10 @@ function StatusPageList() {
                   >
                     <td className="p-4">
                       <div className="flex items-center gap-3">
-
                         <div>
-                          <div className="font-medium text-white">{site.url}</div>
+                          <div className="font-medium text-white">
+                            {site.url}
+                          </div>
                           <div className="text-muted-foreground text-sm">
                             ID: {site.id}
                           </div>
