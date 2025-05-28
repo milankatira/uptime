@@ -3,6 +3,11 @@ import { OrganizationProfile, useAuth } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 
+/**
+ * Displays the organization profile interface if the user belongs to an organization, or a prompt to create or join one otherwise.
+ *
+ * @returns The organization profile page UI, adapting its appearance to the current theme.
+ */
 export default function OrganizationProfilePage() {
   const { theme } = useTheme();
   const { orgId } = useAuth();

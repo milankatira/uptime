@@ -35,6 +35,11 @@ const ShimmerIncidentItem = () => (
   </div>
 );
 
+/**
+ * Displays a searchable list of incidents with status indicators and supports reporting new incidents via a modal.
+ *
+ * Fetches incidents from the API, allows filtering by monitor name, error code, or error text, and presents incident details with visual status cues. Users can report new incidents, which refreshes the list upon submission.
+ */
 function IncidentsSection() {
   const [incidentsData, setIncidentsData] = useState<Incident[]>([]);
   const [searchQuery, setSearchQuery] = useState("");

@@ -4,6 +4,11 @@ import { ArrowRight, Check, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MagicCard } from "@/components/magicui/magic-card";
+/**
+ * Renders a visually engaging pricing section with animated feature lists and a call-to-action for early access.
+ *
+ * Displays a header with animated badges and headings, two columns of animated feature highlights, and a prominent button to encourage users to join the beta launch.
+ */
 function PricingSection() {
   return (
     <section id="pricing" className="py-32 relative overflow-hidden">

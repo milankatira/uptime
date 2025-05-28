@@ -3,6 +3,16 @@ import axios from "axios";
 import { NextResponse, NextRequest } from "next/server";
 import url from "url";
 
+/**
+ * Handles the Discord OAuth2 callback by exchanging the authorization code for an access token, retrieving the user's guilds, and redirecting to the connections page with webhook and guild details.
+ *
+ * If the authorization code or token data is missing, redirects to the generic connections page without parameters.
+ *
+ * @param req - The incoming Next.js request containing the OAuth2 authorization code as a query parameter.
+ * @returns A redirect response to the connections page, optionally including webhook and guild information as query parameters.
+ *
+ * @remark Relies on environment variables for Discord client credentials and uses hardcoded localhost URLs for redirect URIs.
+ */
 export async function GET(req: NextRequest) {
   const code = req.nextUrl.searchParams.get("code");
   if (code) {

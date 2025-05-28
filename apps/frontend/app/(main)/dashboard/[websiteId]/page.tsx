@@ -54,6 +54,13 @@ interface WebsiteDetails {
   ticks: WebsiteTick[];
 }
 
+/**
+ * Renders a colored status indicator circle for uptime status.
+ *
+ * Displays a green circle with a ping animation for "good" status, red for "bad", and gray for "unknown".
+ *
+ * @param status - The current uptime status to display.
+ */
 function StatusCircle({ status }: { status: UptimeStatus }) {
   return (
     <div className="relative flex items-center justify-center">
@@ -76,6 +83,13 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
   );
 }
 
+/**
+ * Displays a horizontal bar chart summarizing website uptime status over the last 30 minutes.
+ *
+ * Divides the last 30 minutes into ten 3-minute windows, classifying each window as "good", "bad", or "unknown" based on the proportion of "Good" status ticks. Each bar's height and color reflect the window's status, with tooltips showing the corresponding time range and status.
+ *
+ * @param ticks - Array of website uptime check results to visualize.
+ */
 function UptimeTicks({ ticks }: { ticks: WebsiteTick[] }) {
   const processedTicks: UptimeStatus[] = useMemo(() => {
     const sortedTicks = [...ticks].sort(
@@ -150,6 +164,14 @@ function UptimeTicks({ ticks }: { ticks: WebsiteTick[] }) {
   );
 }
 
+/**
+ * Determines the overall uptime status based on the most recent three website ticks.
+ *
+ * Returns "good" if all last three ticks have status "Good", "bad" if all are "Bad", or "unknown" otherwise or if there are no ticks.
+ *
+ * @param ticks - Array of website uptime check results.
+ * @returns The overall status: "good", "bad", or "unknown".
+ */
 function getOverallStatus(ticks: WebsiteTick[]): UptimeStatus {
   const sortedTicks = [...ticks].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
@@ -176,6 +198,11 @@ function getOverallStatus(ticks: WebsiteTick[]): UptimeStatus {
   }
 }
 
+/**
+ * Renders a skeleton loading UI for the website details page.
+ *
+ * Displays animated placeholders that mimic the layout of the website details dashboard while data is loading.
+ */
 function WebsiteDetailsLoadingShimmer() {
   return (
     <div className="bg-white dark:bg-gray-900 w-full h-full overflow-scroll animate-pulse p-10">
@@ -262,6 +289,11 @@ function WebsiteDetailsLoadingShimmer() {
   );
 }
 
+/**
+ * Displays and manages the details page for a monitored website, including uptime statistics, recent status, and editing capabilities.
+ *
+ * Fetches website status data, visualizes uptime and response time, and allows users to edit the website's URL and check interval. Handles loading, error, and not-found states, and updates the UI in response to edits.
+ */
 export default function WebsiteDetailsPage() {
   const { websiteId } = useParams();
   const instance = useAxiosInstance();

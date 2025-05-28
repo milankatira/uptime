@@ -3,7 +3,15 @@
 
 import axios from "axios";
 
-// 📤 Function to Send Message to Discord
+/**
+ * Sends a message to a Discord channel using a webhook URL.
+ *
+ * @param webhookUrl - The Discord webhook endpoint to send the message to.
+ * @param content - The message content to be sent.
+ *
+ * @remark
+ * Logs a confirmation message on success or an error message if the request fails.
+ */
 export async function postMessageToDiscord(
   webhookUrl: string,
   content: string,
