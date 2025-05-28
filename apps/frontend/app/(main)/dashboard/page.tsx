@@ -71,6 +71,11 @@ function ErrorMessage({
   );
 }
 
+/**
+ * Displays a summary of monitored websites, including total count, average uptime, and status distribution.
+ *
+ * @param websites - The list of processed website objects to summarize.
+ */
 function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
   const stats = useMemo(() => {
     const totalSites = websites.length;
@@ -179,6 +184,13 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
   );
 }
 
+/**
+ * Renders the main dashboard application for monitoring website uptime.
+ *
+ * Handles user authentication, website data fetching, status processing, and CRUD operations for monitored websites. Displays summary statistics, website cards, loading and error states, and modals for adding new websites or organizations.
+ *
+ * @remark Redirects users without organization memberships to an organization creation screen.
+ */
 function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);

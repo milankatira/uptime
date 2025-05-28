@@ -1,6 +1,13 @@
 import type { Request, Response } from "express";
 import { userService } from "../services/userService";
 
+/**
+ * Updates the authenticated user's preferences.
+ *
+ * Expects preference data in the request body and returns the updated preferences as JSON.
+ *
+ * @remark Requires {@link req.userId} to be set by authentication middleware.
+ */
 export async function updateUserPreferences(req: Request, res: Response) {
   try {
     const userId = req.userId!; // ← set by authMiddleware
@@ -70,6 +77,11 @@ export async function findConnectionByUserId(req: Request, res: Response) {
   }
 }
 
+/**
+ * Finds an existing user by external ID or creates a new user with the provided email and optional image URL.
+ *
+ * Responds with the user object as JSON. Returns a 400 error if the email is missing from the request body, or a 500 error if the operation fails.
+ */
 export async function findOrCreateUser(req: Request, res: Response) {
   try {
     const externalId = req?.userId!;
@@ -93,6 +105,11 @@ export async function findOrCreateUser(req: Request, res: Response) {
   }
 }
 
+/**
+ * Retrieves the authenticated user's preferences and returns them as JSON.
+ *
+ * @remark Assumes {@link req.userId} is set by authentication middleware.
+ */
 export async function getUserPreferences(req: Request, res: Response) {
   try {
     const userId = req.userId!;
@@ -104,6 +121,13 @@ export async function getUserPreferences(req: Request, res: Response) {
   }
 }
 
+/**
+ * Stores a Slack connection for the authenticated user.
+ *
+ * Creates a new Slack connection using the provided request body data and associates it with the current user.
+ *
+ * @returns The stored Slack connection data as JSON.
+ */
 export async function storeSlackConnection(req: Request, res: Response) {
   try {
     const userId = req.userId!;
@@ -115,6 +139,13 @@ export async function storeSlackConnection(req: Request, res: Response) {
   }
 }
 
+/**
+ * Stores a Discord connection for the authenticated user.
+ *
+ * Creates a new Discord connection using the provided request body and associates it with the current user.
+ *
+ * @remark Requires {@link req.userId} to be set by authentication middleware.
+ */
 export async function storeDiscordConnection(req: Request, res: Response) {
   try {
     const userId = req.userId!;

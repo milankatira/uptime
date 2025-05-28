@@ -5,6 +5,13 @@ import axios from "axios";
 
 import { useMemo } from "react";
 
+/**
+ * Returns a memoized Axios instance configured with authentication and organization headers for API requests.
+ *
+ * The Axios instance automatically attaches a Bearer token and, if available, an organization ID to each request.
+ *
+ * @returns An Axios instance preconfigured for authenticated backend API communication.
+ */
 export function useAxiosInstance() {
   const { getToken, orgId } = useAuth();
   return useMemo(() => {

@@ -11,6 +11,14 @@ export interface Option {
   [key: string]: string | boolean | undefined;
 }
 
+/**
+ * Retrieves a list of Slack channels the bot is a member of.
+ *
+ * @param slackAccessToken - The Slack bot user OAuth token.
+ * @returns An array of {@link Option} objects representing accessible channels.
+ *
+ * @throws {Error} If the Slack API request fails or returns an error response.
+ */
 export async function listBotChannels(
   slackAccessToken: string,
 ): Promise<Option[]> {

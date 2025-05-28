@@ -35,6 +35,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
+/**
+ * Displays an area chart visualizing website latency over time.
+ *
+ * Renders a responsive chart of latency measurements using the provided tick data. If no data is available, shows a fallback message.
+ *
+ * @param ticks - Array of website tick objects containing timestamp, status, and latency information to plot.
+ */
 export function ResponseTimeChart({ ticks }: ResponseTimeChartProps) {
   // Prepare data for the chart (e.g., latency over time)
   const chartData = useMemo(() => {

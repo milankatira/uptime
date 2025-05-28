@@ -4,6 +4,11 @@ import redisConnection from "./lib/redis";
 
 const checkQueue = new Queue("website-checks", { connection: redisConnection });
 
+/**
+ * Schedules repeatable website check jobs for all active websites based on their configured intervals.
+ *
+ * Queries the database for websites that are not disabled and adds a repeatable job to the queue for each, ensuring each job is uniquely identified by the website ID.
+ */
 async function scheduleWebsiteChecks() {
   console.log("Scheduling website checks based on intervals");
   const sites = await prismaClient.website.findMany({

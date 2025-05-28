@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+/**
+ * Handles Slack OAuth authentication by exchanging an authorization code for access tokens and redirecting with credentials.
+ *
+ * Extracts the "code" parameter from the request, exchanges it for Slack OAuth tokens, and redirects the user to a local URL with relevant credentials as query parameters. Returns a 400 response if the code is missing, or a 500 response if an error occurs during the process.
+ */
 export async function GET(req: NextRequest) {
   // Extract the code parameter from the query string
   const code = req.nextUrl.searchParams.get("code");
