@@ -67,11 +67,6 @@ export class WebsiteService {
                 timeRange = "30 days";
                 startTime = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
                 break;
-            case "1y":
-                binSize = "1 month";
-                timeRange = "12 months";
-                startTime = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-                break;
             default: // "30m"
                 binSize = "3 minutes";
                 timeRange = "30 minutes";

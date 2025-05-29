@@ -47,7 +47,7 @@ import { ResponseTimeChart } from "./components/ResponseTimeChart";
 import { RecentErrors } from "./components/RecentErrors";
 
 type UptimeStatus = "good" | "bad" | "unknown";
-type TimeRange = "30m" | "1w" | "1m" | "1y";
+type TimeRange = "30m" | "1w" | "1m";
 
 interface AveragedTick {
     windowStart: string;
@@ -130,8 +130,6 @@ function UptimeTicks({
                 return `${7 - index} day${index !== 6 ? "s" : ""} ago`;
             case "1m":
                 return `${30 - index} day${index !== 29 ? "s" : ""} ago`;
-            case "1y":
-                return `${12 - index} month${index !== 11 ? "s" : ""} ago`;
             default: // 30m
                 const minutesAgo = 30 - index * 3;
                 return `${minutesAgo - 3}-${minutesAgo} min ago`;

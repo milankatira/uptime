@@ -28,7 +28,7 @@ interface AveragedTick {
     status: "Good" | "Bad";
 }
 
-type TimeRange = "30m" | "1w" | "1m" | "1y";
+type TimeRange = "30m" | "1w" | "1m";
 
 interface ResponseTimeChartProps {
     averagedTicks: AveragedTick[];
@@ -60,8 +60,6 @@ export function ResponseTimeChart({
         const date = new Date(timestamp);
 
         switch (timeRange) {
-            case "1y":
-                return date.toLocaleDateString([], { month: "short" });
             case "1m":
                 return date.toLocaleDateString([], {
                     day: "numeric",
@@ -94,8 +92,6 @@ export function ResponseTimeChart({
     // Get chart title based on time range
     const getChartTitle = () => {
         switch (timeRange) {
-            case "1y":
-                return "Monthly Response Times";
             case "1m":
                 return "Daily Response Times";
             case "1w":
@@ -108,8 +104,6 @@ export function ResponseTimeChart({
     // Get chart description based on time range
     const getChartDescription = () => {
         switch (timeRange) {
-            case "1y":
-                return "Average monthly latency measurements";
             case "1m":
                 return "Average daily latency measurements";
             case "1w":
