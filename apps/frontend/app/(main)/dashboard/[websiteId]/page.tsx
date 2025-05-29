@@ -66,11 +66,11 @@ interface WebsiteDetails {
 }
 
 /**
- * Displays a colored status indicator circle representing uptime status.
+ * Renders a colored circle to visually indicate the current uptime status.
  *
- * Shows green for "good", red for "bad", and gray for "unknown" status. A pulsing animation is added for "good" status.
+ * The indicator is green with a pulsing animation for "good" status, red for "bad", and gray for "unknown".
  *
- * @param status - The current uptime status to display.
+ * @param status - The uptime status to represent.
  */
 function StatusCircle({ status }: { status: UptimeStatus }) {
     return (
@@ -95,11 +95,11 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
 }
 
 /**
- * Displays a horizontal bar visualization of up to 10 recent uptime status ticks for a website.
+ * Renders a horizontal bar chart visualizing up to 10 recent uptime status ticks for a website.
  *
- * Each tick is represented as a vertical bar whose height and color indicate the status ("good", "bad", or "unknown"). Tooltips provide contextual time and status information based on the selected {@link timeRange}.
+ * Each bar represents a status tick, with height and color indicating "good", "bad", or "unknown" status. Tooltips display contextual time and status information based on the selected {@link timeRange}.
  *
- * @param averagedTicks - Array of recent averaged status ticks to visualize.
+ * @param averagedTicks - The recent averaged status ticks to display.
  * @param timeRange - The selected time range, which determines tooltip labels and tick grouping.
  */
 function UptimeTicks({
@@ -173,10 +173,12 @@ function UptimeTicks({
 }
 
 /**
- * Determines the overall uptime status based on the most recent averaged tick.
+ * Returns the overall uptime status based on the most recent averaged tick.
  *
- * @param averagedTicks - Array of averaged status ticks, ordered with the most recent first.
- * @returns The overall status: "good" if the latest tick is "Good", "bad" if "Bad", or "unknown" if no ticks are available.
+ * If no ticks are available, returns "unknown".
+ *
+ * @param averagedTicks - List of averaged status ticks, with the most recent first.
+ * @returns "good" if the latest tick status is "Good", "bad" if "Bad", or "unknown" if the list is empty.
  */
 function getOverallStatus(averagedTicks: AveragedTick[]): UptimeStatus {
     if (!averagedTicks.length) return "unknown";
@@ -185,9 +187,9 @@ function getOverallStatus(averagedTicks: AveragedTick[]): UptimeStatus {
 }
 
 /**
- * Renders a skeleton loading UI that mimics the layout of the website details page.
+ * Displays a skeleton UI that simulates the website details page layout during data loading.
  *
- * Displays animated placeholders for the status header, summary cards, uptime ticks visualization, and response time chart while data is loading.
+ * Shows animated placeholders for the status header, summary cards, uptime ticks visualization, and response time chart to indicate loading state.
  */
 function WebsiteDetailsLoadingShimmer() {
     return (
@@ -273,9 +275,9 @@ function WebsiteDetailsLoadingShimmer() {
 }
 
 /**
- * Displays and manages detailed uptime and performance information for a specific website.
+ * Renders a detailed dashboard for a monitored website, displaying uptime, response time, and recent error information.
  *
- * Fetches website status, uptime, and response time data for a selectable time range, and periodically refreshes the data based on the website's configured check interval. Allows users to edit the website's URL and check interval, and provides visualizations for uptime status, response times, and recent errors. Handles loading, error, and not-found states.
+ * Fetches and visualizes website status data for a selectable time range, with periodic automatic refresh based on the website's check interval. Allows editing of the website's URL and check interval, and provides interactive UI elements for status, uptime percentage, check interval, total checks, and recent performance metrics. Handles loading, error, and not-found states.
  */
 export default function WebsiteDetailsPage() {
     const { websiteId } = useParams();
