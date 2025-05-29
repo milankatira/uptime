@@ -9,72 +9,79 @@ import { userService } from "../services/userService";
  * @remark Requires {@link req.userId} to be set by authentication middleware.
  */
 export async function updateUserPreferences(req: Request, res: Response) {
-  try {
-    const userId = req.userId!; // ← set by authMiddleware
-    const preferences = req.body;
+    try {
+        const userId = req.userId!; // ← set by authMiddleware
+        const preferences = req.body;
 
-    const result = await userService.updateUserPreferences(userId, preferences);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error updating preferences:", error);
-    return res.status(500).json({ error: "Failed to update preferences" });
-  }
+        const result = await userService.updateUserPreferences(
+            userId,
+            preferences,
+        );
+        return res.json(result);
+    } catch (error) {
+        console.error("Error updating preferences:", error);
+        return res.status(500).json({ error: "Failed to update preferences" });
+    }
 }
 
 export async function updateFcmToken(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { token } = req.body;
-    if (!token) {
-      return res.status(400).json({ error: "Token is required" });
-    }
+    try {
+        const userId = req.userId!;
+        const { token } = req.body;
+        if (!token) {
+            return res.status(400).json({ error: "Token is required" });
+        }
 
-    const result = await userService.updateFcmToken(userId, token);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error updating FCM token:", error);
-    return res.status(500).json({ error: "Failed to update FCM token" });
-  }
+        const result = await userService.updateFcmToken(userId, token);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error updating FCM token:", error);
+        return res.status(500).json({ error: "Failed to update FCM token" });
+    }
 }
 
 export async function addEmailConnection(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ error: "Email is required" });
+    try {
+        const userId = req.userId!;
+        const { email } = req.body;
+        if (!email) return res.status(400).json({ error: "Email is required" });
 
-    const result = await userService.addEmailConnection(userId, email);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error adding email connection:", error);
-    return res.status(500).json({ error: "Failed to add email connection" });
-  }
+        const result = await userService.addEmailConnection(userId, email);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error adding email connection:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to add email connection" });
+    }
 }
 
 export async function removeEmailConnection(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { id } = req.body;
-    if (!id)
-      return res.status(400).json({ error: "Connection ID is required" });
+    try {
+        const userId = req.userId!;
+        const { id } = req.body;
+        if (!id)
+            return res.status(400).json({ error: "Connection ID is required" });
 
-    const result = await userService.removeEmailConnection(userId, id);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error removing email connection:", error);
-    return res.status(500).json({ error: "Failed to remove email connection" });
-  }
+        const result = await userService.removeEmailConnection(userId, id);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error removing email connection:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to remove email connection" });
+    }
 }
 
 export async function findConnectionByUserId(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const result = await userService.findConnectionByUserId(userId);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error finding connections:", error);
-    return res.status(500).json({ error: "Failed to find connections" });
-  }
+    try {
+        const userId = req.userId!;
+        const result = await userService.findConnectionByUserId(userId);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error finding connections:", error);
+        return res.status(500).json({ error: "Failed to find connections" });
+    }
 }
 
 /**
@@ -83,26 +90,26 @@ export async function findConnectionByUserId(req: Request, res: Response) {
  * Responds with the user object as JSON. Returns a 400 error if the email is missing from the request body, or a 500 error if the operation fails.
  */
 export async function findOrCreateUser(req: Request, res: Response) {
-  try {
-    const externalId = req?.userId!;
-    const { email, imageUrl } = req?.body;
+    try {
+        const externalId = req?.userId!;
+        const { email, imageUrl } = req?.body;
 
-    if (!email) {
-      return res
-        .status(400)
-        .json({ error: "Email is required in the request body" });
+        if (!email) {
+            return res
+                .status(400)
+                .json({ error: "Email is required in the request body" });
+        }
+
+        const user = await userService.findOrCreateUserByExternalId(
+            externalId,
+            email, // Pass email
+            imageUrl, // Pass imageUrl
+        );
+        return res.json(user);
+    } catch (error) {
+        console.error("Error finding or creating user:", error);
+        return res.status(500).json({ error: "Failed to find or create user" });
     }
-
-    const user = await userService.findOrCreateUserByExternalId(
-      externalId,
-      email, // Pass email
-      imageUrl, // Pass imageUrl
-    );
-    return res.json(user);
-  } catch (error) {
-    console.error("Error finding or creating user:", error);
-    return res.status(500).json({ error: "Failed to find or create user" });
-  }
 }
 
 /**
@@ -111,14 +118,14 @@ export async function findOrCreateUser(req: Request, res: Response) {
  * @remark Assumes {@link req.userId} is set by authentication middleware.
  */
 export async function getUserPreferences(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const preferences = await userService.getUserPreferences(userId);
-    return res.json(preferences);
-  } catch (error) {
-    console.error("Error fetching preferences:", error);
-    return res.status(500).json({ error: "Failed to fetch preferences" });
-  }
+    try {
+        const userId = req.userId!;
+        const preferences = await userService.getUserPreferences(userId);
+        return res.json(preferences);
+    } catch (error) {
+        console.error("Error fetching preferences:", error);
+        return res.status(500).json({ error: "Failed to fetch preferences" });
+    }
 }
 
 /**
@@ -129,14 +136,14 @@ export async function getUserPreferences(req: Request, res: Response) {
  * @returns The stored Slack connection data as JSON.
  */
 export async function storeSlackConnection(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const data = await userService.createSlackConnection(req.body, userId);
-    res.status(200).json(data);
-  } catch (err) {
-    console.error("Slack Connection Error:", err);
-    res.status(500).json({ message: "Failed to store Slack connection" });
-  }
+    try {
+        const userId = req.userId!;
+        const data = await userService.createSlackConnection(req.body, userId);
+        res.status(200).json(data);
+    } catch (err) {
+        console.error("Slack Connection Error:", err);
+        res.status(500).json({ message: "Failed to store Slack connection" });
+    }
 }
 
 /**
@@ -147,12 +154,15 @@ export async function storeSlackConnection(req: Request, res: Response) {
  * @remark Requires {@link req.userId} to be set by authentication middleware.
  */
 export async function storeDiscordConnection(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const data = await userService.createDiscordConnection(req.body, userId);
-    res.status(200).json(data);
-  } catch (err) {
-    console.error("Discord Connection Error:", err);
-    res.status(500).json({ message: "Failed to store Discord connection" });
-  }
+    try {
+        const userId = req.userId!;
+        const data = await userService.createDiscordConnection(
+            req.body,
+            userId,
+        );
+        res.status(200).json(data);
+    } catch (err) {
+        console.error("Discord Connection Error:", err);
+        res.status(500).json({ message: "Failed to store Discord connection" });
+    }
 }

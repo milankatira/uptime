@@ -7,66 +7,68 @@ import { incidentService } from "../services/incidentService";
  * Responds with a JSON object containing the list of incidents. Optionally filters incidents by organization if an `orgId` header is provided.
  */
 export async function getAllIncidents(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const orgId = req.headers["orgid"] as string | undefined;
-    const incidents = await incidentService.getAllIncidents(userId, orgId);
-    return res.json({ incidents });
-  } catch (error) {
-    console.error("Error getting incidents:", error);
-    return res.status(500).json({ error: "Failed to get incidents" });
-  }
+    try {
+        const userId = req.userId!;
+        const orgId = req.headers["orgid"] as string | undefined;
+        const incidents = await incidentService.getAllIncidents(userId, orgId);
+        return res.json({ incidents });
+    } catch (error) {
+        console.error("Error getting incidents:", error);
+        return res.status(500).json({ error: "Failed to get incidents" });
+    }
 }
 
 export async function getIncidentDetails(req: Request, res: Response) {
-  try {
-    const { incidentId } = req.params;
-    if (!incidentId) {
-      return res.status(400).json({ error: "Incident ID is required" });
+    try {
+        const { incidentId } = req.params;
+        if (!incidentId) {
+            return res.status(400).json({ error: "Incident ID is required" });
+        }
+        const incident = await incidentService.getIncidentDetails(incidentId);
+        if (!incident) {
+            return res.status(404).json({ error: "Incident not found" });
+        }
+        return res.json(incident);
+    } catch (error) {
+        console.error("Error getting incident details:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to get incident details" });
     }
-    const incident = await incidentService.getIncidentDetails(incidentId);
-    if (!incident) {
-      return res.status(404).json({ error: "Incident not found" });
-    }
-    return res.json(incident);
-  } catch (error) {
-    console.error("Error getting incident details:", error);
-    return res.status(500).json({ error: "Failed to get incident details" });
-  }
 }
 
 export async function updateIncident(req: Request, res: Response) {
-  try {
-    const { incidentId } = req.params;
-    const { status } = req.body;
-    if (!incidentId || !status) {
-      return res
-        .status(400)
-        .json({ error: "Incident ID and status are required" });
+    try {
+        const { incidentId } = req.params;
+        const { status } = req.body;
+        if (!incidentId || !status) {
+            return res
+                .status(400)
+                .json({ error: "Incident ID and status are required" });
+        }
+        const updatedIncident = await incidentService.updateIncident(
+            incidentId,
+            status,
+        );
+        return res.json(updatedIncident);
+    } catch (error) {
+        console.error("Error updating incident:", error);
+        return res.status(500).json({ error: "Failed to update incident" });
     }
-    const updatedIncident = await incidentService.updateIncident(
-      incidentId,
-      status,
-    );
-    return res.json(updatedIncident);
-  } catch (error) {
-    console.error("Error updating incident:", error);
-    return res.status(500).json({ error: "Failed to update incident" });
-  }
 }
 
 export async function deleteIncident(req: Request, res: Response) {
-  try {
-    const { incidentId } = req.params;
-    if (!incidentId) {
-      return res.status(400).json({ error: "Incident ID is required" });
+    try {
+        const { incidentId } = req.params;
+        if (!incidentId) {
+            return res.status(400).json({ error: "Incident ID is required" });
+        }
+        await incidentService.deleteIncident(incidentId);
+        return res.json({ message: "Incident deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting incident:", error);
+        return res.status(500).json({ error: "Failed to delete incident" });
     }
-    await incidentService.deleteIncident(incidentId);
-    return res.json({ message: "Incident deleted successfully" });
-  } catch (error) {
-    console.error("Error deleting incident:", error);
-    return res.status(500).json({ error: "Failed to delete incident" });
-  }
 }
 
 /**
@@ -75,28 +77,30 @@ export async function deleteIncident(req: Request, res: Response) {
  * Responds with HTTP 400 if the incident ID or comment is missing. On success, returns the newly added comment with HTTP 201 status.
  */
 export async function addIncidentComment(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { incidentId } = req.params;
-    const { comment } = req.body;
+    try {
+        const userId = req.userId!;
+        const { incidentId } = req.params;
+        const { comment } = req.body;
 
-    if (!incidentId || !comment) {
-      return res
-        .status(400)
-        .json({ error: "Incident ID and comment are required" });
+        if (!incidentId || !comment) {
+            return res
+                .status(400)
+                .json({ error: "Incident ID and comment are required" });
+        }
+
+        const newComment = await incidentService.addCommentToIncident(
+            incidentId,
+            userId,
+            comment,
+        );
+
+        return res.status(201).json(newComment);
+    } catch (error) {
+        console.error("Error adding incident comment:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to add incident comment" });
     }
-
-    const newComment = await incidentService.addCommentToIncident(
-      incidentId,
-      userId,
-      comment,
-    );
-
-    return res.status(201).json(newComment);
-  } catch (error) {
-    console.error("Error adding incident comment:", error);
-    return res.status(500).json({ error: "Failed to add incident comment" });
-  }
 }
 
 /**
@@ -109,29 +113,29 @@ export async function addIncidentComment(req: Request, res: Response) {
  * Returns HTTP 400 if `title` or `errorText` is missing from the request body.
  */
 export async function createIncident(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { title, errorText, websiteId } = req.body;
+    try {
+        const userId = req.userId!;
+        const { title, errorText, websiteId } = req.body;
 
-    const orgId = req.headers["orgid"] as string | undefined;
+        const orgId = req.headers["orgid"] as string | undefined;
 
-    if (!title || !errorText) {
-      return res
-        .status(400)
-        .json({ error: "Title and errorText are required" });
+        if (!title || !errorText) {
+            return res
+                .status(400)
+                .json({ error: "Title and errorText are required" });
+        }
+
+        const newIncident = await incidentService.createIncident(
+            userId,
+            title,
+            errorText,
+            websiteId,
+            orgId,
+        );
+
+        return res.status(201).json(newIncident);
+    } catch (error) {
+        console.error("Error creating incident:", error);
+        return res.status(500).json({ error: "Failed to create incident" });
     }
-
-    const newIncident = await incidentService.createIncident(
-      userId,
-      title,
-      errorText,
-      websiteId,
-      orgId,
-    );
-
-    return res.status(201).json(newIncident);
-  } catch (error) {
-    console.error("Error creating incident:", error);
-    return res.status(500).json({ error: "Failed to create incident" });
-  }
 }

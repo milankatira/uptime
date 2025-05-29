@@ -13,13 +13,13 @@ import axios from "axios";
  * Logs a confirmation message on success or an error message if the request fails.
  */
 export async function postMessageToDiscord(
-  webhookUrl: string,
-  content: string,
+    webhookUrl: string,
+    content: string,
 ) {
-  try {
-    await axios.post(webhookUrl, { content });
-    console.log("✅ Message sent to Discord");
-  } catch (error: any) {
-    console.error("❌ Error sending message to Discord:", error.message);
-  }
+    try {
+        await axios.post(webhookUrl, { content });
+        console.log("✅ Message sent to Discord");
+    } catch (error: any) {
+        console.error("❌ Error sending message to Discord:", error.message);
+    }
 }

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import {
-  deleteIncident,
-  getAllIncidents,
-  getIncidentDetails,
-  updateIncident,
-  addIncidentComment,
-  createIncident, // Import the new controller function
+    deleteIncident,
+    getAllIncidents,
+    getIncidentDetails,
+    updateIncident,
+    addIncidentComment,
+    createIncident, // Import the new controller function
 } from "../controllers/incidentController";
 import { authMiddleware } from "../middleware";
 
@@ -24,10 +24,10 @@ router.put("/incident/:incidentId", authMiddleware, updateIncident);
 router.delete("/incident/:incidentId", authMiddleware, deleteIncident);
 
 router.post(
-  "/incident/:incidentId/comment",
-  // @ts-expect-error - TODO: fix this type error
-  authMiddleware,
-  addIncidentComment,
+    "/incident/:incidentId/comment",
+    // @ts-expect-error - TODO: fix this type error
+    authMiddleware,
+    addIncidentComment,
 );
 
 // @ts-expect-error - TODO: fix this type error

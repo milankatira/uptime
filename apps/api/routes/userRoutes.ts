@@ -1,14 +1,14 @@
 import { Router } from "express";
 import {
-  addEmailConnection,
-  findConnectionByUserId,
-  removeEmailConnection,
-  updateFcmToken,
-  updateUserPreferences,
-  findOrCreateUser,
-  getUserPreferences,
-  storeSlackConnection,
-  storeDiscordConnection,
+    addEmailConnection,
+    findConnectionByUserId,
+    removeEmailConnection,
+    updateFcmToken,
+    updateUserPreferences,
+    findOrCreateUser,
+    getUserPreferences,
+    storeSlackConnection,
+    storeDiscordConnection,
 } from "../controllers/userController";
 import { authMiddleware } from "../middleware";
 

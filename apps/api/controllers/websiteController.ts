@@ -5,80 +5,80 @@ import { websiteService } from "../services/websiteService";
  * Create a new website
  */
 export async function createWebsite(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { url } = req.body;
-    const orgId = req.headers["orgid"] as string | undefined;
+    try {
+        const userId = req.userId!;
+        const { url } = req.body;
+        const orgId = req.headers["orgid"] as string | undefined;
 
-    if (!url) {
-      return res.status(400).json({ error: "URL is required" });
+        if (!url) {
+            return res.status(400).json({ error: "URL is required" });
+        }
+
+        const result = await websiteService.createWebsite(userId, url, orgId);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error creating website:", error);
+        return res.status(500).json({ error: "Failed to create website" });
     }
-
-    const result = await websiteService.createWebsite(userId, url, orgId);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error creating website:", error);
-    return res.status(500).json({ error: "Failed to create website" });
-  }
 }
 
 /**
  * Get website status by ID
  */
 export async function getWebsiteStatus(req: Request, res: Response) {
-  try {
-    const websiteId = req.query.websiteId as string;
+    try {
+        const websiteId = req.query.websiteId as string;
 
-    if (!websiteId) {
-      return res.status(400).json({ error: "Website ID is required" });
+        if (!websiteId) {
+            return res.status(400).json({ error: "Website ID is required" });
+        }
+
+        const data = await websiteService.getWebsiteStatus(websiteId);
+
+        if (!data) {
+            return res.status(404).json({ error: "Website not found" });
+        }
+
+        return res.json(data);
+    } catch (error) {
+        console.error("Error getting website status:", error);
+        return res.status(500).json({ error: "Failed to get website status" });
     }
-
-    const data = await websiteService.getWebsiteStatus(websiteId);
-
-    if (!data) {
-      return res.status(404).json({ error: "Website not found" });
-    }
-
-    return res.json(data);
-  } catch (error) {
-    console.error("Error getting website status:", error);
-    return res.status(500).json({ error: "Failed to get website status" });
-  }
 }
 
 /**
  * Get all websites for a user
  */
 export async function getAllWebsites(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const orgId = req.headers["orgid"] as string | undefined;
-    const result = await websiteService.getAllWebsites(userId, orgId);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error getting websites:", error);
-    return res.status(500).json({ error: "Failed to get websites" });
-  }
+    try {
+        const userId = req.userId!;
+        const orgId = req.headers["orgid"] as string | undefined;
+        const result = await websiteService.getAllWebsites(userId, orgId);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error getting websites:", error);
+        return res.status(500).json({ error: "Failed to get websites" });
+    }
 }
 
 /**
  * Soft delete a website
  */
 export async function deleteWebsite(req: Request, res: Response) {
-  try {
-    const websiteId = req.body.websiteId;
-    const userId = req.userId!;
+    try {
+        const websiteId = req.body.websiteId;
+        const userId = req.userId!;
 
-    if (!websiteId) {
-      return res.status(400).json({ error: "Website ID is required" });
+        if (!websiteId) {
+            return res.status(400).json({ error: "Website ID is required" });
+        }
+
+        const result = await websiteService.deleteWebsite(websiteId, userId);
+        return res.json(result);
+    } catch (error) {
+        console.error("Error deleting website:", error);
+        return res.status(500).json({ error: "Failed to delete website" });
     }
-
-    const result = await websiteService.deleteWebsite(websiteId, userId);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error deleting website:", error);
-    return res.status(500).json({ error: "Failed to delete website" });
-  }
 }
 
 /**
@@ -88,137 +88,150 @@ export async function deleteWebsite(req: Request, res: Response) {
  * Responds with the updated website data on success, or an error message with appropriate HTTP status on failure.
  */
 export async function updateWebsite(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { websiteId } = req.params;
-    const { url, interval } = req.body;
+    try {
+        const userId = req.userId!;
+        const { websiteId } = req.params;
+        const { url, interval } = req.body;
 
-    if (!websiteId) {
-      return res.status(400).json({ error: "Website ID is required" });
-    }
-    if (!url || !interval) {
-      return res.status(400).json({ error: "URL and Interval are required" });
-    }
+        if (!websiteId) {
+            return res.status(400).json({ error: "Website ID is required" });
+        }
+        if (!url || !interval) {
+            return res
+                .status(400)
+                .json({ error: "URL and Interval are required" });
+        }
 
-    const result = await websiteService.updateWebsite(
-      userId,
-      websiteId,
-      url,
-      interval,
-    );
-    return res.json(result);
-  } catch (error) {
-    console.error("Error updating website:", error);
-    return res.status(500).json({ error: "Failed to update website" });
-  }
+        const result = await websiteService.updateWebsite(
+            userId,
+            websiteId,
+            url,
+            interval,
+        );
+        return res.json(result);
+    } catch (error) {
+        console.error("Error updating website:", error);
+        return res.status(500).json({ error: "Failed to update website" });
+    }
 }
 
 /**
  * Create a new heartbeat
  */
 export async function createHeartbeat(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { name, interval, gracePeriod, escalation, maintenance, metadata } =
-      req.body;
-    const orgId = req.headers["orgid"] as string | undefined;
+    try {
+        const userId = req.userId!;
+        const {
+            name,
+            interval,
+            gracePeriod,
+            escalation,
+            maintenance,
+            metadata,
+        } = req.body;
+        const orgId = req.headers["orgid"] as string | undefined;
 
-    if (!name || !interval || !gracePeriod) {
-      return res.status(400).json({ error: "Missing required fields" });
+        if (!name || !interval || !gracePeriod) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        const result = await websiteService.createHeartbeat(
+            userId,
+            name,
+            interval,
+            gracePeriod,
+            escalation,
+            maintenance,
+            metadata,
+            orgId,
+        );
+        return res.json(result);
+    } catch (error) {
+        console.error("Error creating heartbeat:", error);
+        return res.status(500).json({ error: "Failed to create heartbeat" });
     }
-
-    const result = await websiteService.createHeartbeat(
-      userId,
-      name,
-      interval,
-      gracePeriod,
-      escalation,
-      maintenance,
-      metadata,
-      orgId,
-    );
-    return res.json(result);
-  } catch (error) {
-    console.error("Error creating heartbeat:", error);
-    return res.status(500).json({ error: "Failed to create heartbeat" });
-  }
 }
 
 /**
  * Create a new maintenance window
  */
 export async function createMaintenanceWindow(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const { date, timeSlot, repeat } = req.body;
-    const orgId = req.headers["orgid"] as string | undefined;
+    try {
+        const userId = req.userId!;
+        const { date, timeSlot, repeat } = req.body;
+        const orgId = req.headers["orgid"] as string | undefined;
 
-    if (!date || !timeSlot) {
-      return res.status(400).json({ error: "Missing required fields" });
+        if (!date || !timeSlot) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+        const result = await websiteService.createMaintenanceWindow(
+            userId,
+            new Date(date),
+            timeSlot,
+            repeat ?? null,
+            orgId,
+        );
+        return res.json(result);
+    } catch (error) {
+        console.error("Error creating maintenance window:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to create maintenance window" });
     }
-    const result = await websiteService.createMaintenanceWindow(
-      userId,
-      new Date(date),
-      timeSlot,
-      repeat ?? null,
-      orgId,
-    );
-    return res.json(result);
-  } catch (error) {
-    console.error("Error creating maintenance window:", error);
-    return res
-      .status(500)
-      .json({ error: "Failed to create maintenance window" });
-  }
 }
 
 /**
  * Get all maintenance windows for a user
  */
 export async function getAllMaintenanceWindows(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const orgId = req.headers["orgid"] as string | undefined;
-    const result = await websiteService.getAllMaintenanceWindows(userId, orgId);
-    return res.json(result);
-  } catch (error) {
-    console.error("Error getting maintenance windows:", error);
-    return res.status(500).json({ error: "Failed to get maintenance windows" });
-  }
+    try {
+        const userId = req.userId!;
+        const orgId = req.headers["orgid"] as string | undefined;
+        const result = await websiteService.getAllMaintenanceWindows(
+            userId,
+            orgId,
+        );
+        return res.json(result);
+    } catch (error) {
+        console.error("Error getting maintenance windows:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to get maintenance windows" });
+    }
 }
 
 /**
  * Get heartbeat by ID
  */
 export async function getHeartbeat(req: Request, res: Response) {
-  try {
-    const userId = req.userId!;
-    const orgId = req.headers["orgid"] as string | undefined;
-    const data = await websiteService.getHeartbeat(userId, orgId);
-    if (!data) {
-      return res.status(404).json({ error: "Heartbeat not found" });
-    }
+    try {
+        const userId = req.userId!;
+        const orgId = req.headers["orgid"] as string | undefined;
+        const data = await websiteService.getHeartbeat(userId, orgId);
+        if (!data) {
+            return res.status(404).json({ error: "Heartbeat not found" });
+        }
 
-    return res.json(data);
-  } catch (error) {
-    console.error("Error getting heartbeat:", error);
-    return res.status(500).json({ error: "Failed to get heartbeat" });
-  }
+        return res.json(data);
+    } catch (error) {
+        console.error("Error getting heartbeat:", error);
+        return res.status(500).json({ error: "Failed to get heartbeat" });
+    }
 }
 
 export async function updateHeartbeatStatus(req: Request, res: Response) {
-  try {
-    const { heartbeatId, status } = req.params;
+    try {
+        const { heartbeatId, status } = req.params;
 
-    // Update the status
-    const result = await websiteService.updateHeartbeatStatus(
-      heartbeatId,
-      status,
-    );
+        // Update the status
+        const result = await websiteService.updateHeartbeatStatus(
+            heartbeatId,
+            status,
+        );
 
-    // Render HTML response
-    res.setHeader("Content-Type", "text/html");
-    return res.send(`
+        // Render HTML response
+        res.setHeader("Content-Type", "text/html");
+        return res.send(`
       <!DOCTYPE html>
       <html lang="en">
       <head>
@@ -344,10 +357,10 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
       </body>
       </html>
     `);
-  } catch (error) {
-    console.error("Error updating heartbeat status:", error);
-    res.setHeader("Content-Type", "text/html");
-    return res.status(500).send(`
+    } catch (error) {
+        console.error("Error updating heartbeat status:", error);
+        res.setHeader("Content-Type", "text/html");
+        return res.status(500).send(`
       <!DOCTYPE html>
       <html>
       <head>
@@ -377,21 +390,23 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
       </body>
       </html>
     `);
-  }
+    }
 }
 
 export async function getHeartbeatDetails(req: Request, res: Response) {
-  try {
-    const { heartbeatId } = req.params;
+    try {
+        const { heartbeatId } = req.params;
 
-    if (!heartbeatId) {
-      return res.status(400).json({ error: "Heartbeat ID is required" });
+        if (!heartbeatId) {
+            return res.status(400).json({ error: "Heartbeat ID is required" });
+        }
+
+        const data = await websiteService.getHeartbeatDetails(heartbeatId);
+        return res.json(data);
+    } catch (error) {
+        console.error("Error getting heartbeat details:", error);
+        return res
+            .status(500)
+            .json({ error: "Failed to get heartbeat details" });
     }
-
-    const data = await websiteService.getHeartbeatDetails(heartbeatId);
-    return res.json(data);
-  } catch (error) {
-    console.error("Error getting heartbeat details:", error);
-    return res.status(500).json({ error: "Failed to get heartbeat details" });
-  }
 }
