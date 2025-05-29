@@ -12,10 +12,6 @@ import UptimeDemo from "@/components/home/sections/UptimeDemo";
 import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
 
 /**
-    useEffect(() => {
-        document.title = "Uptime.com - Website Monitoring & Performance";
-    }, []);
-
  * Renders the main layout of the web page, including navigation, content sections, and footer.
  *
  * Composes multiple UI sections in a vertical layout to form the complete page structure.
