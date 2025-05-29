@@ -4,9 +4,11 @@ import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 
 /**
- * Displays the organization profile interface if the user belongs to an organization, or a prompt to create or join one otherwise.
+ * Renders the organization profile page, showing the organization interface if the user is a member, or a prompt to create or join an organization if not.
  *
- * @returns The organization profile page UI, adapting its appearance to the current theme.
+ * The page adapts its appearance to the current UI theme.
+ *
+ * @returns The organization profile UI or a message prompting the user to join or create an organization.
  */
 export default function OrganizationProfilePage() {
     const { theme } = useTheme();

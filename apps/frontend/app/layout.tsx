@@ -12,6 +12,13 @@ export const metadata: Metadata =
         description: "Real-time website monitoring with uptime statistics, performance metrics, and instant outage alerts."
     });
 
+/**
+ * Root layout component that sets up global providers and UI elements for the application.
+ *
+ * Wraps all pages with authentication, theme management, toast notifications, and a progress bar.
+ *
+ * @param children - The page content to render within the layout.
+ */
 export default function RootLayout({
     children,
 }: Readonly<{

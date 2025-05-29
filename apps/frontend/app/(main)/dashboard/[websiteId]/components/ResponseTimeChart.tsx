@@ -35,11 +35,11 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 /**
- * Displays an area chart visualizing website latency over time using 3-minute averages.
+ * Renders an area chart displaying website latency trends over time using pre-aggregated 3-minute average data.
  *
- * Renders a responsive chart of latency measurements using pre-aggregated data. If no data is available, shows a fallback message.
+ * Shows a responsive visualization of latency measurements grouped in 3-minute windows. If no data is provided, displays a fallback message indicating the absence of latency data.
  *
- * @param averagedTicks - Array of pre-aggregated latency data in 3-minute windows
+ * @param averagedTicks - Array of latency data points, each representing the average latency and status for a 3-minute window.
  */
 export function ResponseTimeChart({ averagedTicks }: ResponseTimeChartProps) {
     // Prepare data for the chart using 3-minute windows

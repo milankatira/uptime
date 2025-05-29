@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 import { userService } from "../services/userService";
 
 /**
- * Updates the authenticated user's preferences.
+ * Updates the authenticated user's preferences and returns the updated preferences as JSON.
  *
- * Expects preference data in the request body and returns the updated preferences as JSON.
+ * Expects preference data in the request body.
  *
  * @remark Requires {@link req.userId} to be set by authentication middleware.
  */
@@ -24,6 +24,11 @@ export async function updateUserPreferences(req: Request, res: Response) {
     }
 }
 
+/**
+ * Updates the authenticated user's Firebase Cloud Messaging (FCM) token.
+ *
+ * Responds with the update result as JSON. Returns HTTP 400 if the token is missing from the request body.
+ */
 export async function updateFcmToken(req: Request, res: Response) {
     try {
         const userId = req.userId!;
@@ -40,6 +45,12 @@ export async function updateFcmToken(req: Request, res: Response) {
     }
 }
 
+/**
+ * Adds an email connection to the authenticated user's account.
+ *
+ * Responds with HTTP 400 if the email is missing from the request body.
+ * Returns the result of the email connection addition as JSON.
+ */
 export async function addEmailConnection(req: Request, res: Response) {
     try {
         const userId = req.userId!;
@@ -56,6 +67,11 @@ export async function addEmailConnection(req: Request, res: Response) {
     }
 }
 
+/**
+ * Removes an email connection from the authenticated user's account.
+ *
+ * Responds with the result of the removal operation as JSON. Returns HTTP 400 if the connection ID is missing from the request body.
+ */
 export async function removeEmailConnection(req: Request, res: Response) {
     try {
         const userId = req.userId!;
@@ -73,6 +89,11 @@ export async function removeEmailConnection(req: Request, res: Response) {
     }
 }
 
+/**
+ * Retrieves all connections associated with the authenticated user and returns them as JSON.
+ *
+ * Responds with HTTP 500 and an error message if retrieval fails.
+ */
 export async function findConnectionByUserId(req: Request, res: Response) {
     try {
         const userId = req.userId!;
@@ -85,9 +106,14 @@ export async function findConnectionByUserId(req: Request, res: Response) {
 }
 
 /**
- * Finds an existing user by external ID or creates a new user with the provided email and optional image URL.
+ * Finds an existing user by external ID or creates a new user with the specified email and optional image URL, then returns the user as JSON.
  *
- * Responds with the user object as JSON. Returns a 400 error if the email is missing from the request body, or a 500 error if the operation fails.
+ * @param req - Express request object containing the authenticated user's ID and user details in the body.
+ * @param res - Express response object used to send the user data or error messages.
+ *
+ * @returns The user object as a JSON response.
+ *
+ * @remark Responds with HTTP 400 if the email is missing from the request body.
  */
 export async function findOrCreateUser(req: Request, res: Response) {
     try {
@@ -129,11 +155,9 @@ export async function getUserPreferences(req: Request, res: Response) {
 }
 
 /**
- * Stores a Slack connection for the authenticated user.
+ * Creates and stores a Slack connection for the authenticated user.
  *
- * Creates a new Slack connection using the provided request body data and associates it with the current user.
- *
- * @returns The stored Slack connection data as JSON.
+ * Associates a new Slack connection, using data from the request body, with the current user and returns the stored connection data as JSON.
  */
 export async function storeSlackConnection(req: Request, res: Response) {
     try {
@@ -147,9 +171,9 @@ export async function storeSlackConnection(req: Request, res: Response) {
 }
 
 /**
- * Stores a Discord connection for the authenticated user.
+ * Creates and stores a Discord connection for the authenticated user.
  *
- * Creates a new Discord connection using the provided request body and associates it with the current user.
+ * Associates a new Discord connection, using data from the request body, with the current user.
  *
  * @remark Requires {@link req.userId} to be set by authentication middleware.
  */

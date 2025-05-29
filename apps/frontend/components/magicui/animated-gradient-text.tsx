@@ -11,6 +11,15 @@ export interface AnimatedGradientTextProps
     colorTo?: string;
 }
 
+/**
+ * Renders text with an animated gradient effect using customizable colors and animation speed.
+ *
+ * @param speed - Multiplier controlling the animation speed of the gradient.
+ * @param colorFrom - The starting color of the gradient.
+ * @param colorTo - The ending color of the gradient.
+ *
+ * @returns A span element displaying its children with an animated gradient text effect.
+ */
 export function AnimatedGradientText({
     children,
     className,

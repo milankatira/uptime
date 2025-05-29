@@ -2,6 +2,14 @@ import { verifyToken } from "@clerk/backend";
 import type { NextFunction, Request, Response } from "express";
 import { CLERK_PEM_PUBLIC_KEY } from "./config";
 
+/**
+ * Express middleware that authenticates requests using a Bearer token.
+ *
+ * Verifies the token from the `Authorization` header using the configured JWT public key and authorized parties. On successful verification, attaches the user ID to the request object as `userId` and proceeds to the next middleware. Responds with HTTP 401 and an error message if authentication fails.
+ *
+ * @remark
+ * Responds with HTTP 401 if the `Authorization` header is missing, malformed, the token is invalid, or the verified token lacks a user ID.
+ */
 export async function authMiddleware(
     req: Request,
     res: Response,
