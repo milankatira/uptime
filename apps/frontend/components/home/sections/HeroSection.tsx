@@ -97,13 +97,13 @@ const HeroSection = () => {
 
                 <SignedOut>
                     <SignInButton>
-                        <motion.a
+                        <motion.button
                             variants={fadeInUp}
                             whileHover={{ scale: 1.03 }}
                             className="inline-flex h-12 w-full max-w-[200px] items-center justify-center rounded-full border border-white/10 bg-gradient-to-b from-neutral-900 to-neutral-800 px-6 py-3 text-sm font-semibold text-white shadow-[inset_0_6px_8px_#fafafa40,inset_0_-6px_8px_#fafafa40] transition duration-200 hover:-translate-y-0.5 focus:outline-none sm:w-auto"
                         >
                             Get Started
-                        </motion.a>
+                        </motion.button>
                     </SignInButton>
                 </SignedOut>
 
