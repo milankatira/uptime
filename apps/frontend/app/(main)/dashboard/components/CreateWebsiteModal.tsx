@@ -16,11 +16,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 
 const websiteSchema = z.object({
-    url: z
-        .string()
-        .url({
-            message: "Please enter a valid URL including http:// or https://",
-        }),
+    url: z.string().url({
+        message: "Please enter a valid URL including http:// or https://",
+    }),
     interval: z.number().min(10).max(1440),
 });
 

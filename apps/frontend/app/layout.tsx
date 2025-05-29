@@ -6,11 +6,11 @@ import "./globals.css";
 import { ProgressBarWrapper } from "@/components/progress-bar";
 import { constructMetadata } from "@/config";
 
-export const metadata: Metadata =
-    constructMetadata({
-        title: "Uptime.com - Website Monitoring Platform",
-        description: "Real-time website monitoring with uptime statistics, performance metrics, and instant outage alerts."
-    });
+export const metadata: Metadata = constructMetadata({
+    title: "Uptime - Website Monitoring Platform",
+    description:
+        "Real-time website monitoring with uptime statistics, performance metrics, and instant outage alerts.",
+});
 
 /**
  * Root layout component that sets up global providers and UI elements for the application.

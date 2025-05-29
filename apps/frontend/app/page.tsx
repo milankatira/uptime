@@ -18,7 +18,6 @@ import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
  * @returns The root React element for the application's main page.
  */
 function App() {
-
     return (
         <div className="bg-background text-foreground flex min-h-screen flex-col">
             <Navbar />
