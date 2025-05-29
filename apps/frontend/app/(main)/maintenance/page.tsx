@@ -16,9 +16,11 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 /**
- * Displays and manages maintenance windows, allowing users to schedule, view, and repeat maintenance periods.
+ * React component for scheduling, viewing, and managing maintenance windows.
  *
- * Provides a UI for creating new maintenance windows by selecting a date, time slot, and optional repeat frequency. Fetches and displays upcoming maintenance windows from the backend. Handles loading and submission states, and notifies users of errors during creation.
+ * Provides a user interface to create new maintenance windows by selecting a date, time slot, and optional repeat frequency. Displays a list of upcoming maintenance windows fetched from the backend. Handles loading and submission states, and notifies users of errors during creation.
+ *
+ * @returns The maintenance window management UI.
  */
 function MaintenanceWindow() {
     const [showDialog, setShowDialog] = useState(false);

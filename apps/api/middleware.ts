@@ -3,9 +3,9 @@ import type { NextFunction, Request, Response } from "express";
 import { CLERK_PEM_PUBLIC_KEY } from "./config";
 
 /**
- * Express middleware that authenticates requests using a Bearer token.
+ * Express middleware that authenticates incoming requests using a Bearer token from the `Authorization` header.
  *
- * Verifies the token from the `Authorization` header using the configured JWT public key and authorized parties. On successful verification, attaches the user ID to the request object as `userId` and proceeds to the next middleware. Responds with HTTP 401 and an error message if authentication fails.
+ * Verifies the token using a configured JWT public key and optional authorized parties. If verification succeeds and the token contains a user ID, attaches the user ID to the request object as `userId` and calls the next middleware. If authentication fails at any step, responds with HTTP 401 and an appropriate error message.
  *
  * @remark
  * Responds with HTTP 401 if the `Authorization` header is missing, malformed, the token is invalid, or the verified token lacks a user ID.

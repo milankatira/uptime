@@ -8,13 +8,13 @@ interface SpotlightProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Renders a card component with a dynamic spotlight effect that follows the mouse cursor on hover.
+ * Displays a card with a spotlight effect that follows the mouse cursor while hovered.
  *
- * The spotlight is a radial gradient centered at the cursor position, fading from a semi-transparent primary color to transparent. The effect is visible only while the card is hovered.
+ * The spotlight appears as a radial gradient centered on the cursor, fading from a semi-transparent primary color to transparent, and is only visible during hover.
  *
- * @param children - React nodes to display inside the card.
- * @param className - Optional additional CSS classes for the card container.
- * @param spotlightSize - Optional radius of the spotlight effect in pixels. Defaults to 400.
+ * @param children - Content to render inside the card.
+ * @param className - Additional CSS classes for the card container.
+ * @param spotlightSize - Radius of the spotlight effect in pixels. Defaults to 400.
  */
 export function SpotlightCard({
     children,

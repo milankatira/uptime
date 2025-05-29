@@ -25,9 +25,9 @@ export async function updateUserPreferences(req: Request, res: Response) {
 }
 
 /**
- * Updates the authenticated user's Firebase Cloud Messaging (FCM) token.
+ * Updates the authenticated user's Firebase Cloud Messaging (FCM) token using the provided token in the request body.
  *
- * Responds with the update result as JSON. Returns HTTP 400 if the token is missing from the request body.
+ * Responds with the update result as JSON. Returns HTTP 400 if the token is missing from the request body, or HTTP 500 if an internal error occurs.
  */
 export async function updateFcmToken(req: Request, res: Response) {
     try {
@@ -46,10 +46,9 @@ export async function updateFcmToken(req: Request, res: Response) {
 }
 
 /**
- * Adds an email connection to the authenticated user's account.
+ * Adds an email connection to the authenticated user's account using the provided email address.
  *
- * Responds with HTTP 400 if the email is missing from the request body.
- * Returns the result of the email connection addition as JSON.
+ * Responds with HTTP 400 if the email is missing from the request body. On success, returns the result of the addition as JSON. On failure, responds with HTTP 500 and an error message.
  */
 export async function addEmailConnection(req: Request, res: Response) {
     try {
@@ -70,7 +69,7 @@ export async function addEmailConnection(req: Request, res: Response) {
 /**
  * Removes an email connection from the authenticated user's account.
  *
- * Responds with the result of the removal operation as JSON. Returns HTTP 400 if the connection ID is missing from the request body.
+ * Responds with the result of the removal as JSON. Returns HTTP 400 if the connection ID is missing from the request body, or HTTP 500 if an internal error occurs.
  */
 export async function removeEmailConnection(req: Request, res: Response) {
     try {
@@ -90,9 +89,9 @@ export async function removeEmailConnection(req: Request, res: Response) {
 }
 
 /**
- * Retrieves all connections associated with the authenticated user and returns them as JSON.
+ * Returns all connections linked to the authenticated user as a JSON response.
  *
- * Responds with HTTP 500 and an error message if retrieval fails.
+ * @remark Assumes {@link req.userId} is set by authentication middleware.
  */
 export async function findConnectionByUserId(req: Request, res: Response) {
     try {
@@ -106,10 +105,10 @@ export async function findConnectionByUserId(req: Request, res: Response) {
 }
 
 /**
- * Finds an existing user by external ID or creates a new user with the specified email and optional image URL, then returns the user as JSON.
+ * Finds an existing user by external ID or creates a new user with the provided email and optional image URL, returning the user as JSON.
  *
- * @param req - Express request object containing the authenticated user's ID and user details in the body.
- * @param res - Express response object used to send the user data or error messages.
+ * @param req - Express request containing the authenticated user's ID and user details in the body.
+ * @param res - Express response used to send the user data or error messages.
  *
  * @returns The user object as a JSON response.
  *
@@ -139,7 +138,7 @@ export async function findOrCreateUser(req: Request, res: Response) {
 }
 
 /**
- * Retrieves the authenticated user's preferences and returns them as JSON.
+ * Returns the authenticated user's preferences as a JSON response.
  *
  * @remark Assumes {@link req.userId} is set by authentication middleware.
  */
@@ -155,9 +154,11 @@ export async function getUserPreferences(req: Request, res: Response) {
 }
 
 /**
- * Creates and stores a Slack connection for the authenticated user.
+ * Stores a new Slack connection for the authenticated user.
  *
- * Associates a new Slack connection, using data from the request body, with the current user and returns the stored connection data as JSON.
+ * Creates a Slack connection using the request body data and associates it with the current user. Returns the stored connection data as JSON with HTTP 200 on success.
+ *
+ * @remark Responds with HTTP 500 and an error message if storing the Slack connection fails.
  */
 export async function storeSlackConnection(req: Request, res: Response) {
     try {
@@ -171,9 +172,9 @@ export async function storeSlackConnection(req: Request, res: Response) {
 }
 
 /**
- * Creates and stores a Discord connection for the authenticated user.
+ * Stores a new Discord connection for the authenticated user.
  *
- * Associates a new Discord connection, using data from the request body, with the current user.
+ * Creates and associates a Discord connection using information from the request body and returns the stored connection data as JSON.
  *
  * @remark Requires {@link req.userId} to be set by authentication middleware.
  */

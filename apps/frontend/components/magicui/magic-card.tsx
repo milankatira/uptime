@@ -17,20 +17,20 @@ interface MagicCardProps {
 }
 
 /**
- * Renders a card component with a dynamic radial gradient background that follows the mouse cursor.
+ * Displays a card with an animated radial gradient background that follows the mouse cursor.
  *
- * The gradient's size, colors, and opacity can be customized via props. The background gradient animates smoothly based on mouse movement over the card, creating an interactive visual effect.
+ * The gradient's radius, colors, and opacity are customizable via props. The background smoothly animates in response to mouse movement over the card, creating an interactive visual effect.
  *
- * @param children - Content to display inside the card.
+ * @param children - React nodes to render inside the card.
  * @param className - Additional CSS classes for the card container.
  * @param gradientSize - Radius of the radial gradient in pixels. Defaults to 200.
- * @param gradientColor - Optional override for the gradient color. If not provided, uses a theme-based default.
+ * @param gradientColor - Optional override for the gradient color. If omitted, a theme-based default is used.
  * @param gradientOpacity - Opacity of the gradient overlay. Defaults to 0.8.
  * @param gradientFrom - Starting color of the background gradient. Defaults to "#9E7AFF".
  * @param gradientTo - Ending color of the background gradient. Defaults to "#FE8BBB".
  *
  * @remark
- * The gradient color defaults to "#262626" in dark mode and "#f3f3f3" in light mode if {@link gradientColor} is not specified.
+ * If {@link gradientColor} is not specified, the gradient color defaults to "#262626" in dark mode and "#f3f3f3" in light mode.
  */
 export function MagicCard({
     children,

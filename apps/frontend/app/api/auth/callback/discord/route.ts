@@ -4,9 +4,9 @@ import { NextResponse, NextRequest } from "next/server";
 import url from "url";
 
 /**
- * Processes the Discord OAuth2 callback by exchanging the authorization code for an access token, retrieving the user's guilds, and redirecting to the connections page with relevant webhook and guild details as query parameters.
+ * Handles the Discord OAuth2 callback by exchanging the authorization code for an access token, retrieving the user's guilds, and redirecting to the connections page with webhook and guild details as query parameters.
  *
- * If the authorization code or token data is missing, redirects to the generic connections page without additional parameters.
+ * If the authorization code or token data is missing, redirects to the connections page without additional parameters.
  *
  * @param req - The incoming request containing the OAuth2 authorization code as a query parameter.
  * @returns A redirect response to the connections page, optionally including webhook and guild information.

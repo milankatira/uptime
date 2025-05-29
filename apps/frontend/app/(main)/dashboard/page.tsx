@@ -26,7 +26,7 @@ interface ProcessedWebsite {
 }
 
 /**
- * Displays a loading placeholder with animated pulsing cards to indicate that website data is being loaded.
+ * Renders animated placeholder cards to indicate that website data is currently loading.
  */
 
 function LoadingSpinner() {
@@ -53,10 +53,10 @@ function LoadingSpinner() {
 }
 
 /**
- * Displays an error message with a retry button.
+ * Renders an error message with a retry button for user-initiated error recovery.
  *
- * @param message - The error message to display.
- * @param onRetry - Callback invoked when the retry button is clicked.
+ * @param message - The error message to display to the user.
+ * @param onRetry - Function called when the user clicks the retry button.
  */
 function ErrorMessage({
     message,
@@ -80,9 +80,9 @@ function ErrorMessage({
 }
 
 /**
- * Renders a summary of monitored websites, showing the total number of sites, average uptime percentage, and the distribution of site statuses.
+ * Displays a summary of monitored websites, including total count, average uptime percentage, and the number of sites by status.
  *
- * @param websites - The processed website data to summarize.
+ * @param websites - The list of processed websites to summarize.
  */
 function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     const stats = useMemo(() => {
@@ -176,9 +176,9 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
 }
 
 /**
- * Displays an empty state message with an option to add the first website when no websites are being monitored.
+ * Renders an empty state prompt with a call-to-action for adding the first website when no monitored websites exist.
  *
- * @param onAddWebsite - Callback invoked when the user clicks the button to add a website.
+ * @param onAddWebsite - Function called when the user clicks the "Add Your First Website" button.
  */
 function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
     return (
@@ -202,11 +202,11 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
 }
 
 /**
- * Main dashboard component for monitoring website uptime.
+ * Renders the main dashboard for website uptime monitoring, handling authentication, website data processing, and CRUD operations.
  *
- * Manages authentication, website data retrieval and processing, and CRUD operations for monitored websites. Displays summary statistics, website cards, loading and error states, and modals for adding new websites or organizations.
+ * Displays summary statistics, website cards, loading and error states, and modals for adding new websites or organizations. Processes raw website data into status summaries and uptime metrics for display.
  *
- * @remark If the user has no organization memberships, renders an organization creation screen instead of the dashboard.
+ * @remark If the user has no organization memberships, an organization creation screen is shown instead of the dashboard.
  */
 function App() {
     const [isModalOpen, setIsModalOpen] = useState(false);

@@ -7,11 +7,11 @@ admin.initializeApp({
 });
 
 /**
- * Sends a push notification with the specified title and body to a device using its token via Firebase Cloud Messaging.
+ * Sends a push notification with a given title and body to a device identified by its FCM token using Firebase Cloud Messaging.
  *
- * @param token - The recipient device's FCM token.
- * @param title - The notification title.
- * @param body - The notification body content.
+ * @param token - The FCM token of the target device.
+ * @param title - The title of the notification.
+ * @param body - The body content of the notification.
  */
 export async function sendPushNotification(
     token: string,

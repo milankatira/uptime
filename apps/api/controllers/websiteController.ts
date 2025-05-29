@@ -2,14 +2,12 @@ import type { Request, Response } from "express";
 import { websiteService } from "../services/websiteService";
 
 /**
- * Handles the creation of a new website for the authenticated user.
+ * Creates a new website for the authenticated user.
  *
- * Expects a `url` in the request body and optionally an `orgId` in the request headers.
- * Responds with the created website data as JSON on success.
+ * Expects a `url` in the request body and optionally an `orgId` in the request headers. Responds with the created website data as JSON on success.
  *
  * @remark
- * Returns HTTP 400 if the `url` is missing from the request body.
- * Returns HTTP 500 with an error message if website creation fails.
+ * Returns HTTP 400 if the `url` is missing from the request body. Returns HTTP 500 with an error message if website creation fails.
  */
 export async function createWebsite(req: Request, res: Response) {
     try {
@@ -30,9 +28,9 @@ export async function createWebsite(req: Request, res: Response) {
 }
 
 /**
- * Retrieves the status of a website by its ID and returns it as JSON.
+ * Retrieves the status of a website by its ID and responds with the status as JSON.
  *
- * Returns a 400 response if the website ID is missing, or 404 if the website is not found.
+ * Returns a 400 response if the `websiteId` query parameter is missing, or 404 if the website does not exist.
  */
 export async function getWebsiteStatus(req: Request, res: Response) {
     try {
@@ -56,9 +54,9 @@ export async function getWebsiteStatus(req: Request, res: Response) {
 }
 
 /**
- * Retrieves all websites associated with the authenticated user.
+ * Retrieves all websites for the authenticated user.
  *
- * Responds with a JSON array of website data for the user, optionally filtered by organization if an org ID is provided in the request headers.
+ * Returns a JSON array of websites, optionally filtered by organization if an org ID is provided in the request headers.
  */
 export async function getAllWebsites(req: Request, res: Response) {
     try {
@@ -73,9 +71,9 @@ export async function getAllWebsites(req: Request, res: Response) {
 }
 
 /**
- * Performs a soft delete of a website for the authenticated user.
+ * Soft deletes a website belonging to the authenticated user.
  *
- * Responds with a 400 status if the website ID is missing from the request body, or a 500 status if an internal error occurs.
+ * Responds with HTTP 400 if the website ID is missing from the request body, or HTTP 500 if an internal error occurs.
  */
 export async function deleteWebsite(req: Request, res: Response) {
     try {
@@ -95,7 +93,7 @@ export async function deleteWebsite(req: Request, res: Response) {
 }
 
 /**
- * Handles updating a website's URL and monitoring interval for the authenticated user.
+ * Updates the URL and monitoring interval of a website for the authenticated user.
  *
  * Expects `websiteId` in the URL parameters and both `url` and `interval` in the request body. Responds with the updated website data as JSON on success, or an error message with an appropriate HTTP status code if validation fails or an internal error occurs.
  */
@@ -128,11 +126,11 @@ export async function updateWebsite(req: Request, res: Response) {
 }
 
 /**
- * Handles the creation of a new heartbeat for the authenticated user.
+ * Creates a new heartbeat for the authenticated user.
  *
  * Expects `name`, `interval`, and `gracePeriod` in the request body. Optional fields include `escalation`, `maintenance`, `metadata`, and `orgId` in headers.
  *
- * Responds with the created heartbeat data as JSON, or an error message if required fields are missing or creation fails.
+ * Responds with the created heartbeat as JSON, or an error message if required fields are missing or creation fails.
  */
 export async function createHeartbeat(req: Request, res: Response) {
     try {
@@ -203,9 +201,9 @@ export async function createMaintenanceWindow(req: Request, res: Response) {
 }
 
 /**
- * Retrieves all maintenance windows associated with the authenticated user.
+ * Retrieves all maintenance windows for the authenticated user, optionally filtered by organization.
  *
- * @returns A JSON array of maintenance window objects for the user.
+ * Responds with a JSON array of maintenance window objects.
  */
 export async function getAllMaintenanceWindows(req: Request, res: Response) {
     try {
@@ -225,9 +223,9 @@ export async function getAllMaintenanceWindows(req: Request, res: Response) {
 }
 
 /**
- * Retrieves heartbeat data for the authenticated user and optional organization.
+ * Retrieves the heartbeat data for the authenticated user, optionally filtered by organization.
  *
- * Responds with the heartbeat data as JSON if found, or a 404 error if not found.
+ * Responds with the heartbeat data as JSON if found, or a 404 error if no heartbeat exists for the user and organization.
  */
 export async function getHeartbeat(req: Request, res: Response) {
     try {
@@ -246,9 +244,9 @@ export async function getHeartbeat(req: Request, res: Response) {
 }
 
 /**
- * Updates the status of a heartbeat and responds with a styled HTML confirmation page.
+ * Updates the status of a heartbeat and returns a styled HTML confirmation page.
  *
- * Updates the status of the heartbeat identified by the provided `heartbeatId` and `status` in the URL parameters. On success, returns an HTML page confirming the update; on failure, returns an HTML error page.
+ * Updates the heartbeat identified by `heartbeatId` and sets its status to the value provided in the URL parameters. On success, responds with an HTML page confirming the update; on failure, responds with an HTML error page.
  */
 export async function updateHeartbeatStatus(req: Request, res: Response) {
     try {
@@ -425,9 +423,9 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
 }
 
 /**
- * Handles an HTTP request to retrieve detailed information for a specific heartbeat.
+ * Retrieves detailed information for a specific heartbeat by its ID.
  *
- * Responds with a 400 status if the heartbeat ID is missing, or with the heartbeat details as JSON if found.
+ * Responds with HTTP 400 if the heartbeat ID is missing, or with the heartbeat details as JSON if found.
  */
 export async function getHeartbeatDetails(req: Request, res: Response) {
     try {

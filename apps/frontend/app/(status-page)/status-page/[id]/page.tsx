@@ -26,9 +26,9 @@ type Website = {
 };
 
 /**
- * Displays a real-time status monitoring page for a website, including uptime, latency, and operational status.
+ * Renders a real-time status monitoring page for a website, displaying operational status, uptime percentage, and latency.
  *
- * Fetches and displays the current status of a monitored website, updating automatically at regular intervals. Provides visual indicators for system health, uptime percentage, and latency, with support for fullscreen mode and error handling.
+ * Fetches the current status of a monitored website and updates automatically at regular intervals. Provides visual indicators for system health, supports fullscreen mode, and handles loading and error states.
  */
 function StatusPage() {
     const params = useParams();

@@ -5,11 +5,11 @@ import "../globals.css";
 import { SidebarDemo } from "./dashboard/components/Sidebar";
 
 /**
- * Provides the root layout structure for the application, including authentication context, sidebar navigation, and global notifications.
+ * Serves as the root layout for the application, providing authentication context, sidebar navigation, and global toast notifications.
  *
- * Wraps the application content with {@link ClerkProvider} for authentication, displays toast notifications via {@link Toaster}, and applies the sidebar layout using {@link SidebarDemo}.
+ * Wraps the application content with {@link ClerkProvider} for authentication, includes {@link Toaster} for notifications, and uses {@link SidebarDemo} to apply the sidebar layout.
  *
- * @param children - The content to be rendered within the layout.
+ * @param children - The content to display within the layout.
  */
 export default function RootLayout({
     children,

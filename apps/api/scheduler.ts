@@ -5,9 +5,9 @@ import redisConnection from "./lib/redis";
 const checkQueue = new Queue("website-checks", { connection: redisConnection });
 
 /**
- * Schedules repeatable website check jobs for all active websites according to their configured intervals.
+ * Schedules repeatable website check jobs for all active websites based on their configured intervals.
  *
- * Retrieves all non-disabled websites from the database and adds a uniquely identified, repeatable job for each to the queue, ensuring periodic checks based on each website's interval setting.
+ * Queries the database for non-disabled websites and adds a uniquely identified, repeatable job for each to the queue, ensuring periodic checks according to each website's interval setting.
  */
 async function scheduleWebsiteChecks() {
     console.log("Scheduling website checks based on intervals");

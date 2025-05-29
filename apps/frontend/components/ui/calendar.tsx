@@ -8,15 +8,15 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 /**
- * Renders a styled calendar component based on `DayPicker` with custom class names, navigation icons, and optional display of outside days.
+ * Displays a customizable calendar UI using `DayPicker` with tailored styling and navigation icons.
  *
- * @param className - Additional CSS classes to apply to the calendar container.
- * @param classNames - Custom class name overrides for specific calendar elements.
- * @param showOutsideDays - Whether to display days from adjacent months (defaults to `true`).
- * @returns A React element rendering the customized calendar.
+ * @param className - Optional additional CSS classes for the calendar container.
+ * @param classNames - Optional overrides for specific calendar element class names.
+ * @param showOutsideDays - If true, displays days from adjacent months; defaults to true.
+ * @returns A React element rendering the styled calendar.
  *
  * @remark
- * All additional props supported by `DayPicker` can be passed and will be forwarded to the underlying component.
+ * All other props supported by `DayPicker` are forwarded to the underlying component.
  */
 function Calendar({
     className,

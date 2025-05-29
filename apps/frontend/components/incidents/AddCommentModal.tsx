@@ -20,9 +20,9 @@ interface AddCommentModalProps {
 }
 
 /**
- * Displays a modal dialog for users to add a comment or post-mortem.
+ * Renders a modal dialog for submitting a comment or post-mortem related to an incident.
  *
- * The modal includes a textarea for input and a button to submit the comment. Visibility, input value, and event handling are managed via props.
+ * The modal displays a textarea for user input and a button to post the comment. Visibility, input value, and event handling are controlled via props.
  */
 export function AddCommentModal({
     isOpen,

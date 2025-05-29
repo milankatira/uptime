@@ -3,9 +3,9 @@
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 
 /**
- * Renders a progress bar with a fixed height, blue color, no spinner, and shallow routing enabled.
+ * Displays a global progress bar with a fixed height and blue color, without a spinner, and with shallow routing enabled.
  *
- * Intended for use as a global loading indicator in client-side React applications.
+ * Use this component as a loading indicator for client-side navigation in React applications.
  */
 export function ProgressBarWrapper() {
     return (

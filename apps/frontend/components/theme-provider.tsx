@@ -4,11 +4,11 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import * as React from "react";
 
 /**
- * Wraps child components with the NextThemesProvider to enable theme management.
+ * Provides theme management to child components using NextThemesProvider.
  *
- * Accepts all props supported by NextThemesProvider and passes them through unchanged.
+ * Wraps its children with {@link NextThemesProvider}, forwarding all received props to enable theme switching and theming support.
  *
- * @param children - The React nodes to be wrapped by the theme provider.
+ * @param children - React nodes to be wrapped by the theme provider.
  */
 export function ThemeProvider({
     children,

@@ -28,12 +28,14 @@ export interface BadgeProps
         VariantProps<typeof badgeVariants> {}
 
 /**
- * Renders a badge element with styling based on the selected variant.
+ * Displays a badge with customizable visual variants.
  *
- * @param variant - The visual style of the badge. Determines color, border, and background.
- * @param className - Additional class names to apply to the badge.
+ * Renders a `div` element styled according to the specified badge variant and any additional class names.
  *
- * @returns A styled `div` element representing the badge.
+ * @param variant - Specifies the badge's visual style, such as "default", "secondary", "destructive", or "outline".
+ * @param className - Additional CSS classes to merge with the badge's styles.
+ *
+ * @returns A `div` element styled as a badge.
  */
 function Badge({ className, variant, ...props }: BadgeProps) {
     return (

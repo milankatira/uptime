@@ -35,11 +35,11 @@ const buttonVariants = cva(
 );
 
 /**
- * Renders a customizable button with variant and size options.
+ * Renders a button element or custom component with configurable variant and size styles.
  *
- * Supports rendering as a native button or as a child component using the {@link Slot} component when {@link asChild} is true. Styling is determined by the selected variant and size.
+ * If {@link asChild} is true, renders the button as a child component using the {@link Slot} component; otherwise, renders a native button element. Styling is determined by the selected variant and size.
  *
- * @param asChild - If true, renders the button as a child component using {@link Slot} instead of a native button element.
+ * @param asChild - When true, renders the button as a child component instead of a native button.
  */
 function Button({
     className,

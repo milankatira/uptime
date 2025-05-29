@@ -13,11 +13,11 @@ export const metadata: Metadata =
     });
 
 /**
- * Root layout component that sets up global providers and UI elements for the application.
+ * Provides the root layout for the application, configuring global authentication, theming, toast notifications, and a progress bar.
  *
- * Wraps all pages with authentication, theme management, toast notifications, and a progress bar.
+ * Wraps all page content with shared providers and UI elements to ensure consistent behavior and appearance across the app.
  *
- * @param children - The page content to render within the layout.
+ * @param children - The content to render within the layout.
  */
 export default function RootLayout({
     children,

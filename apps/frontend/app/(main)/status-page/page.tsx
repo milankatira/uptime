@@ -5,9 +5,9 @@ import { Eye } from "lucide-react";
 import React from "react";
 
 /**
- * Renders a table of websites with actions to view each site's status page.
+ * Displays a table of websites with actions to open each site's status page in a new browser tab.
  *
- * Displays each website's URL and ID, and provides a button to open its status page in a new browser tab. If no websites are available, shows a message indicating that no status pages are found.
+ * Shows each website's URL and ID, and provides a button to view its status page. If no websites are available, displays a message indicating that no status pages are found.
  */
 function StatusPageList() {
     const { websites } = useWebsites();

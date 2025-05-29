@@ -17,9 +17,9 @@ import { useTheme } from "next-themes";
 import React, { useState } from "react";
 
 /**
- * Renders a dashboard layout with a sidebar containing navigation links, organization controls, and user actions.
+ * Displays a dashboard layout with a sidebar for navigation, organization switching, and user actions.
  *
- * @param children - The main content to display alongside the sidebar.
+ * @param children - The main content to render alongside the sidebar.
  */
 export function SidebarDemo({ children }: { children: React.ReactNode }) {
     const links = [

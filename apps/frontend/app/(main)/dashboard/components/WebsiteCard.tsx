@@ -15,11 +15,11 @@ import { toast } from "sonner";
 type UptimeStatus = "good" | "bad" | "unknown";
 
 /**
- * Renders a colored circle to indicate website uptime status.
+ * Displays a colored circle representing the website's uptime status.
  *
- * Displays a green circle with an animated ping for "good" status, red for "bad", and gray for "unknown".
+ * Shows a green circle with an animated ping for "good" status, red for "bad", and gray for "unknown".
  *
- * @param status - The website's current uptime status.
+ * @param status - The current uptime status of the website.
  */
 function StatusCircle({ status }: { status: UptimeStatus }) {
     return (
@@ -54,7 +54,9 @@ interface ProcessedWebsite {
 }
 
 /**
- * Renders a card displaying a website's uptime status, last check time, and uptime percentage, with a button to delete the website entry.
+ * Displays a card summarizing a website's uptime status, last check time, and uptime percentage, with an option to delete the website entry.
+ *
+ * The card includes a status indicator, hostname, status label, last checked timestamp, uptime percentage, and a delete button. Deleting triggers an authenticated API call and invokes {@link onDelete} upon success.
  *
  * @param website - The website data to display.
  * @param onDelete - Callback invoked after a website is successfully deleted, receiving the website's ID.

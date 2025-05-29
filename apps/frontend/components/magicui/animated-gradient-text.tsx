@@ -12,13 +12,14 @@ export interface AnimatedGradientTextProps
 }
 
 /**
- * Renders text with an animated gradient effect using customizable colors and animation speed.
+ * Displays text with an animated gradient effect, allowing customization of gradient colors and animation speed.
  *
- * @param speed - Multiplier controlling the animation speed of the gradient.
- * @param colorFrom - The starting color of the gradient.
- * @param colorTo - The ending color of the gradient.
+ * The gradient animation is controlled via CSS variables and Tailwind CSS classes, and the effect is applied to the text within a span element.
  *
- * @returns A span element displaying its children with an animated gradient text effect.
+ * @param speed - Animation speed multiplier for the gradient effect.
+ * @param colorFrom - Starting color of the gradient.
+ * @param colorTo - Ending color of the gradient.
+ * @returns A span element rendering its children with an animated gradient text effect.
  */
 export function AnimatedGradientText({
     children,
