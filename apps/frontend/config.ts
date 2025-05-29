@@ -13,6 +13,15 @@ const siteConfig = {
         "website monitoring, uptime tracking, performance metrics, outage alerts, server status",
 };
 
+/**
+ * Constructs a metadata object for Next.js pages using site-wide configuration and optional overrides.
+ *
+ * @param title - Optional page title. Defaults to the site name.
+ * @param description - Optional page description. Defaults to the site description.
+ * @param image - Optional Open Graph image URL. Defaults to the site Open Graph image.
+ * @param noIndex - If true, sets robots directives to prevent indexing and following.
+ * @returns A metadata object containing SEO, Open Graph, Twitter card, icon, and verification details.
+ */
 export function constructMetadata({
     title = siteConfig.name,
     description = siteConfig.description,
