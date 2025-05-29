@@ -21,9 +21,9 @@ interface ErrorData {
 }
 
 /**
- * Displays a card showing recent error occurrences for a specific website.
+ * Renders a card displaying recent error occurrences for a specific website.
  *
- * Fetches error data for the selected website and presents it in a table with status and timestamp columns. Handles loading and error states with appropriate UI feedback. If no errors are present, displays a message indicating all systems are operational.
+ * Fetches and presents error data in a table with status and timestamp columns. Handles loading and error states with appropriate UI feedback. If no errors are found, shows a message indicating all systems are operational.
  */
 export function RecentErrors() {
   const { websiteId } = useParams();
