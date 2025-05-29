@@ -35,13 +35,13 @@ interface ReportIncidentModalProps {
 }
 
 /**
- * Renders a modal dialog for manually reporting a new incident.
+ * Displays a modal dialog for manually reporting a new incident.
  *
- * The modal allows users to enter an incident title, error details, and optionally select a website. On submission, the incident is reported via an API call, and callbacks are triggered for modal state changes and successful reporting.
+ * Users can enter an incident title, provide error details, and optionally select a website. On submission, the incident is reported via an API call, and callbacks are triggered for modal state changes and successful reporting.
  *
  * @param isOpen - Whether the modal is visible.
- * @param onOpenChange - Callback invoked when the modal open state changes.
- * @param onIncidentReported - Callback invoked after a successful incident report.
+ * @param onOpenChange - Invoked when the modal open state changes.
+ * @param onIncidentReported - Invoked after a successful incident report.
  */
 export function ReportIncidentModal({
     isOpen,

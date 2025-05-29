@@ -2,9 +2,9 @@ import type { Request, Response } from "express";
 import { incidentService } from "../services/incidentService";
 
 /**
- * Retrieves all incidents associated with the authenticated user.
+ * Retrieves all incidents for the authenticated user, optionally filtered by organization.
  *
- * Responds with a JSON object containing the list of incidents. Optionally filters incidents by organization if an `orgId` header is provided.
+ * Responds with a JSON object containing the list of incidents. If the `orgid` header is provided, only incidents for that organization are returned.
  */
 export async function getAllIncidents(req: Request, res: Response) {
     try {
@@ -18,6 +18,11 @@ export async function getAllIncidents(req: Request, res: Response) {
     }
 }
 
+/**
+ * Retrieves details for a specific incident by its ID.
+ *
+ * Responds with the incident data if found, a 400 error if the incident ID is missing, or a 404 error if the incident does not exist.
+ */
 export async function getIncidentDetails(req: Request, res: Response) {
     try {
         const { incidentId } = req.params;
@@ -37,6 +42,14 @@ export async function getIncidentDetails(req: Request, res: Response) {
     }
 }
 
+/**
+ * Updates the status of a specific incident.
+ *
+ * Expects the incident ID in the route parameters and the new status in the request body. Responds with the updated incident data on success.
+ *
+ * @remark
+ * Returns a 400 error if either the incident ID or status is missing from the request.
+ */
 export async function updateIncident(req: Request, res: Response) {
     try {
         const { incidentId } = req.params;
@@ -57,6 +70,11 @@ export async function updateIncident(req: Request, res: Response) {
     }
 }
 
+/**
+ * Deletes an incident identified by the provided incident ID.
+ *
+ * Responds with a success message if the incident is deleted, or an error message if the incident ID is missing or deletion fails.
+ */
 export async function deleteIncident(req: Request, res: Response) {
     try {
         const { incidentId } = req.params;
@@ -72,9 +90,9 @@ export async function deleteIncident(req: Request, res: Response) {
 }
 
 /**
- * Adds a comment to a specific incident.
+ * Adds a comment to an incident for the authenticated user.
  *
- * Responds with HTTP 400 if the incident ID or comment is missing. On success, returns the newly added comment with HTTP 201 status.
+ * Responds with HTTP 400 if the incident ID or comment is missing. On success, returns the newly created comment with HTTP 201 status.
  */
 export async function addIncidentComment(req: Request, res: Response) {
     try {
@@ -104,10 +122,9 @@ export async function addIncidentComment(req: Request, res: Response) {
 }
 
 /**
- * Handles the creation of a new incident for a user.
+ * Creates a new incident for the authenticated user.
  *
- * Expects `title` and `errorText` in the request body, and optionally `websiteId` and `orgId` (from headers).
- * Responds with the created incident in JSON format and HTTP 201 status on success.
+ * Requires `title` and `errorText` in the request body. Optionally accepts `websiteId` in the body and `orgId` from headers. Responds with the created incident in JSON format and HTTP 201 status on success.
  *
  * @remark
  * Returns HTTP 400 if `title` or `errorText` is missing from the request body.

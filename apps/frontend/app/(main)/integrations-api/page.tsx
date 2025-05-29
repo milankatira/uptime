@@ -20,9 +20,9 @@ import {
 import { toast } from "sonner";
 
 /**
- * Displays and manages user integrations and connected email notifications.
+ * Renders a page for managing user integrations and notification email addresses.
  *
- * Provides UI for connecting Discord and Slack accounts, adding or removing notification email addresses, and viewing current integration status. Integrations and email data are fetched and updated via API calls, with user feedback provided through toast notifications.
+ * Allows users to connect or view the status of Discord and Slack integrations, add or remove notification email addresses, and view all connected emails. Integration and email data are fetched and updated via API calls, with user feedback provided through toast notifications.
  */
 export default function ConnectionsPage() {
     // const { toast } = useToast();
@@ -41,6 +41,11 @@ export default function ConnectionsPage() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    /**
+     * Fetches the current integration and email connection statuses from the API and updates the component state.
+     *
+     * Displays a toast notification if the request fails.
+     */
     async function fetchConnections() {
         try {
             setLoading(true);
