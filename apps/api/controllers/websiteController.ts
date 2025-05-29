@@ -30,9 +30,12 @@ export async function createWebsite(req: Request, res: Response) {
 }
 
 /**
- * Retrieves the status of a website by its ID and returns it as JSON.
+ * Retrieves the status of a website for a given website ID and optional duration, returning the result as JSON.
  *
- * Returns a 400 response if the website ID is missing, or 404 if the website is not found.
+ * Returns HTTP 400 if the website ID is missing, or HTTP 404 if the website is not found.
+ *
+ * @param req - Express request containing `websiteId` and optional `duration` in the query parameters.
+ * @param res - Express response used to send the status data or error response.
  */
 export async function getWebsiteStatus(req: Request, res: Response) {
     try {
@@ -56,6 +59,11 @@ export async function getWebsiteStatus(req: Request, res: Response) {
     }
 }
 
+/**
+ * Retrieves the last 30 error records for a specified website and returns them as JSON.
+ *
+ * Returns HTTP 400 if the `websiteId` query parameter is missing, or HTTP 500 if an internal error occurs.
+ */
 export async function getErrorGraphData(req: Request, res: Response) {
     try {
         const websiteId = req.query.websiteId as string;

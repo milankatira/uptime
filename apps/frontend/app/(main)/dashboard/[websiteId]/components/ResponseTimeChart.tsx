@@ -44,8 +44,12 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 /**
- * Renders an area chart displaying website latency trends over time using aggregated average data.
- * Adapts display based on selected time range (30 minutes, 1 week, 1 month, 1 year).
+ * Displays an interactive area chart visualizing website latency trends over time, adapting labels, titles, and descriptions based on the selected time range.
+ *
+ * @param averagedTicks - Array of aggregated latency data points to plot.
+ * @param timeRange - Selected time range for the chart ("30m", "1w", "1m", or "1y").
+ *
+ * @returns A React component rendering the latency chart or a message if no data is available.
  */
 export function ResponseTimeChart({
     averagedTicks,
