@@ -2,14 +2,12 @@ import type { Request, Response } from "express";
 import { websiteService } from "../services/websiteService";
 
 /**
- * Handles the creation of a new website for the authenticated user.
+ * Creates a new website for the authenticated user.
  *
- * Expects a `url` in the request body and optionally an `orgId` in the request headers.
- * Responds with the created website data as JSON on success.
+ * Expects a `url` in the request body and optionally an `orgId` in the request headers. Responds with the created website data as JSON on success.
  *
  * @remark
- * Returns HTTP 400 if the `url` is missing from the request body.
- * Returns HTTP 500 with an error message if website creation fails.
+ * Returns HTTP 400 if the `url` is missing from the request body. Returns HTTP 500 with an error message if website creation fails.
  */
 export async function createWebsite(req: Request, res: Response) {
     try {
@@ -30,12 +28,12 @@ export async function createWebsite(req: Request, res: Response) {
 }
 
 /**
- * Retrieves the status of a website for a given website ID and optional duration, returning the result as JSON.
+ * Retrieves status data for a website by its ID and an optional duration, returning the result as JSON.
  *
- * Returns HTTP 400 if the website ID is missing, or HTTP 404 if the website is not found.
+ * If the `websiteId` query parameter is missing, responds with HTTP 400. If no status data is found for the given website, responds with HTTP 404.
  *
- * @param req - Express request containing `websiteId` and optional `duration` in the query parameters.
- * @param res - Express response used to send the status data or error response.
+ * @param req - Express request with `websiteId` and optional `duration` in the query parameters.
+ * @param res - Express response used to send the status data or an error response.
  */
 export async function getWebsiteStatus(req: Request, res: Response) {
     try {
@@ -60,7 +58,7 @@ export async function getWebsiteStatus(req: Request, res: Response) {
 }
 
 /**
- * Retrieves the last 30 error records for a specified website and returns them as JSON.
+ * Retrieves the last 30 error records for a website and returns them as JSON.
  *
  * Returns HTTP 400 if the `websiteId` query parameter is missing, or HTTP 500 if an internal error occurs.
  */
