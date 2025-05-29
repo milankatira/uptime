@@ -9,6 +9,7 @@ import {
     Clock,
     XCircle,
     Edit,
+    Calendar,
 } from "lucide-react";
 import {
     Card,
@@ -35,10 +36,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { ResponseTimeChart } from "./components/ResponseTimeChart";
+import { RecentErrors } from "./components/RecentErrors";
 
 type UptimeStatus = "good" | "bad" | "unknown";
+type TimeRange = "30m" | "1w" | "1m";
 
 interface AveragedTick {
     windowStart: string;
@@ -53,14 +62,15 @@ interface WebsiteDetails {
     disabled: boolean;
     totalTicks: number;
     averagedTicks: AveragedTick[];
+    uptimePercentage: number; // Added to API response
 }
 
 /**
- * Displays a colored circle indicating the current uptime status.
+ * Displays a colored status indicator circle representing uptime status.
  *
- * Shows green with a ping animation for "good", red for "bad", and gray for "unknown" status.
+ * Shows green for "good", red for "bad", and gray for "unknown" status. A pulsing animation is added for "good" status.
  *
- * @param status - The uptime status to represent.
+ * @param status - The current uptime status to display.
  */
 function StatusCircle({ status }: { status: UptimeStatus }) {
     return (
@@ -85,62 +95,63 @@ function StatusCircle({ status }: { status: UptimeStatus }) {
 }
 
 /**
- * Renders a horizontal bar chart visualizing website uptime status across ten 3-minute windows in the last 30 minutes.
+ * Displays a horizontal bar visualization of up to 10 recent uptime status ticks for a website.
  *
- * Each bar represents a 3-minute window, colored and sized according to its status: green and tall for "good", red and medium for "bad", and gray and short for "unknown". Tooltips display the time range and status for each window.
+ * Each tick is represented as a vertical bar whose height and color indicate the status ("good", "bad", or "unknown"). Tooltips provide contextual time and status information based on the selected {@link timeRange}.
  *
- * @param averagedTicks - Pre-averaged uptime data for each 3-minute window.
+ * @param averagedTicks - Array of recent averaged status ticks to visualize.
+ * @param timeRange - The selected time range, which determines tooltip labels and tick grouping.
  */
-function UptimeTicks({ averagedTicks }: { averagedTicks: AveragedTick[] }) {
-    const processedTicks: UptimeStatus[] = useMemo(() => {
-        // Create a map for quick lookup
-        const tickMap = new Map<string, UptimeStatus>();
-        averagedTicks.forEach((tick) => {
-            tickMap.set(
-                tick.windowStart,
-                tick.status === "Good" ? "good" : "bad",
-            );
-        });
+function UptimeTicks({
+    averagedTicks,
+    timeRange,
+}: {
+    averagedTicks: AveragedTick[];
+    timeRange: TimeRange;
+}) {
+    // Process ticks to show most recent with unknown padding
+    const displayTicks = useMemo(() => {
+        const statuses: UptimeStatus[] = averagedTicks
+            .slice(0, 10) // Get most recent 10 ticks
+            .map((tick) => (tick.status === "Good" ? "good" : "bad"));
 
-        // Find the most recent window
-        const mostRecent =
-            averagedTicks.length > 0
-                ? new Date(averagedTicks[0].windowStart).getTime()
-                : Date.now();
-
-        // Generate 10 windows backwards from most recent
-        const windowSize = 3 * 60 * 1000;
-        const windows: UptimeStatus[] = [];
-
-        for (let i = 0; i < 10; i++) {
-            const windowStart = new Date(mostRecent - i * windowSize);
-            const windowKey = windowStart.toISOString();
-
-            windows.push(
-                tickMap.has(windowKey) ? tickMap.get(windowKey)! : "unknown",
-            );
+        // Pad with "unknown" if we have less than 10 ticks
+        while (statuses.length < 10) {
+            statuses.unshift("unknown");
         }
 
-        return windows.reverse(); // Oldest first, newest last
+        return statuses;
     }, [averagedTicks]);
+
+    // Function to calculate time ago for tooltip based on time range
+    const getTimeAgo = (index: number) => {
+        switch (timeRange) {
+            case "1w":
+                return `${7 - index} day${index !== 6 ? "s" : ""} ago`;
+            case "1m":
+                return `${30 - index} day${index !== 29 ? "s" : ""} ago`;
+            default: // 30m
+                const minutesAgo = 30 - index * 3;
+                return `${minutesAgo - 3}-${minutesAgo} min ago`;
+        }
+    };
 
     return (
         <div className="mt-3 flex gap-1 h-10">
-            {processedTicks.map((tick, index) => {
+            {displayTicks.map((tick, index) => {
                 const height =
                     tick === "good" ? "h-10" : tick === "bad" ? "h-4" : "h-2";
-
-                const minutesAgo = 30 - index * 3;
-                const tooltipContent = `${minutesAgo - 3}-${minutesAgo} min ago: ${
-                    tick.charAt(0).toUpperCase() + tick.slice(1)
-                }`;
+                const tooltipContent =
+                    tick === "unknown"
+                        ? "No data available"
+                        : `${getTimeAgo(index)}: ${tick.charAt(0).toUpperCase() + tick.slice(1)}`;
 
                 return (
                     <TooltipProvider key={index}>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <div
-                                    className={`w-8 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${
+                                    className={`flex-1 ${height} transform rounded-t-sm transition-all duration-300 hover:translate-y-[-2px] ${
                                         tick === "good"
                                             ? "bg-gradient-to-b from-emerald-400 to-emerald-500 dark:from-emerald-300 dark:to-emerald-500"
                                             : tick === "bad"
@@ -160,25 +171,23 @@ function UptimeTicks({ averagedTicks }: { averagedTicks: AveragedTick[] }) {
         </div>
     );
 }
+
 /**
- * Returns the overall uptime status based on the most recent averaged tick.
+ * Determines the overall uptime status based on the most recent averaged tick.
  *
- * If there are no averaged ticks, returns "unknown". Otherwise, returns "good" if the latest tick's status is "Good", or "bad" if it is "Bad".
- *
- * @param averagedTicks - List of averaged uptime data windows, ordered with the most recent first.
- * @returns "good", "bad", or "unknown" representing the current overall status.
+ * @param averagedTicks - Array of averaged status ticks, ordered with the most recent first.
+ * @returns The overall status: "good" if the latest tick is "Good", "bad" if "Bad", or "unknown" if no ticks are available.
  */
 function getOverallStatus(averagedTicks: AveragedTick[]): UptimeStatus {
     if (!averagedTicks.length) return "unknown";
-
-    const mostRecent = averagedTicks[0]; // Already ordered by windowStart DESC
+    const mostRecent = averagedTicks[0];
     return mostRecent.status === "Good" ? "good" : "bad";
 }
 
 /**
- * Displays an animated skeleton UI that mimics the website details dashboard layout while data is loading.
+ * Renders a skeleton loading UI that mimics the layout of the website details page.
  *
- * Shows placeholder elements for the header, stat cards, uptime ticks bar chart, and response time chart to indicate loading state.
+ * Displays animated placeholders for the status header, summary cards, uptime ticks visualization, and response time chart while data is loading.
  */
 function WebsiteDetailsLoadingShimmer() {
     return (
@@ -196,7 +205,6 @@ function WebsiteDetailsLoadingShimmer() {
                     </div>
                 </div>
 
-                {/* Stat Cards Shimmer */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     {[1, 2, 3].map((i) => (
                         <Card key={i} className="bg-gray-200 dark:bg-gray-800">
@@ -211,7 +219,6 @@ function WebsiteDetailsLoadingShimmer() {
                     ))}
                 </div>
 
-                {/* Uptime Ticks Shimmer */}
                 <Card className="mb-6 bg-gray-200 dark:bg-gray-800">
                     <CardHeader>
                         <div className="h-4 w-48 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
@@ -251,7 +258,6 @@ function WebsiteDetailsLoadingShimmer() {
                     </CardContent>
                 </Card>
 
-                {/* Chart Shimmer */}
                 <Card className="bg-gray-200 dark:bg-gray-800">
                     <CardHeader>
                         <div className="h-4 w-48 bg-gray-300 dark:bg-gray-700 rounded mb-2"></div>
@@ -267,11 +273,9 @@ function WebsiteDetailsLoadingShimmer() {
 }
 
 /**
- * Renders the details page for a monitored website, showing uptime statistics, recent status, and response time charts, with the ability to edit website settings.
+ * Displays and manages detailed uptime and performance information for a specific website.
  *
- * Periodically fetches and visualizes website monitoring data, including uptime percentage, check interval, total checks, and recent status windows. Provides an edit modal for updating the website's URL and check interval, and handles loading, error, and not-found states.
- *
- * @remark The page automatically refreshes its data at the website's configured check interval.
+ * Fetches website status, uptime, and response time data for a selectable time range, and periodically refreshes the data based on the website's configured check interval. Allows users to edit the website's URL and check interval, and provides visualizations for uptime status, response times, and recent errors. Handles loading, error, and not-found states.
  */
 export default function WebsiteDetailsPage() {
     const { websiteId } = useParams();
@@ -282,37 +286,50 @@ export default function WebsiteDetailsPage() {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [editUrl, setEditUrl] = useState("");
     const [editInterval, setEditInterval] = useState(60);
+    const [timeRange, setTimeRange] = useState<TimeRange>("30m");
+
+    // Fetch website details with time range parameter
+    const fetchWebsiteDetails = async () => {
+        if (!websiteId) return;
+
+        try {
+            const response = await instance.get(`/api/v1/website/status`, {
+                params: {
+                    websiteId,
+                    duration: timeRange,
+                },
+            });
+            setWebsite(response.data);
+        } catch (err) {
+            console.error("Failed to fetch website details:", err);
+            setError("Failed to load website details.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
         let timeoutId: NodeJS.Timeout;
 
-        const fetchWebsiteDetails = async () => {
-            if (!websiteId) return;
-
-            try {
-                const response = await instance.get(`/api/v1/website/status`, {
-                    params: { websiteId },
-                });
-                setWebsite(response.data);
-            } catch (err) {
-                console.error("Failed to fetch website details:", err);
-                setError("Failed to load website details.");
-            } finally {
-                setLoading(false);
-                // Set up next fetch
-                timeoutId = setTimeout(
-                    fetchWebsiteDetails,
-                    (website && website?.interval * 1000) || 60000,
-                );
-            }
-        };
-
         fetchWebsiteDetails();
+
+        // Set up periodic refresh based on interval
+        const refreshInterval = website?.interval
+            ? website.interval * 1000
+            : 60000;
+        // eslint-disable-next-line prefer-const
+        timeoutId = setTimeout(fetchWebsiteDetails, refreshInterval);
 
         return () => {
             if (timeoutId) clearTimeout(timeoutId);
         };
-    }, [websiteId, instance, website?.interval]);
+    }, [websiteId, instance, timeRange, website?.interval]);
+
+    // Handle time range change
+    const handleTimeRangeChange = (newRange: TimeRange) => {
+        setTimeRange(newRange);
+        fetchWebsiteDetails();
+    };
 
     const displayUrl = useMemo(() => {
         if (!website) return "Loading...";
@@ -325,7 +342,7 @@ export default function WebsiteDetailsPage() {
     }, [website]);
 
     const overallStatus = useMemo(() => {
-        if (!website) return "unknown";
+        if (!website?.averagedTicks.length) return "unknown";
         return getOverallStatus(website.averagedTicks);
     }, [website]);
 
@@ -354,21 +371,29 @@ export default function WebsiteDetailsPage() {
         }
     }, [overallStatus]);
 
-    const uptimePercentage = useMemo(() => {
-        if (!website || !website.averagedTicks.length) return 0;
-
-        const goodWindows = website.averagedTicks.filter(
-            (tick) => tick.status === "Good",
-        ).length;
-
-        return (goodWindows / website.averagedTicks.length) * 100;
-    }, [website]);
+    // Get time range label for UI
+    const getTimeRangeLabel = () => {
+        switch (timeRange) {
+            case "1w":
+                return "Last 1 week";
+            case "1m":
+                return "Last 1 month";
+            default:
+                return "Last 30 min";
+        }
+    };
 
     const lastChecked = useMemo(() => {
-        if (!website || !website.averagedTicks.length) return "Never";
+        if (!website?.averagedTicks.length) return "Never";
 
-        // Use the most recent window start time
-        return new Date(website.averagedTicks[0].windowStart).toLocaleString();
+        // Get the most recent check time
+        const mostRecent = new Date(website.averagedTicks[0].windowStart);
+        return mostRecent.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            day: "numeric",
+            month: "short",
+        });
     }, [website]);
 
     const handleEditClick = () => {
@@ -389,12 +414,7 @@ export default function WebsiteDetailsPage() {
             });
             toast.success("Website updated successfully!");
             setIsEditModalOpen(false);
-
-            // Refetch website details
-            const response = await instance.get(`/api/v1/website/status`, {
-                params: { websiteId },
-            });
-            setWebsite(response.data);
+            fetchWebsiteDetails();
         } catch (err) {
             console.error("Failed to update website:", err);
             toast.error("Failed to update website.");
@@ -420,43 +440,66 @@ export default function WebsiteDetailsPage() {
     return (
         <div className="bg-white dark:bg-gray-900 w-full h-full overflow-scroll p-10">
             <div className="container mx-auto py-8 h-full">
-                <div className="flex items-center space-x-4 mb-6">
-                    <StatusCircle status={overallStatus} />
-                    <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                            {displayUrl}
-                        </h1>
-                        <div className="mt-1 flex items-center space-x-3">
-                            {statusLabel}
-                            <div className="h-4 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
-                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                <Clock className="mr-1 h-4 w-4" />
-                                Last window: {lastChecked}
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center space-x-4">
+                        <StatusCircle status={overallStatus} />
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                                {displayUrl}
+                            </h1>
+                            <div className="mt-1 flex items-center space-x-3">
+                                {statusLabel}
+                                <div className="h-4 w-[1px] bg-gray-300 dark:bg-gray-600"></div>
+                                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                    <Clock className="mr-1 h-4 w-4" />
+                                    Last check: {lastChecked}
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-6 w-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                                    onClick={handleEditClick}
+                                    aria-label="Edit website"
+                                >
+                                    <Edit className="h-4 w-4" />
+                                </Button>
                             </div>
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-6 w-6 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                                onClick={handleEditClick}
-                                aria-label="Edit website"
-                            >
-                                <Edit className="h-4 w-4" />
-                            </Button>
                         </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2">
+                        <Calendar className="h-5 w-5 text-gray-500" />
+                        <Select
+                            value={timeRange}
+                            onValueChange={(v) =>
+                                handleTimeRangeChange(v as TimeRange)
+                            }
+                        >
+                            <SelectTrigger className="w-[120px]">
+                                <SelectValue placeholder="Time Range" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="30m">Last 30 min</SelectItem>
+                                <SelectItem value="1w">Last 1 week</SelectItem>
+                                <SelectItem value="1m">Last 1 month</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <Card className="bg-white dark:bg-gray-900">
                         <CardHeader>
-                            <CardDescription>Uptime (All Time)</CardDescription>
+                            <CardDescription>
+                                Uptime ({getTimeRangeLabel()})
+                            </CardDescription>
                             <CardTitle className="text-2xl font-bold">
-                                {uptimePercentage.toFixed(1)}%
+                                {website?.uptimePercentage?.toFixed(1)}%
                             </CardTitle>
                         </CardHeader>
                         <CardContent>
                             <Progress
-                                value={uptimePercentage}
+                                value={website.uptimePercentage}
                                 className="w-full"
                             />
                         </CardContent>
@@ -493,15 +536,26 @@ export default function WebsiteDetailsPage() {
 
                 <Card className="mb-6 bg-white dark:bg-gray-900">
                     <CardHeader>
-                        <CardTitle>Last 30 Minutes Status</CardTitle>
+                        <CardTitle>{getTimeRangeLabel()} Status</CardTitle>
                         <CardDescription>
-                            Visual representation of recent 3-minute windows
+                            Visual representation of status windows
                         </CardDescription>
                     </CardHeader>
                     <CardContent>
-                        <UptimeTicks averagedTicks={website.averagedTicks} />
+                        <UptimeTicks
+                            averagedTicks={website.averagedTicks}
+                            timeRange={timeRange}
+                        />
                         <div className="mt-1 flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                            <span>30 min ago</span>
+                            <span>
+                                {timeRange === "30m"
+                                    ? "30 min ago"
+                                    : timeRange === "1w"
+                                      ? "7 days ago"
+                                      : timeRange === "1m"
+                                        ? "30 days ago"
+                                        : "12 months ago"}
+                            </span>
                             <span>Now</span>
                         </div>
                         <div className="mt-4 flex space-x-3 text-xs text-gray-500 dark:text-gray-400 justify-center">
@@ -521,11 +575,14 @@ export default function WebsiteDetailsPage() {
                     </CardContent>
                 </Card>
 
-                <ResponseTimeChart averagedTicks={website.averagedTicks} />
+                <ResponseTimeChart
+                    averagedTicks={website.averagedTicks}
+                    timeRange={timeRange}
+                />
                 <br />
+                <RecentErrors />
             </div>
 
-            {/* Edit Website Modal */}
             <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
                 <DialogContent className="sm:max-w-[425px] bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
                     <DialogHeader>

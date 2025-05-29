@@ -6,6 +6,7 @@ import {
     deleteWebsite,
     getAllMaintenanceWindows,
     getAllWebsites,
+    getErrorGraphData,
     getHeartbeat,
     getHeartbeatDetails,
     getWebsiteStatus,
@@ -24,6 +25,13 @@ router.get(
     // @ts-expect-error - TODO: fix this type error
     getWebsiteStatus,
 );
+
+router.get(
+    "/website/error-graph",
+    // @ts-expect-error - TODO: fix this type error
+    authMiddleware,
+    getErrorGraphData
+  );
 
 // @ts-expect-error - TODO: fix this type error
 router.get("/websites", authMiddleware, getAllWebsites);
