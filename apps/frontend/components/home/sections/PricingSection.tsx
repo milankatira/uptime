@@ -5,9 +5,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { MagicCard } from "@/components/magicui/magic-card";
 /**
- * Renders a visually engaging pricing section with animated feature lists and a call-to-action for early access.
+ * Displays a pricing section with animated feature highlights and a call-to-action for early access.
  *
- * Displays a header with animated badges and headings, two columns of animated feature highlights, and a prominent button to encourage users to join the beta launch.
+ * Renders a visually engaging section featuring animated badges, headings, two columns of feature lists, and a prominent button to encourage users to join the beta launch.
  */
 function PricingSection() {
     return (

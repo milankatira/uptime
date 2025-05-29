@@ -25,7 +25,9 @@ interface ProcessedWebsite {
     interval: number;
 }
 
-// Remove WebsiteCard component definition from here
+/**
+ * Displays a loading placeholder with animated pulsing cards to indicate that website data is being loaded.
+ */
 
 function LoadingSpinner() {
     return (
@@ -50,6 +52,12 @@ function LoadingSpinner() {
     );
 }
 
+/**
+ * Displays an error message with a retry button.
+ *
+ * @param message - The error message to display.
+ * @param onRetry - Callback invoked when the retry button is clicked.
+ */
 function ErrorMessage({
     message,
     onRetry,
@@ -72,9 +80,9 @@ function ErrorMessage({
 }
 
 /**
- * Displays a summary of monitored websites, including total count, average uptime, and status distribution.
+ * Renders a summary of monitored websites, showing the total number of sites, average uptime percentage, and the distribution of site statuses.
  *
- * @param websites - The list of processed website objects to summarize.
+ * @param websites - The processed website data to summarize.
  */
 function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     const stats = useMemo(() => {
@@ -167,6 +175,11 @@ function DashboardSummary({ websites }: { websites: ProcessedWebsite[] }) {
     );
 }
 
+/**
+ * Displays an empty state message with an option to add the first website when no websites are being monitored.
+ *
+ * @param onAddWebsite - Callback invoked when the user clicks the button to add a website.
+ */
 function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white p-8 text-center shadow-md dark:border-gray-700 dark:bg-gray-800">
@@ -189,11 +202,11 @@ function EmptyState({ onAddWebsite }: { onAddWebsite: () => void }) {
 }
 
 /**
- * Renders the main dashboard application for monitoring website uptime.
+ * Main dashboard component for monitoring website uptime.
  *
- * Handles user authentication, website data fetching, status processing, and CRUD operations for monitored websites. Displays summary statistics, website cards, loading and error states, and modals for adding new websites or organizations.
+ * Manages authentication, website data retrieval and processing, and CRUD operations for monitored websites. Displays summary statistics, website cards, loading and error states, and modals for adding new websites or organizations.
  *
- * @remark Redirects users without organization memberships to an organization creation screen.
+ * @remark If the user has no organization memberships, renders an organization creation screen instead of the dashboard.
  */
 function App() {
     const [isModalOpen, setIsModalOpen] = useState(false);

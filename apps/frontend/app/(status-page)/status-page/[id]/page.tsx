@@ -25,6 +25,11 @@ type Website = {
     ticks: Tick[];
 };
 
+/**
+ * Displays a real-time status monitoring page for a website, including uptime, latency, and operational status.
+ *
+ * Fetches and displays the current status of a monitored website, updating automatically at regular intervals. Provides visual indicators for system health, uptime percentage, and latency, with support for fullscreen mode and error handling.
+ */
 function StatusPage() {
     const params = useParams();
     const id = params?.id as string;

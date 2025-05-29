@@ -6,6 +6,13 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
+/**
+ * Sends a push notification with the specified title and body to a device using its token via Firebase Cloud Messaging.
+ *
+ * @param token - The recipient device's FCM token.
+ * @param title - The notification title.
+ * @param body - The notification body content.
+ */
 export async function sendPushNotification(
     token: string,
     title: string,

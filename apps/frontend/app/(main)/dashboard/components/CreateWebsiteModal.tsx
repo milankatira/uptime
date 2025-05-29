@@ -22,6 +22,16 @@ const websiteSchema = z.object({
     interval: z.number().min(10).max(1440),
 });
 
+/**
+ * Displays a modal dialog for adding a new website with a URL and check interval.
+ *
+ * When submitted, calls {@link onClose} with the entered URL and interval. If canceled or closed, calls {@link onClose} with `null`.
+ *
+ * @param isOpen - Whether the modal is visible.
+ * @param onClose - Callback invoked with the website URL and interval on submit, or `null` if canceled.
+ *
+ * @returns The modal dialog component, or `null` if not open.
+ */
 export function CreateWebsiteModal({
     isOpen,
     onClose,

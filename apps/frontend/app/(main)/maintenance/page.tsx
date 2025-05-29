@@ -15,6 +15,11 @@ import { CalendarIcon, Clock } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
+/**
+ * Displays and manages maintenance windows, allowing users to schedule, view, and repeat maintenance periods.
+ *
+ * Provides a UI for creating new maintenance windows by selecting a date, time slot, and optional repeat frequency. Fetches and displays upcoming maintenance windows from the backend. Handles loading and submission states, and notifies users of errors during creation.
+ */
 function MaintenanceWindow() {
     const [showDialog, setShowDialog] = useState(false);
     const [date, setDate] = useState<Date | undefined>(undefined);

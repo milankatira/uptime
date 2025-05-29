@@ -12,10 +12,10 @@ export interface Option {
 }
 
 /**
- * Retrieves a list of Slack channels the bot is a member of.
+ * Lists Slack channels (public and private) the bot is a member of.
  *
  * @param slackAccessToken - The Slack bot user OAuth token.
- * @returns An array of {@link Option} objects representing accessible channels.
+ * @returns An array of {@link Option} objects, each representing a channel the bot can access.
  *
  * @throws {Error} If the Slack API request fails or returns an error response.
  */

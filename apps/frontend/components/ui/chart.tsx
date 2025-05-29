@@ -42,14 +42,14 @@ function useChart() {
 }
 
 /**
- * Provides theming and configuration context for a chart and renders its container.
+ * Provides chart configuration and theming context, and renders a responsive chart container.
  *
- * Wraps chart content with a context provider for configuration, applies scoped CSS variables for theming, and renders children inside a responsive container.
+ * Wraps chart content with a configuration context provider, applies scoped CSS variables for theming, and ensures responsive sizing for child chart components.
  *
- * @param id - Optional unique identifier for the chart instance.
+ * @param id - Optional unique identifier for the chart instance. If not provided, a unique ID is generated.
  * @param className - Additional class names for the chart container.
- * @param config - Chart configuration object defining labels, icons, and colors for chart items.
- * @param children - Chart components to be rendered inside the responsive container.
+ * @param config - Chart configuration object specifying labels, icons, and colors for chart items.
+ * @param children - Chart components to render inside the responsive container.
  */
 function ChartContainer({
     id,
@@ -122,9 +122,9 @@ ${colorConfig
 const ChartTooltip = RechartsPrimitive.Tooltip;
 
 /**
- * Renders a customizable tooltip content component for Recharts charts, supporting theming, custom indicators, and flexible label/value formatting.
+ * Renders a customizable tooltip content component for Recharts charts, supporting theming, indicator styles, and flexible label and value formatting.
  *
- * Displays chart data details in a styled tooltip, with options to show or hide labels and indicators, customize indicator style, and format labels and values. Integrates with chart configuration for icons, colors, and labels.
+ * Displays chart data details in a styled tooltip, with options to show or hide labels and indicators, customize indicator appearance, and format labels and values. Integrates with chart configuration for icons, colors, and labels.
  *
  * @param indicator - The style of the indicator shown next to each entry ("dot", "line", or "dashed").
  * @param hideLabel - If true, hides the tooltip label.
@@ -307,11 +307,11 @@ function ChartTooltipContent({
 const ChartLegend = RechartsPrimitive.Legend;
 
 /**
- * Renders a styled legend for a chart, displaying icons or colored squares and labels for each legend entry.
+ * Displays a chart legend with icons or colored squares and labels for each legend entry.
  *
- * @param hideIcon - If true, hides custom icons and displays colored squares instead.
- * @param nameKey - Optional key to use for legend item identification.
- * @returns A React element representing the chart legend, or null if there are no legend items.
+ * @param hideIcon - If true, shows colored squares instead of custom icons.
+ * @param nameKey - Optional key used to identify legend items.
+ * @returns The rendered legend as a React element, or null if there are no legend items.
  */
 function ChartLegendContent({
     className,
@@ -372,14 +372,14 @@ function ChartLegendContent({
 }
 
 /**
- * Retrieves the chart configuration entry corresponding to a given payload and key.
+ * Looks up a chart configuration entry based on a payload object and key.
  *
- * Examines the payload and its nested `payload` property to determine the appropriate config key, returning the matching config object if found.
+ * Attempts to resolve the config key by checking the payload and its nested `payload` property for a string value matching the provided key. Returns the corresponding config entry if found, or `undefined` if no match exists.
  *
- * @param config - The chart configuration object.
- * @param payload - The payload item, potentially containing nested data.
- * @param key - The key to look up in the config.
- * @returns The matching config entry, or `undefined` if not found.
+ * @param config - The chart configuration mapping.
+ * @param payload - The data payload, which may contain a nested `payload` object.
+ * @param key - The key to search for within the payload and config.
+ * @returns The matching configuration entry, or `undefined` if not found.
  */
 function getPayloadConfigFromPayload(
     config: ChartConfig,

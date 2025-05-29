@@ -14,6 +14,22 @@ export interface OrbitingCirclesProps
     speed?: number;
 }
 
+/**
+ * Renders child elements orbiting around a central point with configurable animation and layout.
+ *
+ * Each child is positioned in a circular orbit, with animation speed, direction, radius, and icon size customizable via props. Optionally displays an SVG path representing the orbit.
+ *
+ * @param className - Additional CSS classes for orbiting child wrappers.
+ * @param children - Elements to be rendered as orbiting icons.
+ * @param reverse - If true, reverses the orbit animation direction.
+ * @param duration - Duration of one full orbit animation cycle, in seconds. Defaults to 20.
+ * @param radius - Radius of the orbit path, in pixels. Defaults to 160.
+ * @param path - Whether to render the orbit path as an SVG circle. Defaults to true.
+ * @param iconSize - Size of each orbiting icon, in pixels. Defaults to 30.
+ * @param speed - Multiplier to scale the animation speed. Defaults to 1.
+ *
+ * @returns React elements rendering the orbiting children and optional orbit path.
+ */
 export function OrbitingCircles({
     className,
     children,

@@ -13,9 +13,9 @@ import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
 /**
  * Renders the main layout of the web page, including navigation, content sections, and footer.
  *
- * Composes multiple UI sections such as hero, features, pricing, testimonials, and more within a styled container.
+ * Composes multiple UI sections in a vertical layout to form the complete page structure.
  *
- * @returns The complete page layout as a React element.
+ * @returns The root React element for the application's main page.
  */
 function App() {
     return (
