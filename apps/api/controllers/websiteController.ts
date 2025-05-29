@@ -37,12 +37,13 @@ export async function createWebsite(req: Request, res: Response) {
 export async function getWebsiteStatus(req: Request, res: Response) {
     try {
         const websiteId = req.query.websiteId as string;
+        const duration = (req.query.duration as string) || "1w";
 
         if (!websiteId) {
             return res.status(400).json({ error: "Website ID is required" });
         }
 
-        const data = await websiteService.getWebsiteStatus(websiteId);
+        const data = await websiteService.getWebsiteStatus(websiteId, duration);
 
         if (!data) {
             return res.status(404).json({ error: "Website not found" });
@@ -52,6 +53,25 @@ export async function getWebsiteStatus(req: Request, res: Response) {
     } catch (error) {
         console.error("Error getting website status:", error);
         return res.status(500).json({ error: "Failed to get website status" });
+    }
+}
+
+export async function getErrorGraphData(req: Request, res: Response) {
+    try {
+        const websiteId = req.query.websiteId as string;
+
+        if (!websiteId) {
+            return res.status(400).json({ error: "Website ID is required" });
+        }
+
+        const data = await websiteService.getLast30Errors(
+            websiteId,
+        );
+
+        return res.json(data);
+    } catch (error) {
+        console.error("Error getting error graph data:", error);
+        return res.status(500).json({ error: "Failed to get error data" });
     }
 }
 

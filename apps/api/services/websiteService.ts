@@ -38,7 +38,7 @@ export class WebsiteService {
     /**
      * Get website status by ID
      */
-    async getWebsiteStatus(websiteId: string) {
+    async getWebsiteStatus(websiteId: string, duration: string) {
         const website = await prismaClient.website.findFirst({
             where: { id: websiteId, disabled: false },
             include: {
@@ -50,26 +50,64 @@ export class WebsiteService {
 
         if (!website) return null;
 
+        // Determine time range and bin size based on duration
+        let binSize: string;
+        let timeRange: string;
+        let startTime: Date;
+
+        const now = new Date();
+        switch (duration) {
+            case "1w":
+                binSize = "1 day";
+                timeRange = "7 days";
+                startTime = new Date(now.setDate(now.getDate() - 7));
+                break;
+            case "1m":
+                binSize = "1 day";
+                timeRange = "30 days";
+                startTime = new Date(now.setDate(now.getDate() - 30));
+                break;
+            case "1y":
+                binSize = "1 month";
+                timeRange = "12 months";
+                startTime = new Date(now.setFullYear(now.getFullYear() - 1));
+                break;
+            default: // "30m"
+                binSize = "3 minutes";
+                timeRange = "30 minutes";
+                startTime = new Date(now.setMinutes(now.getMinutes() - 30));
+        }
+
         const aggregatedTicks = await prismaClient.$queryRaw`
-      WITH binned_data AS (
-        SELECT
-          date_bin('30 minutes', "createdAt" AT TIME ZONE 'UTC', TIMESTAMP '1970-01-01') AS bin_start,
-          AVG(latency) AS avg_latency,
-          COUNT(*) FILTER (WHERE status = 'Good')::float / COUNT(*) AS good_ratio
-        FROM "WebsiteTick"
-        WHERE "websiteId" = ${websiteId}
-        GROUP BY bin_start
-      )
-      SELECT
-        bin_start AS "windowStart",
-        avg_latency AS "avgLatency",
-        CASE
-          WHEN good_ratio >= 0.5 THEN 'Good'::"WebsiteStatus"
-          ELSE 'Bad'::"WebsiteStatus"
-        END AS status
-      FROM binned_data
-      ORDER BY bin_start DESC
-    `;
+            WITH binned_data AS (
+                SELECT
+                    date_bin(${binSize}::interval,
+                             "createdAt" AT TIME ZONE 'UTC',
+                             TIMESTAMP '1970-01-01') AS bin_start,
+                    AVG(latency) AS avg_latency,
+                    COUNT(*) FILTER (WHERE status = 'Good')::float / COUNT(*) AS good_ratio
+                FROM "WebsiteTick"
+                WHERE "websiteId" = ${websiteId}
+                    AND "createdAt" >= ${startTime}
+                GROUP BY bin_start
+            )
+            SELECT
+                bin_start AS "windowStart",
+                avg_latency AS "avgLatency",
+                CASE
+                    WHEN good_ratio >= 0.5 THEN 'Good'::"WebsiteStatus"
+                    ELSE 'Bad'::"WebsiteStatus"
+                END AS status
+            FROM binned_data
+            ORDER BY bin_start DESC
+        `;
+
+        // Calculate uptime percentage for the selected duration
+        let uptimePercentage = 0;
+        if (Array.isArray(aggregatedTicks) && aggregatedTicks.length > 0) {
+            const goodWindows = aggregatedTicks.filter(tick => tick.status === "Good").length;
+            uptimePercentage = (goodWindows / aggregatedTicks.length) * 100;
+        }
 
         return {
             ...website,
@@ -80,8 +118,29 @@ export class WebsiteService {
                       windowStart: new Date(tick.windowStart).toISOString(),
                   }))
                 : [],
+            uptimePercentage,
         };
     }
+
+    async getLast30Errors(websiteId: string) {
+        const errorData = await prismaClient.websiteTick.findMany({
+          where: {
+            websiteId,
+            status: 'Bad',
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+          take: 30,
+        });
+
+        return errorData.map((item) => ({
+          timestamp: item.createdAt.toISOString(),
+          status: item.status,
+        }));
+      }
+
+
 
     /**
      * Get all websites for a user
