@@ -12,6 +12,13 @@ export const metadata: Metadata = constructMetadata({
         "Real-time website monitoring with uptime statistics, performance metrics, and instant outage alerts.",
 });
 
+/**
+ * Root layout component that sets up global providers and theming for the application.
+ *
+ * Wraps the app with authentication, notification, theming, and progress bar providers, and renders the provided children.
+ *
+ * @param children - The content to be rendered within the layout.
+ */
 export default function RootLayout({
     children,
 }: Readonly<{

@@ -10,6 +10,11 @@ import StatsSection from "@/components/home/sections/StatsSection";
 import TestimonialsSection from "@/components/home/sections/TestimonialsSection";
 import UptimeDemo from "@/components/home/sections/UptimeDemo";
 import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
+/**
+ * Renders the main layout of the web page, including navigation, content sections, and footer.
+ *
+ * Sequentially displays all major sections of the site within a styled container.
+ */
 function App() {
     return (
         <div className="bg-background text-foreground flex min-h-screen flex-col">
