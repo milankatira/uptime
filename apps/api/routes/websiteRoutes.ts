@@ -1,16 +1,16 @@
 import { Router } from "express";
 import {
-  createHeartbeat,
-  createMaintenanceWindow,
-  createWebsite,
-  deleteWebsite,
-  getAllMaintenanceWindows,
-  getAllWebsites,
-  getHeartbeat,
-  getHeartbeatDetails,
-  getWebsiteStatus,
-  updateHeartbeatStatus,
-  updateWebsite, // Import the new controller function
+    createHeartbeat,
+    createMaintenanceWindow,
+    createWebsite,
+    deleteWebsite,
+    getAllMaintenanceWindows,
+    getAllWebsites,
+    getHeartbeat,
+    getHeartbeatDetails,
+    getWebsiteStatus,
+    updateHeartbeatStatus,
+    updateWebsite, // Import the new controller function
 } from "../controllers/websiteController";
 import { authMiddleware } from "../middleware";
 
@@ -20,9 +20,9 @@ const router = Router();
 router.post("/website", authMiddleware, createWebsite);
 
 router.get(
-  "/website/status",
-  // @ts-expect-error - TODO: fix this type error
-  getWebsiteStatus,
+    "/website/status",
+    // @ts-expect-error - TODO: fix this type error
+    getWebsiteStatus,
 );
 
 // @ts-expect-error - TODO: fix this type error
@@ -33,10 +33,10 @@ router.delete("/website", authMiddleware, deleteWebsite);
 
 // Add the new PUT route for updating a website
 router.put(
-  "/website/:websiteId",
-  // @ts-expect-error - TODO: fix this type error
-  authMiddleware,
-  updateWebsite,
+    "/website/:websiteId",
+    // @ts-expect-error - TODO: fix this type error
+    authMiddleware,
+    updateWebsite,
 );
 
 // @ts-expect-error - TODO: fix this type error
@@ -49,23 +49,23 @@ router.post("/maintenance-window", authMiddleware, createMaintenanceWindow);
 router.get("/maintenance-windows", authMiddleware, getAllMaintenanceWindows);
 
 router.get(
-  "/heartbeat",
-  // @ts-expect-error - TODO: fix this type error
-  authMiddleware,
-  getHeartbeat,
+    "/heartbeat",
+    // @ts-expect-error - TODO: fix this type error
+    authMiddleware,
+    getHeartbeat,
 );
 
 router.get(
-  "/heartbeat/:status/:heartbeatId",
-  // @ts-expect-error - TODO: fix this type error
-  updateHeartbeatStatus,
+    "/heartbeat/:status/:heartbeatId",
+    // @ts-expect-error - TODO: fix this type error
+    updateHeartbeatStatus,
 );
 
 router.get(
-  "/heartbeat-details/:heartbeatId",
-  // @ts-expect-error - TODO: fix this type error
-  authMiddleware,
-  getHeartbeatDetails,
+    "/heartbeat-details/:heartbeatId",
+    // @ts-expect-error - TODO: fix this type error
+    authMiddleware,
+    getHeartbeatDetails,
 );
 
 export default router;

@@ -1,61 +1,61 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import React from "react";
 
 interface AddCommentModalProps {
-  isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  comment: string;
-  onCommentChange: (value: string) => void;
-  onPostComment: () => void;
+    isOpen: boolean;
+    onOpenChange: (open: boolean) => void;
+    comment: string;
+    onCommentChange: (value: string) => void;
+    onPostComment: () => void;
 }
 
 /**
- * Renders a modal dialog for adding a comment or post-mortem.
+ * Displays a modal dialog for users to add a comment or post-mortem.
  *
- * Displays a textarea for user input and a button to submit the comment. The modal's visibility, comment value, and event handlers are controlled via props.
+ * The modal includes a textarea for input and a button to submit the comment. Visibility, input value, and event handling are managed via props.
  */
 export function AddCommentModal({
-  isOpen,
-  onOpenChange,
-  comment,
-  onCommentChange,
-  onPostComment,
+    isOpen,
+    onOpenChange,
+    comment,
+    onCommentChange,
+    onPostComment,
 }: AddCommentModalProps) {
-  return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>Add Comment</DialogTitle>
-          <DialogDescription>
-            Leave a comment or post-mortem for this incident.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="grid gap-4 py-4">
-          {/* Replace Input with Textarea */}
-          <Textarea
-            id="comment"
-            placeholder="Your comment here..."
-            className="col-span-3"
-            value={comment}
-            onChange={(e) => onCommentChange(e.target.value)}
-          />
-        </div>
-        <DialogFooter>
-          <Button type="submit" onClick={onPostComment}>
-            Post Comment
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+    return (
+        <Dialog open={isOpen} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add Comment</DialogTitle>
+                    <DialogDescription>
+                        Leave a comment or post-mortem for this incident.
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    {/* Replace Input with Textarea */}
+                    <Textarea
+                        id="comment"
+                        placeholder="Your comment here..."
+                        className="col-span-3"
+                        value={comment}
+                        onChange={(e) => onCommentChange(e.target.value)}
+                    />
+                </div>
+                <DialogFooter>
+                    <Button type="submit" onClick={onPostComment}>
+                        Post Comment
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
 }
