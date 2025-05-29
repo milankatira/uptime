@@ -11,7 +11,6 @@ import TestimonialsSection from "@/components/home/sections/TestimonialsSection"
 import UptimeDemo from "@/components/home/sections/UptimeDemo";
 import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
 function App() {
-
     return (
         <div className="bg-background text-foreground flex min-h-screen flex-col">
             <Navbar />
