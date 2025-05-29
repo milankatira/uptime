@@ -10,6 +10,13 @@ import StatsSection from "@/components/home/sections/StatsSection";
 import TestimonialsSection from "@/components/home/sections/TestimonialsSection";
 import UptimeDemo from "@/components/home/sections/UptimeDemo";
 import ConnectAppsSection from "@/components/home/sections/ConnectAppsSection";
+/**
+ * Renders the main layout of the web page, including navigation, content sections, and footer.
+ *
+ * Composes multiple UI sections such as hero, features, pricing, testimonials, and more within a styled container.
+ *
+ * @returns The complete page layout as a React element.
+ */
 function App() {
     return (
         <div className="bg-background text-foreground flex min-h-screen flex-col">
