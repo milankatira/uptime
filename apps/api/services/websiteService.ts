@@ -60,22 +60,22 @@ export class WebsiteService {
             case "1w":
                 binSize = "1 day";
                 timeRange = "7 days";
-                startTime = new Date(now.setDate(now.getDate() - 7));
+                startTime = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
                 break;
             case "1m":
                 binSize = "1 day";
                 timeRange = "30 days";
-                startTime = new Date(now.setDate(now.getDate() - 30));
+                startTime = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
                 break;
             case "1y":
                 binSize = "1 month";
                 timeRange = "12 months";
-                startTime = new Date(now.setFullYear(now.getFullYear() - 1));
+                startTime = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
                 break;
             default: // "30m"
                 binSize = "3 minutes";
                 timeRange = "30 minutes";
-                startTime = new Date(now.setMinutes(now.getMinutes() - 30));
+                startTime = new Date(now.getTime() - 30 * 60 * 1000);
         }
 
         const aggregatedTicks = await prismaClient.$queryRaw`
