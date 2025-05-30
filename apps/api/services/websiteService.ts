@@ -100,7 +100,9 @@ export class WebsiteService {
         // Calculate uptime percentage for the selected duration
         let uptimePercentage = 0;
         if (Array.isArray(aggregatedTicks) && aggregatedTicks.length > 0) {
-            const goodWindows = aggregatedTicks.filter(tick => tick.status === "Good").length;
+            const goodWindows = aggregatedTicks.filter(
+                (tick) => tick.status === "Good",
+            ).length;
             uptimePercentage = (goodWindows / aggregatedTicks.length) * 100;
         }
 
@@ -119,23 +121,21 @@ export class WebsiteService {
 
     async getLast30Errors(websiteId: string) {
         const errorData = await prismaClient.websiteTick.findMany({
-          where: {
-            websiteId,
-            status: 'Bad',
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-          take: 30,
+            where: {
+                websiteId,
+                status: "Bad",
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+            take: 30,
         });
 
         return errorData.map((item) => ({
-          timestamp: item.createdAt.toISOString(),
-          status: item.status,
+            timestamp: item.createdAt.toISOString(),
+            status: item.status,
         }));
-      }
-
-
+    }
 
     /**
      * Get all websites for a user
@@ -423,12 +423,20 @@ export class WebsiteService {
             // Ensure incident is created after status update and email attempt
             await prismaClient.incident.create({
                 data: {
-                    status: "Ongoing", // Or "Investigating"
+                    status: "Ongoing",
+                    orgId: currentHeartbeat.orgId,
+                    heartbeatId: heartbeatId,
                     errorCode: "HEARTBEAT_DOWN",
                     errorText: `Heartbeat ${updatedHeartbeat.name} is down`,
                     date: new Date(),
                     duration: 0, // Duration can be calculated later when resolved
                     userId: updatedHeartbeat.userId,
+                    Timeline: {
+                        create: {
+                            type: "STATUS_CHANGE",
+                            message: "Heartbeat status changed to DOWN",
+                        },
+                    },
                 },
             });
         } else if (status.toUpperCase() === "UP") {
