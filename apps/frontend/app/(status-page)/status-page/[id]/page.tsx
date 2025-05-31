@@ -23,10 +23,9 @@ interface WebsiteDetails {
 }
 
 /**
- * Displays a real-time status monitoring page for a website, including uptime, latency, and operational status.
+ * Renders a real-time status monitoring page for a website, displaying uptime percentage, average latency, and operational status.
  *
- * Fetches and displays the current status of a monitored website, updating automatically at regular intervals.
- * Provides visual indicators for system health, uptime percentage, and latency, with support for fullscreen mode.
+ * Fetches the latest website status data at regular intervals and updates the UI with visual indicators for system health. Supports fullscreen mode and provides user controls for display preferences.
  */
 function StatusPage() {
     const params = useParams();

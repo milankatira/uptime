@@ -31,11 +31,11 @@ export async function createWebsite(req: Request, res: Response) {
 }
 
 /**
- * Retrieves status data for a website by its ID and an optional duration, returning the result as JSON.
+ * Retrieves the status data for a website by its ID and optional duration, returning the result as JSON.
  *
- * If the `websiteId` query parameter is missing, responds with HTTP 400. If no status data is found for the given website, responds with HTTP 404.
+ * Responds with HTTP 400 if the `websiteId` query parameter is missing, or 404 if no status data is found for the specified website.
  *
- * @param req - Express request with `websiteId` and optional `duration` in the query parameters.
+ * @param req - Express request containing `websiteId` and optional `duration` in the query parameters.
  * @param res - Express response used to send the status data or an error response.
  */
 export async function getWebsiteStatus(req: Request, res: Response) {
@@ -68,9 +68,10 @@ export async function getWebsiteStatus(req: Request, res: Response) {
 }
 
 /**
- * Retrieves the last 30 error records for a website and returns them as JSON.
+ * Retrieves the last 30 error records for a website and returns them as a JSON array.
  *
  * Returns HTTP 400 if the `websiteId` query parameter is missing, or HTTP 500 if an internal error occurs.
+ * Results are cached in Redis for improved performance.
  */
 export async function getErrorGraphData(req: Request, res: Response) {
     try {
@@ -97,9 +98,9 @@ export async function getErrorGraphData(req: Request, res: Response) {
 }
 
 /**
- * Retrieves all websites associated with the authenticated user.
+ * Retrieves all websites for the authenticated user, optionally filtered by organization.
  *
- * Responds with a JSON array of website data for the user, optionally filtered by organization if an org ID is provided in the request headers.
+ * Returns a JSON array of website data associated with the user. If an organization ID is provided in the request headers, only websites for that organization are returned.
  */
 export async function getAllWebsites(req: Request, res: Response) {
     try {
@@ -125,9 +126,13 @@ export async function getAllWebsites(req: Request, res: Response) {
 }
 
 /**
- * Performs a soft delete of a website for the authenticated user.
+ * Soft deletes a website belonging to the authenticated user.
  *
- * Responds with a 400 status if the website ID is missing from the request body, or a 500 status if an internal error occurs.
+ * Removes the website from active records and invalidates the user's website cache in Redis.
+ *
+ * @returns The result of the deletion operation as JSON.
+ *
+ * @remark Responds with status 400 if the website ID is missing from the request body, or 500 if an internal error occurs.
  */
 export async function deleteWebsite(req: Request, res: Response) {
     try {
@@ -151,9 +156,11 @@ export async function deleteWebsite(req: Request, res: Response) {
 }
 
 /**
- * Handles updating a website's URL and monitoring interval for the authenticated user.
+ * Updates the URL and monitoring interval of a website for the authenticated user.
  *
- * Expects `websiteId` in the URL parameters and both `url` and `interval` in the request body. Responds with the updated website data as JSON on success, or an error message with an appropriate HTTP status code if validation fails or an internal error occurs.
+ * Requires `websiteId` in the URL parameters and both `url` and `interval` in the request body. Responds with the updated website data as JSON on success, or a 400 error if required fields are missing.
+ *
+ * @returns The updated website object as JSON.
  */
 export async function updateWebsite(req: Request, res: Response) {
     try {
@@ -283,9 +290,9 @@ export async function getAllMaintenanceWindows(req: Request, res: Response) {
 }
 
 /**
- * Retrieves heartbeat data for the authenticated user and optional organization.
+ * Retrieves heartbeat data for the authenticated user, optionally filtered by organization.
  *
- * Responds with the heartbeat data as JSON if found, or a 404 error if not found.
+ * Responds with the heartbeat data as JSON if found, or a 404 error if no data exists for the user and organization.
  */
 export async function getHeartbeat(req: Request, res: Response) {
     try {
@@ -493,9 +500,10 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
 }
 
 /**
- * Handles an HTTP request to retrieve detailed information for a specific heartbeat.
+ * Retrieves detailed information for a specific heartbeat and returns it as JSON.
  *
- * Responds with a 400 status if the heartbeat ID is missing, or with the heartbeat details as JSON if found.
+ * Responds with a 400 status code if the heartbeat ID is missing, or a 500 status code if retrieval fails.
+ * Uses Redis caching to improve performance for repeated requests.
  */
 export async function getHeartbeatDetails(req: Request, res: Response) {
     try {
