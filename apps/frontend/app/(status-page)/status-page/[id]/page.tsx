@@ -6,29 +6,27 @@ import { useAxiosInstance } from "@/lib/axiosInstance";
 import { BellOff, Maximize, Minimize } from "lucide-react";
 import { useParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
-
-// TypeScript interfaces for Website and Tick
-type Tick = {
-    id: string;
-    websiteId: string;
-    createdAt: string;
-    status: string;
-    latency: number;
+type AveragedTick = {
+    windowStart: string;
+    avgLatency: number;
+    status: "Good" | "Bad";
 };
 
-type Website = {
+interface WebsiteDetails {
     id: string;
     url: string;
-    userId?: string;
-    interval?: number;
-    disabled?: boolean;
-    ticks: Tick[];
-};
+    interval: number;
+    disabled: boolean;
+    totalTicks: number;
+    averagedTicks: AveragedTick[];
+    uptimePercentage: number;
+}
 
 /**
  * Displays a real-time status monitoring page for a website, including uptime, latency, and operational status.
  *
- * Fetches and displays the current status of a monitored website, updating automatically at regular intervals. Provides visual indicators for system health, uptime percentage, and latency, with support for fullscreen mode and error handling.
+ * Fetches and displays the current status of a monitored website, updating automatically at regular intervals.
+ * Provides visual indicators for system health, uptime percentage, and latency, with support for fullscreen mode.
  */
 function StatusPage() {
     const params = useParams();
@@ -38,7 +36,7 @@ function StatusPage() {
     const [countdown, setCountdown] = useState(50);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
-    const [website, setWebsite] = useState<Website | null>(null);
+    const [website, setWebsite] = useState<WebsiteDetails | null>(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -70,15 +68,17 @@ function StatusPage() {
             );
         };
     }, []);
+
     useEffect(() => {
         const fetchStatus = async () => {
             setLoading(true);
             setError("");
             try {
                 const res = await instance.get(
-                    `/api/v1/website/status?websiteId=${id}`,
+                    `/api/v1/website/status?websiteId=${id}&duration=30m`,
                 );
                 setWebsite(res.data);
+                setCountdown(res.data.interval);
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (err) {
                 setError("Failed to fetch website status");
@@ -86,8 +86,8 @@ function StatusPage() {
                 setLoading(false);
             }
         };
+
         fetchStatus();
-        // Optionally, refresh every 50s
         const interval = setInterval(fetchStatus, 50000);
         return () => clearInterval(interval);
     }, [id, instance]);
@@ -111,35 +111,29 @@ function StatusPage() {
     let displayStatus = "Unknown";
     let latency = null;
     let uptime = 0;
-    if (website && website?.ticks && website.ticks.length > 0) {
-        const latestTick = website.ticks[website.ticks.length - 1];
-        // Map status values
-        if (latestTick.status === "Good" || latestTick.status === "good") {
-            statusLabel = "Good";
-            statusColor = "bg-green-500";
-            badgeColor = "bg-green-500";
-            displayStatus = "Operational";
-        } else if (
-            latestTick.status === "Down" ||
-            latestTick.status === "down"
-        ) {
-            statusLabel = "Down";
-            statusColor = "bg-red-500";
-            badgeColor = "bg-red-500";
-            displayStatus = "Outage";
-        } else {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            statusLabel = latestTick.status;
-            statusColor = "bg-gray-400";
-            badgeColor = "bg-gray-400";
-            displayStatus = latestTick.status;
+
+    if (website) {
+        // Use the most recent averaged tick for status
+        if (website.averagedTicks.length > 0) {
+            const latestTick = website.averagedTicks[0];
+
+            if (latestTick.status === "Good") {
+                statusLabel = "Good";
+                statusColor = "bg-green-500";
+                badgeColor = "bg-green-500";
+                displayStatus = "Operational";
+            } else {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                statusLabel = "Down";
+                statusColor = "bg-red-500";
+                badgeColor = "bg-red-500";
+                displayStatus = "Outage";
+            }
+
+            latency = Math.round(latestTick.avgLatency);
         }
-        latency = latestTick.latency;
-        // Uptime: percent of ticks with status 'Good' or 'good'
-        const upCount = website.ticks.filter(
-            (t) => t.status === "Good" || t.status === "good",
-        ).length;
-        uptime = (upCount / website.ticks.length) * 100;
+
+        uptime = website.uptimePercentage;
     }
 
     return (
@@ -147,9 +141,11 @@ function StatusPage() {
             <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
                 {/* Header */}
                 <div className="mb-8 flex items-center justify-between">
-                    <h1 className="text-4xl font-bold">Status page</h1>
+                    <h1 className="text-4xl font-bold text-white">
+                        Status page
+                    </h1>
                     <div className="text-right">
-                        <h2 className="mb-1 text-2xl font-medium">
+                        <h2 className="mb-1 text-2xl font-medium text-white">
                             Service status
                         </h2>
                         <p className="text-sm text-gray-200">
@@ -158,6 +154,7 @@ function StatusPage() {
                         </p>
                     </div>
                 </div>
+
                 {/* System Status Card */}
                 <Card className="mb-8 rounded-lg bg-white p-6 text-black shadow-lg">
                     <div className="flex items-center gap-4">
@@ -186,8 +183,9 @@ function StatusPage() {
                         </div>
                     </div>
                 </Card>
+
                 {/* Services Section */}
-                <h2 className="mb-4 text-2xl font-bold">Services</h2>
+                <h2 className="mb-4 text-2xl font-bold text-white">Services</h2>
                 <Card className="rounded-lg bg-white p-6 text-black shadow-lg">
                     {loading ? (
                         <div>Loading...</div>
@@ -201,7 +199,7 @@ function StatusPage() {
                                         {website.url}
                                     </span>
                                     <span className="text-sm text-gray-800">
-                                        → {uptime.toFixed(2)}%
+                                        → {uptime.toFixed(1)}%
                                     </span>
                                 </div>
                                 <Badge
@@ -239,6 +237,7 @@ function StatusPage() {
                         <div>No website data found.</div>
                     )}
                 </Card>
+
                 {/* Footer */}
                 <div className="mt-12 flex items-center justify-between text-sm text-gray-200">
                     <div className="flex items-center gap-6">

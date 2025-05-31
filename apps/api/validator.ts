@@ -1,10 +1,8 @@
-import { WebsiteStatus } from "@prisma/client";
-
 import axios from "axios";
 import { Worker } from "bullmq";
-import prismaClient from "./lib/prisma";
+import { prismaClient } from "@repo/db/client";
 import redisConnection from "./lib/redis";
-
+import { WebsiteStatus } from "@repo/shared/types/website";
 const worker = new Worker(
     "website-checks",
     async (job) => {

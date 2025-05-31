@@ -1,6 +1,6 @@
-import { Queue } from "bullmq";
-import prismaClient from "./lib/prisma";
+import { Queue } from "bullmq";;
 import redisConnection from "./lib/redis";
+import { prismaClient } from "@repo/db/client";
 
 const checkQueue = new Queue("website-checks", { connection: redisConnection });
 
