@@ -362,7 +362,8 @@ const IncidentDetailPage = () => {
                                                     <polyline points="22,6 12,13 2,6"></polyline>
                                                 </svg>
                                             )}
-                                            {(item.type === "start" || index == 0) && (
+                                            {(item.type === "start" ||
+                                                index == 0) && (
                                                 <svg
                                                     className="h-5 w-5"
                                                     viewBox="0 0 24 24"

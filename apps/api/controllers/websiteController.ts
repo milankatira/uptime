@@ -1,5 +1,7 @@
 import type { Request, Response } from "express";
 import { websiteService } from "../services/websiteService";
+import redis from "../lib/redis";
+import { CACHE_TTL } from "../constant";
 
 /**
  * Creates a new website for the authenticated user.
@@ -20,6 +22,7 @@ export async function createWebsite(req: Request, res: Response) {
         }
 
         const result = await websiteService.createWebsite(userId, url, orgId);
+        await redis.del(`websites:${userId}:${orgId ?? "all"}`);
         return res.json(result);
     } catch (error) {
         console.error("Error creating website:", error);
@@ -44,7 +47,14 @@ export async function getWebsiteStatus(req: Request, res: Response) {
             return res.status(400).json({ error: "Website ID is required" });
         }
 
+        const cacheKey = `status:${websiteId}:${duration}`;
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+            return res.json(JSON.parse(cached));
+        }
         const data = await websiteService.getWebsiteStatus(websiteId, duration);
+
+        await redis.set(cacheKey, JSON.stringify(data), "EX", CACHE_TTL);
 
         if (!data) {
             return res.status(404).json({ error: "Website not found" });
@@ -70,10 +80,15 @@ export async function getErrorGraphData(req: Request, res: Response) {
             return res.status(400).json({ error: "Website ID is required" });
         }
 
-        const data = await websiteService.getLast30Errors(
-            websiteId,
-        );
+        const cacheKey = `errors:last30:${websiteId}`;
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+            return res.json(JSON.parse(cached));
+        }
 
+        const data = await websiteService.getLast30Errors(websiteId);
+
+        await redis.set(cacheKey, JSON.stringify(data), "EX", CACHE_TTL);
         return res.json(data);
     } catch (error) {
         console.error("Error getting error graph data:", error);
@@ -90,7 +105,18 @@ export async function getAllWebsites(req: Request, res: Response) {
     try {
         const userId = req.userId!;
         const orgId = req.headers["orgid"] as string | undefined;
+        const cacheKey = `websites:${userId}:${orgId ?? "all"}`;
+
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+            console.log("return cached data")
+            return res.json(JSON.parse(cached));
+        }
+
         const result = await websiteService.getAllWebsites(userId, orgId);
+
+        await redis.set(cacheKey, JSON.stringify(result), "EX", CACHE_TTL);
+
         return res.json(result);
     } catch (error) {
         console.error("Error getting websites:", error);
@@ -107,12 +133,16 @@ export async function deleteWebsite(req: Request, res: Response) {
     try {
         const websiteId = req.body.websiteId;
         const userId = req.userId!;
+        const orgId = req.headers["orgid"] as string | undefined;
 
         if (!websiteId) {
             return res.status(400).json({ error: "Website ID is required" });
         }
 
         const result = await websiteService.deleteWebsite(websiteId, userId);
+
+        await redis.del(`websites:${userId}:${orgId ?? "all"}`);
+
         return res.json(result);
     } catch (error) {
         console.error("Error deleting website:", error);
@@ -127,6 +157,7 @@ export async function deleteWebsite(req: Request, res: Response) {
  */
 export async function updateWebsite(req: Request, res: Response) {
     try {
+        const orgId = req.headers["orgid"] as string | undefined;
         const userId = req.userId!;
         const { websiteId } = req.params;
         const { url, interval } = req.body;
@@ -146,6 +177,7 @@ export async function updateWebsite(req: Request, res: Response) {
             url,
             interval,
         );
+        await redis.del(`websites:${userId}:${orgId?? "all"}`);
         return res.json(result);
     } catch (error) {
         console.error("Error updating website:", error);
@@ -259,7 +291,17 @@ export async function getHeartbeat(req: Request, res: Response) {
     try {
         const userId = req.userId!;
         const orgId = req.headers["orgid"] as string | undefined;
+
+        const cacheKey = `heartbeat:${userId}:${orgId ?? "all"}`;
+
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+            return res.json(JSON.parse(cached));
+        }
+
         const data = await websiteService.getHeartbeat(userId, orgId);
+
+        await redis.set(cacheKey, JSON.stringify(data), "EX", CACHE_TTL);
         if (!data) {
             return res.status(404).json({ error: "Heartbeat not found" });
         }
@@ -463,7 +505,16 @@ export async function getHeartbeatDetails(req: Request, res: Response) {
             return res.status(400).json({ error: "Heartbeat ID is required" });
         }
 
+        const cacheKey = `heartbeat:detail:${heartbeatId}`;
+        const cached = await redis.get(cacheKey);
+        if (cached) {
+            return res.json(JSON.parse(cached));
+        }
+
         const data = await websiteService.getHeartbeatDetails(heartbeatId);
+
+        await redis.set(cacheKey, JSON.stringify(data), "EX", CACHE_TTL);
+
         return res.json(data);
     } catch (error) {
         console.error("Error getting heartbeat details:", error);

@@ -30,8 +30,8 @@ router.get(
     "/website/error-graph",
     // @ts-expect-error - TODO: fix this type error
     authMiddleware,
-    getErrorGraphData
-  );
+    getErrorGraphData,
+);
 
 // @ts-expect-error - TODO: fix this type error
 router.get("/websites", authMiddleware, getAllWebsites);
