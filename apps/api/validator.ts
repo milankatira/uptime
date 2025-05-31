@@ -2,10 +2,7 @@ import axios from "axios";
 import { Worker } from "bullmq";
 import { prismaClient } from "@repo/db/client";
 import redisConnection from "./lib/redis";
-enum WebsiteStatus {
-    Good = "Good",
-    Bad = "Bad",
-}
+import { WebsiteStatus } from "@repo/shared/types/website";
 const worker = new Worker(
     "website-checks",
     async (job) => {
