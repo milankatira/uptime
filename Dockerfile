@@ -1,4 +1,4 @@
-# Stage 1: Base image with dependencies
+# Stage 1: Build dependencies and generate Prisma client
 FROM node:18-slim AS base
 
 # Install system dependencies
@@ -10,7 +10,7 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy lockfile and package.json files
+# Copy essential project files
 COPY package.json pnpm-lock.yaml turbo.json ./
 COPY apps/api/package.json apps/api/package.json
 COPY packages/db/package.json packages/db/package.json
@@ -18,29 +18,15 @@ COPY packages/db/package.json packages/db/package.json
 # Install dependencies
 RUN pnpm install
 
-# Copy all source code
+# Copy source code
 COPY . .
 
 # Generate Prisma client
-RUN cd packages/db && pnpm install && pnpm prisma generate
+RUN pnpm --filter=db prisma generate
 
-# Stage 2: Final image
-FROM node:18-slim
 
-# Install Bun
-RUN npm install -g bun
-
-WORKDIR /app
-
-# Install Node.js first
-RUN apt-get update && apt-get install -y curl
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-RUN apt-get install -y nodejs
-
-WORKDIR /usr/src/app
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y openssl
+# Stage 2: Final runtime image
+FROM node:18-slim AS final
 
 # Set working directory
 WORKDIR /app
@@ -48,10 +34,10 @@ WORKDIR /app
 # Install pnpm
 RUN npm install -g pnpm
 
-# Copy built files from the base stage
+# Copy necessary files from build stage
 COPY --from=base /app .
 
-# Expose API port
+# Expose port
 EXPOSE 8080
 
 # Start the API
