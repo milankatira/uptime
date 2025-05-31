@@ -54,11 +54,12 @@ export async function getWebsiteStatus(req: Request, res: Response) {
         }
         const data = await websiteService.getWebsiteStatus(websiteId, duration);
 
-        await redis.set(cacheKey, JSON.stringify(data), "EX", CACHE_TTL);
 
         if (!data) {
             return res.status(404).json({ error: "Website not found" });
         }
+
+        await redis.set(cacheKey, JSON.stringify(data), "EX", CACHE_TTL);
 
         return res.json(data);
     } catch (error) {
