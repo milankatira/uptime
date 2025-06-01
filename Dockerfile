@@ -1,41 +1,58 @@
-# Stage 1: Base image with dependencies installed
-FROM node:18-slim AS deps
+# Stage 1: Base image with dependenciesMore actions
+FROM node:18-slim AS base
 
-WORKDIR /app
-
-# Install system packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y openssl
 
-# Install pnpm globally
+# Set working directory
+WORKDIR /app
+
+# Install pnpm
 RUN npm install -g pnpm
 
-# Copy root-level config files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
+# Copy lockfile and package.json files
+COPY package.json pnpm-lock.yaml turbo.json ./
+COPY apps/api/package.json apps/api/package.json
+COPY apps/frontend/package.json apps/frontend/package.json
+COPY packages/db/package.json packages/db/package.json
 
-# Copy all apps and packages
-COPY apps ./apps
-COPY packages ./packages
-
-# Install dependencies for the entire monorepo
-RUN pnpm install --frozen-lockfile
-
+# Install dependencies
+RUN pnpm install
 # Generate Prisma client
-RUN pnpm --filter=db exec prisma generate
+RUN cd packages/db && pnpm install && pnpm prisma generate
 
+# Build all apps
+RUN pnpm run build
 
-# Stage 2: Runtime container
-FROM node:18-slim AS runner
+# Stage 2: Final image
+FROM node:18-slim
+
+# Install Bun
+RUN npm install -g bun
 
 WORKDIR /app
 
-# Install pnpm again in final image
+# Install Node.js first
+RUN apt-get update && apt-get install -y curl
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
+RUN apt-get install -y nodejs
+
+WORKDIR /usr/src/app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y openssl
+
+# Set working directory
+WORKDIR /app
+
+# Install pnpm
 RUN npm install -g pnpm
 
-# Copy everything from the build container
-COPY --from=deps /app .
+# Copy built files from the base stage
+COPY --from=base /app .
 
-# Expose port used by your app (e.g., Express)
+# Expose API port
 EXPOSE 8080
 
-# Start the API app in dev mode
+# Start the API
 CMD ["pnpm", "--filter=api", "run", "dev"]
