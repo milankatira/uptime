@@ -1,44 +1,41 @@
-# Stage 1: Build dependencies and generate Prisma client
-FROM node:18-slim AS base
+# Stage 1: Base image with dependencies installed
+FROM node:18-slim AS deps
 
-# Install system dependencies
+WORKDIR /app
+
+# Install system packages
 RUN apt-get update && apt-get install -y openssl
 
-# Set working directory
-WORKDIR /app
-
-# Install pnpm
+# Install pnpm globally
 RUN npm install -g pnpm
 
-# Copy essential project files
-COPY package.json pnpm-lock.yaml turbo.json ./
-COPY apps/api/package.json apps/api/package.json
-COPY packages/db/package.json packages/db/package.json
+# Copy root-level config files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 
-# Install dependencies
-RUN pnpm install
+# Copy all apps and packages
+COPY apps ./apps
+COPY packages ./packages
 
-# Copy source code
-COPY . .
+# Install dependencies for the entire monorepo
+RUN pnpm install --frozen-lockfile
 
 # Generate Prisma client
-RUN pnpm --filter=db prisma generate
+RUN pnpm --filter=db exec prisma generate
 
 
-# Stage 2: Final runtime image
-FROM node:18-slim AS final
+# Stage 2: Runtime container
+FROM node:18-slim AS runner
 
-# Set working directory
 WORKDIR /app
 
-# Install pnpm
+# Install pnpm again in final image
 RUN npm install -g pnpm
 
-# Copy necessary files from build stage
-COPY --from=base /app .
+# Copy everything from the build container
+COPY --from=deps /app .
 
-# Expose port
+# Expose port used by your app (e.g., Express)
 EXPOSE 8080
 
-# Start the API
+# Start the API app in dev mode
 CMD ["pnpm", "--filter=api", "run", "dev"]
