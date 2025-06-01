@@ -162,7 +162,7 @@ export async function sendTestAlert(req: Request, res: Response) {
         const userId = req.userId!;
         const { heartbeatId } = req.params;
         if (!heartbeatId) {
-            return res.status(400).json({ error: "Incident ID is required" });
+            return res.status(400).json({ error: "Heartbeat ID is required" });
         }
         await incidentService.sendTestAlert(userId, heartbeatId);
         return res.json({ message: "Test alert sent successfully" });
