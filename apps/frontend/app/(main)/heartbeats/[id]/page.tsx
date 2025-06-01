@@ -18,21 +18,25 @@ import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 const HeartbeatDetailPage = () => {
-    interface HeartbeatRecord {
-        id: string;
-        heartbeatId: string;
-        status: "UP" | "DOWN";
-        timestamp: string;
-        metadata: Record<string, unknown> | null;
-    }
+// Move interfaces to the top of the file
 
-    interface HeartbeatDetails {
-        name: string;
-        status: string;
-        interval: number;
-        HeartbeatRecord: HeartbeatRecord[];
-    }
+interface HeartbeatRecord {
+    id: string;
+    heartbeatId: string;
+    status: "UP" | "DOWN";
+    timestamp: string;
+    metadata: Record<string, unknown> | null;
+}
 
+interface HeartbeatDetails {
+    name: string;
+    status: string;
+    interval: number;
+    HeartbeatRecord: HeartbeatRecord[];
+}
+
+const HeartbeatDetailPage = () => {
+    // ...rest of your component code (interfaces removed from here)
     const params = useParams();
     const id = params?.id as string;
     const instance = useAxiosInstance();
