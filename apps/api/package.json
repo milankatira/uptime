@@ -6,8 +6,8 @@
         "@types/bun": "latest"
     },
     "scripts": {
-        "start": "bun --watch run index.ts",
-        "dev": "bun --watch run index.ts",
+        "start": "bun --watch run index.ts &&  bun run --watch validator.ts",
+        "dev": "bun --watch run index.ts && bun run --watch validator.ts",
         "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
         "format": "prettier --write .",
         "prettier-check": "prettier --check ."
@@ -26,6 +26,7 @@
         "@types/jsonwebtoken": "^9.0.9",
         "axios": "^1.9.0",
         "bullmq": "^5.52.1",
+        "bun": "^1.2.15",
         "cors": "^2.8.5",
         "dotenv": "^16.5.0",
         "express": "^5.1.0",

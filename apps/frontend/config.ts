@@ -1,4 +1,4 @@
-export const API_BACKEND_URL = "http://localhost:8080";
+export const API_BACKEND_URL = "https://uptime-4kj9.onrender.com";
 
 import { Metadata } from "next";
 import { generateFavicon } from "@/lib/generate-favicon";
