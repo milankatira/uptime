@@ -1,4 +1,4 @@
-# Stage 1: Base image with dependenciesMore actions
+# Stage 1: Base image with dependencies
 FROM node:18-slim AS base
 
 # Install system dependencies
@@ -13,16 +13,16 @@ RUN npm install -g pnpm
 # Copy lockfile and package.json files
 COPY package.json pnpm-lock.yaml turbo.json ./
 COPY apps/api/package.json apps/api/package.json
-COPY apps/frontend/package.json apps/frontend/package.json
 COPY packages/db/package.json packages/db/package.json
 
 # Install dependencies
 RUN pnpm install
+
+# Copy all source code
+COPY . .
+
 # Generate Prisma client
 RUN cd packages/db && pnpm install && pnpm prisma generate
-
-# Build all apps
-RUN pnpm run build
 
 # Stage 2: Final image
 FROM node:18-slim
