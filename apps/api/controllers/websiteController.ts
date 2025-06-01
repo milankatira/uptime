@@ -54,7 +54,6 @@ export async function getWebsiteStatus(req: Request, res: Response) {
         }
         const data = await websiteService.getWebsiteStatus(websiteId, duration);
 
-
         if (!data) {
             return res.status(404).json({ error: "Website not found" });
         }
@@ -110,7 +109,7 @@ export async function getAllWebsites(req: Request, res: Response) {
 
         const cached = await redis.get(cacheKey);
         if (cached) {
-            console.log("return cached data")
+            console.log("return cached data");
             return res.json(JSON.parse(cached));
         }
 
@@ -178,7 +177,7 @@ export async function updateWebsite(req: Request, res: Response) {
             url,
             interval,
         );
-        await redis.del(`websites:${userId}:${orgId?? "all"}`);
+        await redis.del(`websites:${userId}:${orgId ?? "all"}`);
         return res.json(result);
     } catch (error) {
         console.error("Error updating website:", error);

@@ -87,6 +87,7 @@ const Page = (props: Props) => {
         };
 
         connectAccounts();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         app_id,
         authed_user_id,
@@ -101,7 +102,6 @@ const Page = (props: Props) => {
         webhook_url,
         guild_name,
         guild_id,
-        instance,
         router,
     ]);
 

@@ -2,6 +2,10 @@ import { IncidentNotification } from "@repo/email/emails/IncidentNotification";
 
 import { sendEmail } from "@repo/email/send-via-nodemailer";
 import { prismaClient } from "@repo/db/client";
+import {
+    addOrUpdateWebsiteJob,
+    deleteWebsiteJob,
+} from "../queues/websiteCheckQueue";
 
 export class WebsiteService {
     /**
@@ -26,13 +30,20 @@ export class WebsiteService {
             });
         }
 
-        return await prismaClient.website.create({
+        const website = await prismaClient.website.create({
             data: {
                 userId: user.id,
                 url,
                 orgId,
             },
         });
+
+        await addOrUpdateWebsiteJob({
+            id: website.id,
+            interval: website.interval,
+        });
+
+        return website;
     }
 
     /**
@@ -179,7 +190,7 @@ export class WebsiteService {
         if (!user) {
             throw new Error("User does not exist");
         }
-        await prismaClient.website.update({
+        const data = await prismaClient.website.update({
             where: {
                 id: websiteId,
                 userId: user.id,
@@ -188,6 +199,8 @@ export class WebsiteService {
                 disabled: true,
             },
         });
+
+        await deleteWebsiteJob(websiteId);
 
         return { message: "Deleted website successfully" };
     }
@@ -221,8 +234,7 @@ export class WebsiteService {
             throw new Error("Website not found or does not belong to user");
         }
 
-        // Update the website
-        return prismaClient.website.update({
+        const websiteData = await prismaClient.website.update({
             where: {
                 id: websiteId,
             },
@@ -231,6 +243,13 @@ export class WebsiteService {
                 interval,
             },
         });
+
+        await addOrUpdateWebsiteJob({
+            id: website.id,
+            interval: websiteData.interval,
+        });
+
+        return websiteData;
     }
 
     /**

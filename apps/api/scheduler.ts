@@ -1,4 +1,4 @@
-import { Queue } from "bullmq";;
+import { Queue } from "bullmq";
 import redisConnection from "./lib/redis";
 import { prismaClient } from "@repo/db/client";
 
