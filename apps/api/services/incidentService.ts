@@ -3,7 +3,7 @@ import { IncidentStatus } from "../types/index";
 import { listBotChannels, postMessageToSlack } from "../lib/slack";
 import { postMessageToDiscord } from "../lib/discord";
 import { sendEmail } from "@repo/email/send-via-nodemailer";
-import { IncidentNotification } from "@repo/email/emails/IncidentNotification"; // Import the email template
+import { IncidentNotification } from "@repo/email/emails/IncidentNotification";
 
 export class IncidentService {
     async getAllIncidents(userId: string, orgId?: string) {
@@ -121,7 +121,7 @@ export class IncidentService {
         });
 
         const slackConnection = user.Connections.find(
-            (data) => data.Slack,
+            (data: { Slack: any; }) => data.Slack,
         )?.Slack;
 
         if (slackConnection) {
@@ -151,7 +151,7 @@ export class IncidentService {
         }
 
         const discordConnection = user.Connections.find(
-            (data) => data.DiscordWebhook,
+            (data: { DiscordWebhook: any; }) => data.DiscordWebhook,
         )?.DiscordWebhook;
         if (discordConnection) {
             if (discordConnection?.url) {
@@ -175,23 +175,19 @@ export class IncidentService {
             }
         }
 
-        // Assuming 'email' is a field directly on the Connection model or a nested relation
-        // Adjust the find logic based on your actual schema
         const emailConnection = user.Connections.find(
-            (data) => data.email,
+            (data: { email: any; }) => data.email,
         )?.email;
 
         if (emailConnection) {
-            // Assuming the Email model has an 'address' field
             const recipientEmail = emailConnection as any;
 
             if (recipientEmail) {
-                // Prepare data for the email template
                 const emailProps = {
-                    userName: user.email || "User", // Use user's name if available
-                    acknowledgeLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}/acknowledge`, // Example link
-                    viewIncidentLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}`, // Example link
-                    unavailableLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}/unavailable`, // Example link
+                    userName: user.email || "User",
+                    acknowledgeLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}/acknowledge`,
+                    viewIncidentLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}`,
+                    unavailableLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}/unavailable`,
                     heartbeatName: websiteId
                         ? (
                               await prismaClient.website.findUnique({
@@ -199,26 +195,25 @@ export class IncidentService {
                                   select: { url: true },
                               })
                           )?.url || `Website ID: ${websiteId}`
-                        : "Manual Incident", // Use website name or ID
+                        : "Manual Incident",
                     incidentCause: errorText,
-                    startedAt: newIncident.date.toLocaleString(), // Format date
-                    companyName: process.env.COMPANY_NAME || "Your Company", // Get from env or config
+                    startedAt: newIncident.date.toLocaleString(),
+                    companyName: process.env.COMPANY_NAME || "Your Company",
                     logoUrl:
                         process.env.COMPANY_LOGO_URL ||
-                        "https://your-logo-url.com/default-logo.png", // Get from env or config
-                    supportUrl: process.env.SUPPORT_URL || "#", // Get from env or config
-                    signInUrl: process.env.SIGN_IN_URL || "#", // Get from env or config
+                        "https://your-logo-url.com/default-logo.png",
+                    supportUrl: process.env.SUPPORT_URL || "#",
+                    signInUrl: process.env.SIGN_IN_URL || "#",
                 };
 
                 let emailSubject = `🚨 Incident Alert: ${emailProps.heartbeatName}`;
 
-                // Call the sendEmail function
                 try {
                     await sendEmail(
                         recipientEmail,
                         emailSubject,
-                        IncidentNotification, // Pass the React email component
-                        emailProps, // Pass the props for the component
+                        IncidentNotification,
+                        emailProps,
                     );
                     console.log(
                         `Incident notification email sent to ${recipientEmail}`,
@@ -246,6 +241,119 @@ export class IncidentService {
         });
 
         return newIncident;
+    }
+
+    async sendTestAlert(userId: string, heartbeatId?: string) {
+        const user = await prismaClient.user.findUnique({
+            where: { externalId: userId },
+            include: {
+                Connections: {
+                    include: {
+                        Slack: true,
+                        DiscordWebhook: true,
+                    },
+                },
+            },
+        });
+
+        if (!user) {
+            throw new Error("User does not exist");
+        }
+
+        let heartbeatDetails = null;
+
+        if (heartbeatId) {
+            heartbeatDetails = await prismaClient.heartbeat.findUnique({
+                where: { id: heartbeatId },
+                select: { name: true },
+            });
+        }
+
+        let websiteId: string | undefined;
+        let errorText = "This is a test alert";
+
+        const newIncident = await prismaClient.incident.create({
+            data: {
+                userId: user.id,
+                errorText: errorText,
+                status: IncidentStatus.Ongoing,
+                date: new Date(),
+                cause: "Test Alert",
+                websiteId: websiteId || null,
+                errorCode: "TEST",
+                duration: 0,
+                orgId: null,
+            },
+        });
+
+        await prismaClient.timeline.create({
+            data: {
+                time: new Date(),
+                incidentId: newIncident.id,
+                type: "start",
+                message: `Test incident created${heartbeatDetails ? ` for ${heartbeatDetails.name}` : ""}`,
+            },
+        });
+
+        const baseMessage = "🔔 This is a test alert from Uptime Monitoring";
+        const customMessage = heartbeatDetails
+            ? `${baseMessage} for ${heartbeatDetails.name}`
+            : baseMessage;
+
+        // Send to Slack
+        const slackConnection = user.Connections.find(
+            (data: { Slack: any; }) => data.Slack,
+        )?.Slack;
+        if (slackConnection?.slackAccessToken) {
+            await postMessageToSlack(
+                slackConnection.slackAccessToken,
+                await listBotChannels(slackConnection.slackAccessToken),
+                customMessage,
+            );
+        }
+
+        const discordConnection = user.Connections.find(
+            (data: { DiscordWebhook: any; }) => data.DiscordWebhook,
+        )?.DiscordWebhook;
+        if (discordConnection?.url) {
+            await postMessageToDiscord(discordConnection.url, customMessage);
+        }
+
+        const emailConnection = user.Connections.find(
+            (data: { email: any; }) => data.email,
+        )?.email;
+        if (emailConnection) {
+            const emailProps = {
+                userName: user.email || "User",
+                acknowledgeLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}`,
+                viewIncidentLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}`,
+                unavailableLink: `${process.env.FRONTEND_URL}/incidents/${newIncident.id}`,
+                heartbeatName: websiteId
+                    ? (
+                          await prismaClient.website.findUnique({
+                              where: { id: websiteId },
+                              select: { url: true },
+                          })
+                      )?.url || `Website ID: ${websiteId}`
+                    : "Manual Incident",
+                incidentCause: errorText,
+                startedAt: newIncident.date.toLocaleString(),
+                companyName: process.env.COMPANY_NAME || "Your Company",
+                logoUrl:
+                    process.env.COMPANY_LOGO_URL ||
+                    "https://your-logo-url.com/default-logo.png",
+                supportUrl: process.env.SUPPORT_URL || "#",
+                signInUrl: process.env.SIGN_IN_URL || "#",
+            };
+            await sendEmail(
+                emailConnection,
+                heartbeatId
+                    ? `Test Alert for ${emailProps.heartbeatName}`
+                    : "Test Alert from Uptime Monitoring",
+                IncidentNotification,
+                emailProps,
+            );
+        }
     }
 }
 

@@ -143,7 +143,7 @@ function PricingSection() {
                                 damping: 17,
                             }}
                         >
-                            <Link href={"/sign-in"}>
+                            <Link href={"/dashboard"}>
                                 <Button size="lg">
                                     Get Started Now
                                     <ArrowRight className="ml-2 h-5 w-5" />

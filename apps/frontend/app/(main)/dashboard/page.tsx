@@ -213,7 +213,7 @@ function App() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const { websites, refreshWebsites } = useWebsites();
-    const { getToken, orgId } = useAuth();
+    const { getToken, orgId, isLoaded } = useAuth();
     const { user } = useUser();
     const instance = useAxiosInstance();
 
@@ -266,17 +266,19 @@ function App() {
                 : "Never";
 
             const lastThreeTicks = windows.slice(-3);
-            const goodCount = lastThreeTicks.filter(
-                (status) => status === "good",
+            const lastItems = sortedTicks.slice(-1);
+
+            const goodCount = lastItems?.filter(
+                (data) => data.status == "Good",
             ).length;
-            const badCount = lastThreeTicks.filter(
-                (status) => status === "bad",
+            const badCount = lastItems?.filter(
+                (data) => data.status == "Bad",
             ).length;
 
             let derivedStatus: "good" | "bad" | "unknown";
-            if (goodCount === 3) {
+            if (goodCount === 1) {
                 derivedStatus = "good";
-            } else if (badCount === 3) {
+            } else if (badCount === 1) {
                 derivedStatus = "bad";
             } else if (lastThreeTicks.every((t) => t === "unknown")) {
                 derivedStatus = "unknown";
@@ -298,6 +300,7 @@ function App() {
 
     React.useEffect(() => {
         setLoading(true);
+        if (!isLoaded) return;
         refreshWebsites()
             .then(() => setLoading(false))
             .catch(() => {
@@ -315,7 +318,6 @@ function App() {
                     email: user?.primaryEmailAddress?.emailAddress,
                     imageUrl: user?.imageUrl,
                 });
-                toast.success("User synchronized successfully");
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
             } catch (error) {
                 toast.error("Failed to synchronize user");
@@ -348,17 +350,6 @@ function App() {
             setError("Failed to add website");
         }
     };
-
-    // const { user } = useUser(); // This line is now redundant and can be removed
-
-    useEffect(() => {
-        if (user?.organizationMemberships) {
-            // const organizationIds = user.organizationMemberships.map((m) => m.id);
-            // updateUserOrganizationIds(organizationIds).catch((err) =>
-            //   console.error("Failed to update organization IDs:", err),
-            // );
-        }
-    }, [user?.organizationMemberships]);
 
     if (user?.organizationMemberships?.length === 0) {
         return (

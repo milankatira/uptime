@@ -1,6 +1,6 @@
 import { API_BACKEND_URL } from "@/config";
+import { useAxiosInstance } from "@/lib/axiosInstance";
 import { useAuth } from "@clerk/nextjs";
-import axios from "axios";
 import {
     AlertTriangle,
     BarChart4,
@@ -66,6 +66,7 @@ export function WebsiteCard({
     website: ProcessedWebsite;
     onDelete: (id: string) => void;
 }) {
+    const instance = useAxiosInstance();
     const [isDeleting, setIsDeleting] = useState(false);
     const { getToken } = useAuth();
 
@@ -107,7 +108,7 @@ export function WebsiteCard({
         setIsDeleting(true);
         try {
             const token = await getToken();
-            await axios.delete(`${API_BACKEND_URL}/api/v1/website`, {
+            await instance.delete(`${API_BACKEND_URL}/api/v1/website`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

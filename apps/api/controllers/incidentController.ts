@@ -156,3 +156,18 @@ export async function createIncident(req: Request, res: Response) {
         return res.status(500).json({ error: "Failed to create incident" });
     }
 }
+
+export async function sendTestAlert(req: Request, res: Response) {
+    try {
+        const userId = req.userId!;
+        const { heartbeatId } = req.params;
+        if (!heartbeatId) {
+            return res.status(400).json({ error: "Heartbeat ID is required" });
+        }
+        await incidentService.sendTestAlert(userId, heartbeatId);
+        return res.json({ message: "Test alert sent successfully" });
+    } catch (error) {
+        console.error("Error sending test alert:", error);
+        return res.status(500).json({ error: "Failed to send test alert" });
+    }
+}

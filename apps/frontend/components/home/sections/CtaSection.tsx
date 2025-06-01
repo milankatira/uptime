@@ -1,5 +1,6 @@
 import GradientText from "@/components/ui/GradientText";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -74,15 +75,15 @@ const CtaSection = () => {
                         variants={fadeInUp}
                         className="mt-10"
                     >
-                        <a
-                            href="/signup"
+                        <Link
+                            href="/dashboard"
                             className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-black"
                         >
                             <span className="absolute inset-[-1000%] animate-spin-slow bg-[conic-gradient(from_90deg_at_50%_50%,#CFFFD2_0%,#1E7F37_50%,#CFFFD2_100%)]" />
                             <span className="inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 px-5 text-sm font-semibold text-white backdrop-blur-2xl">
                                 Get Started Now
                             </span>
-                        </a>
+                        </Link>
                     </motion.div>
                 </div>
             </div>

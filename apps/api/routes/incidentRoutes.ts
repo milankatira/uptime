@@ -5,7 +5,8 @@ import {
     getIncidentDetails,
     updateIncident,
     addIncidentComment,
-    createIncident, // Import the new controller function
+    createIncident,
+    sendTestAlert, // Import the new controller function
 } from "../controllers/incidentController";
 import { authMiddleware } from "../middleware";
 
@@ -32,5 +33,8 @@ router.post(
 
 // @ts-expect-error - TODO: fix this type error
 router.post("/incident", authMiddleware, createIncident);
+
+// @ts-expect-error - TODO: fix this type error
+router.post("/test-incident/:heartbeatId", authMiddleware, sendTestAlert);
 
 export default router;

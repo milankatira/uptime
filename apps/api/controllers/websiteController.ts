@@ -54,7 +54,6 @@ export async function getWebsiteStatus(req: Request, res: Response) {
         }
         const data = await websiteService.getWebsiteStatus(websiteId, duration);
 
-
         if (!data) {
             return res.status(404).json({ error: "Website not found" });
         }
@@ -110,7 +109,7 @@ export async function getAllWebsites(req: Request, res: Response) {
 
         const cached = await redis.get(cacheKey);
         if (cached) {
-            console.log("return cached data")
+            console.log("return cached data");
             return res.json(JSON.parse(cached));
         }
 
@@ -178,7 +177,7 @@ export async function updateWebsite(req: Request, res: Response) {
             url,
             interval,
         );
-        await redis.del(`websites:${userId}:${orgId?? "all"}`);
+        await redis.del(`websites:${userId}:${orgId ?? "all"}`);
         return res.json(result);
     } catch (error) {
         console.error("Error updating website:", error);
@@ -323,13 +322,8 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
     try {
         const { heartbeatId, status } = req.params;
 
-        // Update the status
-        const result = await websiteService.updateHeartbeatStatus(
-            heartbeatId,
-            status,
-        );
+        await websiteService.updateHeartbeatStatus(heartbeatId, status);
 
-        // Render HTML response
         res.setHeader("Content-Type", "text/html");
         return res.send(`
       <!DOCTYPE html>
@@ -424,7 +418,7 @@ export async function updateHeartbeatStatus(req: Request, res: Response) {
         </style>
       </head>
       <body>
-        <a href="/heartbeats" class="back-link">
+        <a href="${process.env.FRONTEND_BASE_URL}/heartbeats" class="back-link">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M10 12L6 8L10 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
