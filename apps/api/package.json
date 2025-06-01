@@ -2,12 +2,9 @@
     "name": "api",
     "module": "index.ts",
     "type": "module",
-    "devDependencies": {
-        "@types/bun": "latest"
-    },
     "scripts": {
-        "start": "bun --watch run index.ts &&  bun run --watch validator.ts",
-        "dev": "bun --watch run index.ts && bun run --watch validator.ts",
+        "start": "concurrently \"bun run index.ts --watch\" \"bun run validator.ts --watch\"",
+        "dev": "concurrently \"bun run index.ts --watch\" \"bun run validator.ts --watch\"",
         "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
         "format": "prettier --write .",
         "prettier-check": "prettier --check ."
@@ -26,11 +23,7 @@
         "@types/jsonwebtoken": "^9.0.9",
         "axios": "^1.9.0",
         "bullmq": "^5.52.1",
-"devDependencies": {
-  "@types/bun": "latest",
-  "bun": "^1.2.15"
-},
-"dependencies": {
+        "concurrently": "^9.1.2",
         "cors": "^2.8.5",
         "dotenv": "^16.5.0",
         "express": "^5.1.0",
@@ -38,5 +31,9 @@
         "ioredis": "^5.6.1",
         "jsonwebtoken": "^9.0.2",
         "prisma": "^6.7.0"
+    },
+    "devDependencies": {
+        "@types/bun": "^1.0.0",
+        "bun": "^1.2.15"
     }
 }

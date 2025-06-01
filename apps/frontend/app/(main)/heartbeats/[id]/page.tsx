@@ -17,9 +17,6 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
 
-const HeartbeatDetailPage = () => {
-// Move interfaces to the top of the file
-
 interface HeartbeatRecord {
     id: string;
     heartbeatId: string;
@@ -36,7 +33,6 @@ interface HeartbeatDetails {
 }
 
 const HeartbeatDetailPage = () => {
-    // ...rest of your component code (interfaces removed from here)
     const params = useParams();
     const id = params?.id as string;
     const instance = useAxiosInstance();
