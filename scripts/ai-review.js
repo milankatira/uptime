@@ -1,6 +1,5 @@
-const { Octokit } = require("@octokit/rest");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { execSync } = require("child_process");
+import { Octokit } from "@octokit/rest";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const token = process.env.GITHUB_TOKEN;
 const geminiKey = process.env.GEMINI_API_KEY;
@@ -36,7 +35,7 @@ async function main() {
   });
 }
 
-main().catch((error) => {
-  console.error("Review failed:", error.message);
+main().catch((err) => {
+  console.error("Review failed:", err);
   process.exit(1);
 });
