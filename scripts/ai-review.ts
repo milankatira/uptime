@@ -35,7 +35,7 @@ async function main() {
 
   const prompt = `You are a code review assistant. Analyze the following code changes and provide suggestions:\n\n${diffs}`;
 
-  const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+  const model = genAI.getGenerativeModel({ model:"models/gemini-2.0-flash" });
   const result = await model.generateContent(prompt);
   const review = result.response.text();
 
