@@ -64,7 +64,7 @@ export const PLANS: PLAN[] = [
     //         "API access",
     //         "Unlimited team members",
     //         "24/7 priority support",
-    //         "Dedicated success manager",
+    //         "Dedicated success manager and account manager",
     //     ],
     //     link: "https://stripe.com/enterprise-plan-link"
     // }
