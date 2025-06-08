@@ -88,7 +88,7 @@ const HeartbeatDetailPage = () => {
         } catch (error) {
             toast.error("Failed to send test alert", {
                 description:
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     (error as any)?.response?.data?.message || "Unknown error",
             });
         }

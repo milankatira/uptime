@@ -8,7 +8,9 @@ export async function addOrUpdateWebsiteJob(site: {
     interval: number;
 }): Promise<void> {
     if (!site.id || site.interval <= 0) {
-        throw new Error("Invalid site parameters: id is required and interval must be positive");
+        throw new Error(
+            "Invalid site parameters: id is required and interval must be positive",
+        );
     }
 
     try {
@@ -30,8 +32,13 @@ export async function addOrUpdateWebsiteJob(site: {
             },
         );
     } catch (error) {
-        console.error(`Failed to add/update website job for site ${site.id}:`, error);
-        throw new Error(`Queue operation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        console.error(
+            `Failed to add/update website job for site ${site.id}:`,
+            error,
+        );
+        throw new Error(
+            `Queue operation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        );
     }
 }
 

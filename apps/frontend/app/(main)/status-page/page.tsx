@@ -1,16 +1,15 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { useWebsites } from "@/hooks/useWebsites";
+import { useUser } from "@clerk/nextjs";
 import { Eye } from "lucide-react";
 import React from "react";
 
-/**
- * Renders a table of websites with actions to view each site's status page.
- *
- * Displays each website's URL and ID, and provides a button to open its status page in a new browser tab. If no websites are available, shows a message indicating that no status pages are found.
- */
 function StatusPageList() {
-    const { websites } = useWebsites();
+    const { user } = useUser();
+    const { websites, loading } = useWebsites(
+        user?.primaryEmailAddress?.emailAddress,
+    );
 
     return (
         <div className="w-full bg-white px-4 py-8 sm:px-6 lg:px-8 dark:bg-gray-900">
@@ -34,7 +33,26 @@ function StatusPageList() {
                             </tr>
                         </thead>
                         <tbody>
-                            {websites && websites.length > 0 ? (
+                            {loading ? (
+                                Array.from({ length: 3 }).map((_, index) => (
+                                    <tr
+                                        key={index}
+                                        className="border-b border-dark-border animate-pulse"
+                                    >
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-3">
+                                                <div>
+                                                    <div className="h-4 w-40 rounded bg-gray-700 mb-2" />
+                                                    <div className="h-3 w-24 rounded bg-gray-600" />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="h-8 w-8 rounded-full bg-gray-700" />
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : websites && websites.length > 0 ? (
                                 websites.map((site) => (
                                     <tr
                                         key={site.id}
@@ -52,7 +70,6 @@ function StatusPageList() {
                                                 </div>
                                             </div>
                                         </td>
-
                                         <td className="p-4">
                                             <div className="flex items-center gap-2">
                                                 <Button

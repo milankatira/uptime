@@ -115,10 +115,12 @@ const Navbar = () => {
                         <UserButton afterSignOutUrl="/" />
                     </SignedIn>
                     <SignedOut>
-                        <SignInButton>
+                        <SignInButton forceRedirectUrl={"/dashboard"}>
                             <Button variant="outline">Sign In</Button>
                         </SignInButton>
-                        <Button>Start Free Trial</Button>
+                        <SignInButton forceRedirectUrl={"/dashboard"}>
+                            <Button>Start Free Trial</Button>
+                        </SignInButton>
                     </SignedOut>
                 </div>
 
@@ -177,7 +179,7 @@ const Navbar = () => {
                             <UserButton afterSignOutUrl="/" />
                         </SignedIn>
                         <SignedOut>
-                            <SignInButton>
+                            <SignInButton forceRedirectUrl={"/dashboard"}>
                                 <Button variant="outline" className="w-full">
                                     Sign In
                                 </Button>

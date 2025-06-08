@@ -26,17 +26,22 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <ClerkProvider>
-                <body>
-                    <Toaster />
-                    <ThemeProvider defaultTheme="dark" attribute="class">
+            <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+            >
+                <ClerkProvider>
+                    <body>
+                        <Toaster />
                         <ProgressBarWrapper />
                         {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
                         {/* @ts-ignore */}
                         {children}
-                    </ThemeProvider>
-                </body>
-            </ClerkProvider>
+                    </body>
+                </ClerkProvider>
+            </ThemeProvider>
         </html>
     );
 }

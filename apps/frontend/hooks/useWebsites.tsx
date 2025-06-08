@@ -14,13 +14,20 @@ interface Website {
     }[];
 }
 
-export function useWebsites() {
+export function useWebsites(email?: string) {
     const instance = useAxiosInstance();
     const [websites, setWebsites] = useState<Website[]>([]);
+    const [loading, setLoading] = useState(false);
 
     async function refreshWebsites() {
-        const response = await instance.get("/api/v1/websites");
-        setWebsites(response.data.websites);
+        if (!email) return;
+        setLoading(true);
+        try {
+            const response = await instance.get("/api/v1/websites");
+            setWebsites(response.data.websites);
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -28,5 +35,5 @@ export function useWebsites() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return { websites, refreshWebsites };
+    return { websites, loading, refreshWebsites };
 }

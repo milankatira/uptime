@@ -212,9 +212,11 @@ function App() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { websites, refreshWebsites } = useWebsites();
     const { getToken, orgId, isLoaded } = useAuth();
     const { user } = useUser();
+    const { websites, refreshWebsites } = useWebsites(
+        user?.primaryEmailAddress?.emailAddress,
+    );
     const instance = useAxiosInstance();
 
     const processedWebsites = useMemo(() => {
@@ -327,7 +329,7 @@ function App() {
             syncUser();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [user?.primaryEmailAddress?.emailAddress]);
 
     const handleAddWebsite = async (url: string | null, interval?: number) => {
         if (url === null) {

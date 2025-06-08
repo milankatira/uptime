@@ -121,7 +121,7 @@ export class IncidentService {
         });
 
         const slackConnection = user.Connections.find(
-            (data: { Slack: any; }) => data.Slack,
+            (data: { Slack: any }) => data.Slack,
         )?.Slack;
 
         if (slackConnection) {
@@ -151,7 +151,7 @@ export class IncidentService {
         }
 
         const discordConnection = user.Connections.find(
-            (data: { DiscordWebhook: any; }) => data.DiscordWebhook,
+            (data: { DiscordWebhook: any }) => data.DiscordWebhook,
         )?.DiscordWebhook;
         if (discordConnection) {
             if (discordConnection?.url) {
@@ -176,7 +176,7 @@ export class IncidentService {
         }
 
         const emailConnection = user.Connections.find(
-            (data: { email: any; }) => data.email,
+            (data: { email: any }) => data.email,
         )?.email;
 
         if (emailConnection) {
@@ -302,7 +302,7 @@ export class IncidentService {
 
         // Send to Slack
         const slackConnection = user.Connections.find(
-            (data: { Slack: any; }) => data.Slack,
+            (data: { Slack: any }) => data.Slack,
         )?.Slack;
         if (slackConnection?.slackAccessToken) {
             await postMessageToSlack(
@@ -313,14 +313,14 @@ export class IncidentService {
         }
 
         const discordConnection = user.Connections.find(
-            (data: { DiscordWebhook: any; }) => data.DiscordWebhook,
+            (data: { DiscordWebhook: any }) => data.DiscordWebhook,
         )?.DiscordWebhook;
         if (discordConnection?.url) {
             await postMessageToDiscord(discordConnection.url, customMessage);
         }
 
         const emailConnection = user.Connections.find(
-            (data: { email: any; }) => data.email,
+            (data: { email: any }) => data.email,
         )?.email;
         if (emailConnection) {
             const emailProps = {

@@ -96,7 +96,7 @@ const HeroSection = () => {
                 </motion.p>
 
                 <SignedOut>
-                    <SignInButton>
+                    <SignInButton forceRedirectUrl={"/dashboard"}>
                         <motion.button
                             variants={fadeInUp}
                             whileHover={{ scale: 1.03 }}
