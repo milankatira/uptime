@@ -218,7 +218,7 @@ Content-Type: application/json
                                     className="flex flex-col items-center gap-4 rounded-xl border border-gray-800 bg-gray-900 p-6"
                                 >
                                     <item.icon className="h-8 w-8 text-indigo-500" />
-                                    <span>{item.label}</span>
+                                    <span className="text-indigo-500">{item.label}</span>
                                 </div>
                             ))}
                         </div>
