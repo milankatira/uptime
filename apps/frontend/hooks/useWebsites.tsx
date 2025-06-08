@@ -32,8 +32,8 @@ export function useWebsites(email?: string) {
 
     useEffect(() => {
         refreshWebsites();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [email]);
 
     return { websites, loading, refreshWebsites };
 }
