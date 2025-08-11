@@ -1,4 +1,4 @@
-export const API_BACKEND_URL = "https://uptime-4kj9.onrender.com";
+export const API_BACKEND_URL = "https://api-uptime.milankatira.com";
 
 import { Metadata } from "next";
 import { generateFavicon } from "@/lib/generate-favicon";
